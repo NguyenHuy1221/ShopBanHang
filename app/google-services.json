@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578648405685",
+    "project_id": "shopbanhang-38995",
+    "storage_bucket": "shopbanhang-38995.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578648405685:android:78c6d394fd363b033470fc",
+        "android_client_info": {
+          "package_name": "com.example.shopbanhang"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxLuYW9iUZO6lqAHPg32apTTgEk2lddjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
