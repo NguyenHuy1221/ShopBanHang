@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.DAO.ThuongHieuDAO;
-import com.example.shopbanhang.InterFace.ThayImage;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -37,14 +36,13 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
 
     private Context context;
     private List<ThuongHieu> mThuongHieu;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("thuonghieu");
-    private static final int PICK_IMAGE_REQUEST = 123;
+    private static final int PICK_IMAGE_REQUEST_CODE = 2;
     private Uri selectedImageUri;
-    private ThayImage thayImage;
+    ImageView imgBrandDialog;
 
-    public ThuongHieuAdapter(ThayImage thayImage) {
-        this.thayImage = thayImage;
+    public ThuongHieuAdapter(Context context, List<ThuongHieu> mThuongHieu) {
+        this.context = context;
+        this.mThuongHieu = mThuongHieu;
     }
 
     public void updateList(List<ThuongHieu> thuongHieuList) {
@@ -52,20 +50,15 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public ThuongHieuAdapter(Context context, List<ThuongHieu> mThuongHieu) {
-        this.context = context;
-        this.mThuongHieu = mThuongHieu;
-    }
-
     @NonNull
     @Override
-    public ThuongHieuAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.custom_thuong_hieu,null);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.custom_thuong_hieu, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ThuongHieuAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ThuongHieu thuongHieu = mThuongHieu.get(position);
         holder.tenThuongHieu.setText(thuongHieu.getTenThuongHieu());
         Picasso.get().load(thuongHieu.getImageUrl()).into(holder.imgThuongHieu);
@@ -77,8 +70,6 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
             }
         });
 
-
-
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +78,6 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
         });
     }
 
-
     @Override
     public int getItemCount() {
         return mThuongHieu.size();
@@ -95,7 +85,7 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tenThuongHieu;
-        private ImageView edit,delete,imgThuongHieu;
+        private ImageView edit, delete, imgThuongHieu;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tenThuongHieu = itemView.findViewById(R.id.tv_thuonghieu_edit);
@@ -116,18 +106,18 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
                         thuongHieuDAO.deleteThuongHieu(thuongHieu);
                         Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
                     }
-                }).setNegativeButton("Không",null).show();
+                }).setNegativeButton("Không", null).show();
     }
 
     private void updateBrand(ThuongHieu thuongHieu) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_thuong_hieu,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_thuong_hieu, null);
         builder.setView(view);
 
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        ImageView imgBrand = view.findViewById(R.id.imgBrand);
+        imgBrandDialog = view.findViewById(R.id.imgBrand);
         TextView tenth = view.findViewById(R.id.update_th);
         EditText edtName = view.findViewById(R.id.edtBrandName);
         Button btnThem = view.findViewById(R.id.btnAddThuongHieu);
@@ -135,9 +125,9 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
         tenth.setText("Sửa thương hiệu");
         btnThem.setText("Sửa");
         edtName.setText(thuongHieu.getTenThuongHieu());
-        Picasso.get().load(thuongHieu.getImageUrl()).into(imgBrand);
+        Picasso.get().load(thuongHieu.getImageUrl()).into(imgBrandDialog);
 
-        imgBrand.setOnClickListener(new View.OnClickListener() {
+        imgBrandDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 oppenFile();
@@ -148,24 +138,61 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
             @Override
             public void onClick(View v) {
                 String suaTen = edtName.getText().toString().trim().toUpperCase();
-                if (!suaTen.equals("")){
+
+                if (!suaTen.equals("")) {
                     thuongHieu.setTenThuongHieu(suaTen);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(context, "Tên thương hiệu không được trống", Toast.LENGTH_SHORT).show();
                 }
-                dialog.dismiss();
             }
         });
-
     }
 
     private void oppenFile() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        ((Activity) context).startActivityForResult(intent, PICK_IMAGE_REQUEST);
-        thayImage.clickImage(selectedImageUri);
+        ((Activity)context).startActivityForResult(intent,PICK_IMAGE_REQUEST_CODE);
     }
 
-    // aor maf so co la zxc xzczxc
+    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+                Picasso.get().load(selectedImageUri).into(imgBrandDialog);
+        }
+    }
 
-//zxcasdwqweqwesasdczxczxc
+
+
+//    private void uploadImageToFirebase(ThuongHieu thuongHieu, ImageView imgBrand) {
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReference();
+//
+//        // Create a reference to "brands" folder and the image file name
+//        StorageReference imageRef = storageRef.child("thuonghieu/" + thuongHieu.getIdThuongHieu() + ".png");
+//
+//        // Upload the image to Firebase Storage
+//        imageRef.putFile(selectedImageUri)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        // Get the download URL for the image and update the brand's imageUrl
+//                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                            @Override
+//                            public void onSuccess(Uri downloadUri) {
+//                                thuongHieu.setImageUrl(downloadUri.toString());
+//                                Picasso.get().load(downloadUri).into(imgBrand);
+//                            }
+//                        });
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        // Handle failed image upload
+//                        Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 }

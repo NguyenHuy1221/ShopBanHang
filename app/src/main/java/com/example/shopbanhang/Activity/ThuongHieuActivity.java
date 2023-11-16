@@ -40,7 +40,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThuongHieuActivity extends AppCompatActivity implements ThayImage {
+public class ThuongHieuActivity extends AppCompatActivity  {
     private static final int PICK_IMAGE_REQUEST = 1;
     private RecyclerView recyclerView;
     private ThuongHieuAdapter thuongHieuAdapter;
@@ -138,6 +138,7 @@ public class ThuongHieuActivity extends AppCompatActivity implements ThayImage {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mImageUri = data.getData();
             Picasso.get().load(mImageUri).into(imgBrand);
+            thuongHieuAdapter.handleActivityResult(requestCode,resultCode,data);
         }
     }
 
@@ -210,9 +211,4 @@ public class ThuongHieuActivity extends AppCompatActivity implements ThayImage {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-
-    @Override
-    public void clickImage(Uri imageUri) {
-        Picasso.get().load(imageUri).into(imgBrand);
-    }
 }
