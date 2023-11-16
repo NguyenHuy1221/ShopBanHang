@@ -1,12 +1,15 @@
 package com.example.shopbanhang.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ThuongHieu {
     private String idThuongHieu;
     private String tenThuongHieu;
-    private String imageUrl; // Thay vì image
+    private String imageUrl;
 
     public ThuongHieu() {
-        // Hàm khởi tạo mặc định là cần thiết cho Firebase Realtime Database
+
     }
 
     public ThuongHieu(String idThuongHieu, String tenThuongHieu, String imageUrl) {
@@ -38,5 +41,15 @@ public class ThuongHieu {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("idThuongHieu", idThuongHieu);
+        result.put("tenThuongHieu", tenThuongHieu);
+        result.put("imageUrl", imageUrl);
+        return result;
+    }
+
+
 }
 
