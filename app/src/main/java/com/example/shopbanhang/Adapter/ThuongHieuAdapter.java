@@ -165,7 +165,7 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
         thayImage.clickImage(selectedImageUri);
     }
 
-    // aor maf so co la
+    // aor maf so co la zxc xzczxc
 
-
+//zxcasdwqweqwesasdczxczxc
 }
