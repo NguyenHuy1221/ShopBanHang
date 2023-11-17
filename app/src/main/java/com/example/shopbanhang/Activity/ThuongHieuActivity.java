@@ -1,5 +1,6 @@
 package com.example.shopbanhang.Activity;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,6 +162,7 @@ public class ThuongHieuActivity extends AppCompatActivity  {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
+        ProgressDialog progressDialog = ProgressDialog.show(context, "Chờ Chút", "Đang tải lên hình ảnh...", true);
 
         // Tải ảnh lên Storage
         imageRef.putFile(imageUri)
@@ -172,6 +175,7 @@ public class ThuongHieuActivity extends AppCompatActivity  {
                             public void onSuccess(Uri uri) {
                                 ThuongHieuDAO thuongHieuDAO = new ThuongHieuDAO();
                                 thuongHieuDAO.insertThuongHieu(new ThuongHieu(id,name,uri.toString()));
+                                progressDialog.dismiss();
                             }
                         });
                     }
@@ -181,6 +185,7 @@ public class ThuongHieuActivity extends AppCompatActivity  {
                     public void onFailure(@NonNull Exception e) {
                         // Xử lý khi tải ảnh lên thất bại
                         Toast.makeText(context, "Tải ảnh lên thất bại", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
     }
@@ -234,6 +239,8 @@ public class ThuongHieuActivity extends AppCompatActivity  {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
+        ProgressDialog progressDialog = ProgressDialog.show(context, "Chờ Chút", "Đang tải lên hình ảnh...", true);
+
 
         imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -245,13 +252,14 @@ public class ThuongHieuActivity extends AppCompatActivity  {
                         thuongHieu.setImageUrl(uri.toString());
                         ThuongHieuDAO thuongHieuDAO = new ThuongHieuDAO();
                         thuongHieuDAO.updateThuongHieu(thuongHieu);
+                        progressDialog.dismiss();
                     }
                 });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                progressDialog.dismiss();
             }
         });
     }
