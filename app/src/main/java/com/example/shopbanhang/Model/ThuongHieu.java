@@ -42,7 +42,7 @@ public class ThuongHieu {
         this.imageUrl = imageUrl;
     }
 
-    public Map<String, Object> toMap() {
+    public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("idThuongHieu", idThuongHieu);
         result.put("tenThuongHieu", tenThuongHieu);

@@ -1,33 +1,17 @@
 package com.example.shopbanhang.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.shopbanhang.DAO.ThuongHieuDAO;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -36,13 +20,12 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
 
     private Context context;
     private List<ThuongHieu> mThuongHieu;
-    private static final int PICK_IMAGE_REQUEST_CODE = 2;
-    private Uri selectedImageUri;
-    ImageView imgBrandDialog;
+    private final IclickListener mIclickListener;
 
-    public ThuongHieuAdapter(Context context, List<ThuongHieu> mThuongHieu) {
+    public ThuongHieuAdapter(Context context, List<ThuongHieu> mThuongHieu, IclickListener mIclickListener) {
         this.context = context;
         this.mThuongHieu = mThuongHieu;
+        this.mIclickListener = mIclickListener;
     }
 
     public void updateList(List<ThuongHieu> thuongHieuList) {
@@ -63,19 +46,28 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
         holder.tenThuongHieu.setText(thuongHieu.getTenThuongHieu());
         Picasso.get().load(thuongHieu.getImageUrl()).into(holder.imgThuongHieu);
 
+
+
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateBrand(thuongHieu);
+//                updateBrand(thuongHieu);
+                mIclickListener.onClickUpdateItem(thuongHieu);
             }
         });
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteBrand(thuongHieu);
+                mIclickListener.onClickDeleteItem(thuongHieu);
             }
         });
+    }
+
+    public interface IclickListener {
+        void onClickUpdateItem(ThuongHieu thuongHieu);
+
+        void onClickDeleteItem(ThuongHieu thuongHieu);
     }
 
     @Override
@@ -95,73 +87,76 @@ public class ThuongHieuAdapter extends RecyclerView.Adapter<ThuongHieuAdapter.Vi
         }
     }
 
-    private void deleteBrand(ThuongHieu thuongHieu) {
-        new AlertDialog.Builder(context)
-                .setTitle("Xóa thương hiệu")
-                .setMessage("Bạn có chắc muốn xóa thương hiệu này")
-                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ThuongHieuDAO thuongHieuDAO = new ThuongHieuDAO();
-                        thuongHieuDAO.deleteThuongHieu(thuongHieu);
-                        Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
-                    }
-                }).setNegativeButton("Không", null).show();
-    }
+//    private void deleteBrand(ThuongHieu thuongHieu) {
+//        new AlertDialog.Builder(context)
+//                .setTitle("Xóa thương hiệu")
+//                .setMessage("Bạn có chắc muốn xóa thương hiệu này")
+//                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        ThuongHieuDAO thuongHieuDAO = new ThuongHieuDAO();
+//                        thuongHieuDAO.deleteThuongHieu(thuongHieu);
+//                        Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).setNegativeButton("Không", null).show();
+//    }
+//
+//    private void updateBrand(ThuongHieu thuongHieu) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        View view = LayoutInflater.from(context).inflate(R.layout.dialog_thuong_hieu, null);
+//        builder.setView(view);
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//
+//        imgBrandDialog = view.findViewById(R.id.imgBrand);
+//        TextView tenth = view.findViewById(R.id.update_th);
+//        EditText edtName = view.findViewById(R.id.edtBrandName);
+//        Button btnThem = view.findViewById(R.id.btnAddThuongHieu);
+//
+//        tenth.setText("Sửa thương hiệu");
+//        btnThem.setText("Sửa");
+//        edtName.setText(thuongHieu.getTenThuongHieu());
+//        Picasso.get().load(thuongHieu.getImageUrl()).into(imgBrandDialog);
+//
+//        imgBrandDialog.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                oppenFile();
+//            }
+//        });
+//
+//        btnThem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String suaTen = edtName.getText().toString().trim().toUpperCase();
+//
+//                if (!suaTen.equals("")) {
+//                    thuongHieu.setTenThuongHieu(suaTen);
+//                    dialog.dismiss();
+//                } else {
+//                    Toast.makeText(context, "Tên thương hiệu không được trống", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 
-    private void updateBrand(ThuongHieu thuongHieu) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_thuong_hieu, null);
-        builder.setView(view);
+//    private void oppenFile() {
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        ((Activity)context).startActivityForResult(intent,PICK_IMAGE_REQUEST_CODE);
+//        Log.d("HUYNE",imgBrandDialog.toString());
+//
+//    }
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        imgBrandDialog = view.findViewById(R.id.imgBrand);
-        TextView tenth = view.findViewById(R.id.update_th);
-        EditText edtName = view.findViewById(R.id.edtBrandName);
-        Button btnThem = view.findViewById(R.id.btnAddThuongHieu);
-
-        tenth.setText("Sửa thương hiệu");
-        btnThem.setText("Sửa");
-        edtName.setText(thuongHieu.getTenThuongHieu());
-        Picasso.get().load(thuongHieu.getImageUrl()).into(imgBrandDialog);
-
-        imgBrandDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                oppenFile();
-            }
-        });
-
-        btnThem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String suaTen = edtName.getText().toString().trim().toUpperCase();
-
-                if (!suaTen.equals("")) {
-                    thuongHieu.setTenThuongHieu(suaTen);
-                    dialog.dismiss();
-                } else {
-                    Toast.makeText(context, "Tên thương hiệu không được trống", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private void oppenFile() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        ((Activity)context).startActivityForResult(intent,PICK_IMAGE_REQUEST_CODE);
-    }
-
-    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            selectedImageUri = data.getData();
-                Picasso.get().load(selectedImageUri).into(imgBrandDialog);
-        }
-    }
+//    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+//            selectedImageUri = data.getData();
+//                Picasso.get().load(selectedImageUri).into(imgBrandDialog);
+//
+//        }
+//    }
 
 
 
