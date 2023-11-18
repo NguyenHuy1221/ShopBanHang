@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,13 +15,16 @@
         android:theme="@style/Theme.ShopBanHang"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.quan_ly_khuyen_mai"
+            android:exported="false" />
+        <activity
             android:name=".Activity.MainActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.QuanLyKhoActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.ThuongHieuActivity"
+             android:name=".Activity.ThuongHieuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
