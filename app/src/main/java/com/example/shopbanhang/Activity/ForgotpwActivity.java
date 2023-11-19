@@ -1,14 +1,16 @@
-package com.example.shopbanhang;
+package com.example.shopbanhang.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class SignupActivity extends AppCompatActivity {
+import com.example.shopbanhang.R;
+
+public class ForgotpwActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_forgotpw);
     }
 }
