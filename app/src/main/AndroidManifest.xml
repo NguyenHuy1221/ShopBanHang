@@ -16,10 +16,16 @@
         android:theme="@style/Theme.ShopBanHang"
         tools:targetApi="31">
         <activity
-            android:name=".ForgotpwActivity"
+            android:name=".DialogThemTaiKhoanActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activity.quan_ly_khuyen_mai"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ForgotpwActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.MainActivity"
@@ -29,6 +35,9 @@
             android:exported="false" />
         <activity
             android:name=".Activity.ThuongHieuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.QuanLyTaiKhoanActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

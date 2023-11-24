@@ -1,14 +1,16 @@
-package com.example.shopbanhang;
+package com.example.shopbanhang.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class ForgotpwActivity extends AppCompatActivity {
+import com.example.shopbanhang.R;
+
+public class Doanh_Thu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgotpw);
+        setContentView(R.layout.activity_doanh_thu);
     }
 }
