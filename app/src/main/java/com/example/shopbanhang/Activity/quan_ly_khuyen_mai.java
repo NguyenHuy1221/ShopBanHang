@@ -35,6 +35,7 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.show();
+
     }
 
     private void initView() {

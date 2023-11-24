@@ -10,38 +10,137 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="3"
+        android:weightSum="5"
         android:orientation="horizontal"
         >
-        
-        <ImageView
-            android:scaleType="centerCrop"
-            android:layout_weight="1"
+
+        <RelativeLayout
+            android:layout_weight="1.7"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/no_image"
-            />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_khuyenMai"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/no_image" />
+
+            <TextView
+                android:id="@+id/txtPhanTramKhuyenMai"
+                android:layout_width="73dp"
+                android:layout_height="51dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:text="100%"
+                android:textSize="29sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                />
+        </RelativeLayout>
+
+
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="horizontal"
+            android:layout_weight="2.8"
+            android:orientation="vertical"
             >
 
             <TextView
+                android:id="@+id/txtTenKhuyenMai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tên khuyến mãi"
-                android:layout_gravity="center"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginLeft="18dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
                 />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày bắt đầu:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/txtNgayBatDau"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12/12/2023"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    />
+            </LinearLayout>
 
 
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày kết thúc:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/txtNgayKetThuc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12/12/2023"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_edit"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                />
         </LinearLayout>
 
     </LinearLayout>
