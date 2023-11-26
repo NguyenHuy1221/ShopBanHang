@@ -6,17 +6,19 @@ public class KhuyenMai {
     private String tenKhuyenMai;
     private String ngayBatDau;
     private String ngayKetThuc;
+    private String phanTramKhuyenMai;
 
     public KhuyenMai(){
 
     }
 
-    public KhuyenMai(String idKhuyenMai, String imgKhuyenMai, String tenKhuyenMai, String ngayBatDau, String ngayKetThuc) {
+    public KhuyenMai(String idKhuyenMai, String imgKhuyenMai, String tenKhuyenMai, String ngayBatDau, String ngayKetThuc, String phanTramKhuyenMai) {
         this.idKhuyenMai = idKhuyenMai;
         this.imgKhuyenMai = imgKhuyenMai;
         this.tenKhuyenMai = tenKhuyenMai;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
+        this.phanTramKhuyenMai = phanTramKhuyenMai;
     }
 
     public String getIdKhuyenMai() {
@@ -57,5 +59,13 @@ public class KhuyenMai {
 
     public void setNgayKetThuc(String ngayKetThuc) {
         this.ngayKetThuc = ngayKetThuc;
+    }
+
+    public String getPhanTramKhuyenMai() {
+        return phanTramKhuyenMai;
+    }
+
+    public void setPhanTramKhuyenMai(String phanTramKhuyenMai) {
+        this.phanTramKhuyenMai = phanTramKhuyenMai;
     }
 }

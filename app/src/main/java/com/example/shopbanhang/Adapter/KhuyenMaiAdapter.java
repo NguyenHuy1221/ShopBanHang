@@ -34,7 +34,15 @@ public class KhuyenMaiAdapter extends RecyclerView.Adapter<KhuyenMaiAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        KhuyenMai khuyenMai = khuyenMaiList.get(position);
+        if(khuyenMai == null){
+            return;
+        }
 
+        holder.txtTenKhuyenMai.setText(khuyenMai.getTenKhuyenMai());
+        holder.txtNgayBatDau.setText(khuyenMai.getNgayBatDau());
+        holder.txtNgayKetThuc.setText(khuyenMai.getNgayKetThuc());
+        holder.txtPhanTramKhuyenMai.setText(khuyenMai.getPhanTramKhuyenMai());
 
     }
 

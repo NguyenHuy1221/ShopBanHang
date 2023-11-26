@@ -12,13 +12,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/backBtnKM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/arrow" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quản lý khuyến mãi"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="183dp"
             android:padding="10dp"
+            android:text="Quản lý khuyến mãi"
             android:textSize="16dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatAdd"
@@ -35,10 +51,12 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_qlsp"
+        android:id="@+id/recycle_qlkm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        tools:listitem="@layout/item_khuyen_mai"
         />
 
 </LinearLayout>

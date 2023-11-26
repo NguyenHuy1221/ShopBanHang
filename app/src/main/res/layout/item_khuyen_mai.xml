@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="15dp"
     android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="10dp"
     >
     
     <LinearLayout
@@ -24,7 +26,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/no_image" />
+
+                android:background="@color/red"
+                />
 
             <TextView
                 android:id="@+id/txtPhanTramKhuyenMai"
@@ -41,7 +45,7 @@
                 android:layout_marginBottom="32dp"
                 android:gravity="center"
                 android:text="100%"
-                android:textSize="29sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 />
@@ -80,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ngày bắt đầu:"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     />
@@ -90,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12/12/2023"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textColor="@color/black"
                     />
             </LinearLayout>
@@ -109,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ngày kết thúc:"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     />
@@ -119,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12/12/2023"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textColor="@color/black"
                     />
             </LinearLayout>
