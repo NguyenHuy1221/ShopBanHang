@@ -41,7 +41,7 @@ public class TrangChuActivity extends AppCompatActivity {
     private RecyclerView.Adapter sanPhamMainAdapter;
     private List<ThuongHieu> mThuongHieu;
     private Context context = this;
-    private LinearLayout Lme;
+    private LinearLayout Lme,next_gio_hang;
 
 
 
@@ -55,18 +55,21 @@ public class TrangChuActivity extends AppCompatActivity {
         sendCategoryFirebase();
         sendProductsFirebase();
 
-        Lme.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TrangChuActivity.this, Trang_Ca_Nhan.class);
-                startActivity(intent);
-            }
+        Lme.setOnClickListener(v -> {
+            Intent intent = new Intent(TrangChuActivity.this, Trang_Ca_Nhan.class);
+            startActivity(intent);
+        });
+
+        next_gio_hang.setOnClickListener(v -> {
+            Intent intent = new Intent(TrangChuActivity.this,Gio_Hang.class);
+            startActivity(intent);
         });
 
     }
 
     public void anhxa(){
         Lme = findViewById(R.id.Lme);
+        next_gio_hang = findViewById(R.id.next_gio_hang);
         viewPager2 = findViewById(R.id.viewpagerSlider);
         recyclerViewCategory = findViewById(R.id.rcy_category);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));

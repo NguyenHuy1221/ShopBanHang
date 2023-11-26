@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SanPham {
+    private long timestamp;
     private int masp;
     private String tensp;
+    private int soluongnhap;
+    private int soluongban;
     private double gianhap;
     private double giaban;
     private String thuonghieu;
@@ -23,9 +26,12 @@ public class SanPham {
 
     }
 
-    public SanPham(int masp, String tensp, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet) {
+    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet) {
+        this.timestamp = timestamp;
         this.masp = masp;
         this.tensp = tensp;
+        this.soluongnhap = soluongnhap;
+        this.soluongban = soluongban;
         this.gianhap = gianhap;
         this.giaban = giaban;
         this.thuonghieu = thuonghieu;
@@ -35,19 +41,6 @@ public class SanPham {
         this.ghichu = ghichu;
         this.imageUrl = imageUrl;
         this.urlChiTiet = urlChiTiet;
-    }
-
-    public SanPham(int masp, String tensp, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl) {
-        this.masp = masp;
-        this.tensp = tensp;
-        this.gianhap = gianhap;
-        this.giaban = giaban;
-        this.thuonghieu = thuonghieu;
-        this.mausp = mausp;
-        this.sizesp = sizesp;
-        this.trangthai = trangthai;
-        this.ghichu = ghichu;
-        this.imageUrl = imageUrl;
     }
 
     public int getMasp() {
@@ -64,6 +57,22 @@ public class SanPham {
 
     public void setTensp(String tensp) {
         this.tensp = tensp;
+    }
+
+    public int getSoluongnhap() {
+        return soluongnhap;
+    }
+
+    public void setSoluongnhap(int soluongnhap) {
+        this.soluongnhap = soluongnhap;
+    }
+
+    public int getSoluongban() {
+        return soluongban;
+    }
+
+    public void setSoluongban(int soluongban) {
+        this.soluongban = soluongban;
     }
 
     public double getGianhap() {
@@ -130,12 +139,40 @@ public class SanPham {
         this.imageUrl = imageUrl;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public List<String> getUrlChiTiet() {
         return urlChiTiet;
     }
 
     public void setUrlChiTiet(List<String> urlChiTiet) {
         this.urlChiTiet = urlChiTiet;
+    }
+
+
+
+    // Phương thức để cập nhật số lượng sau khi bán hàng
+    public void sell(int soluong) {
+        if (soluong <= soluongnhap) {
+            soluongnhap -= soluong;
+            soluongban += soluong;
+            System.out.println("Đã bán " + soluong + " sản phẩm '" + tensp + "'.");
+        } else {
+            System.out.println("Không đủ số lượng trong kho để bán.");
+        }
+    }
+
+
+    // Phương thức để cập nhật số lượng sau khi nhập hàng vào kho
+    public void restock(int soluong) {
+        soluongban += soluong;
+        System.out.println("Đã nhập thêm " + soluong + " sản phẩm '" + tensp + "' vào kho.");
     }
 
     public Map<String, Object> toMap(){

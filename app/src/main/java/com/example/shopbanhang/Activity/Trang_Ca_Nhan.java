@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.example.shopbanhang.R;
 public class Trang_Ca_Nhan extends AppCompatActivity {
     TextView sanpham,taikhoan,hoadon,doanhthu,khuyenmai,lichsumua,thongtinchitiet,doimatkhau;
     LinearLayout trangchu,yeuthich,giohang;
+    Button backBtn;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +26,16 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         hoadon = findViewById(R.id.GO_qlhd);
         doanhthu = findViewById(R.id.GO_qldt);
         khuyenmai = findViewById(R.id.GO_qlkm);
-        trangchu = findViewById(R.id.GO_trangchu);
-        yeuthich = findViewById(R.id.GO_yeuthich);
-        giohang = findViewById(R.id.GO_giohang);
+        backBtn = findViewById(R.id.backBtn);
 
-        sanpham.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Trang_Ca_Nhan.this, QuanLySanPhamActivity.class);
-                startActivity(intent);
-            }
+        backBtn.setOnClickListener(v -> finish());
+//        trangchu = findViewById(R.id.GO_trangchu);
+//        yeuthich = findViewById(R.id.GO_yeuthich);
+//        giohang = findViewById(R.id.GO_giohang);
+
+        sanpham.setOnClickListener(v -> {
+            Intent intent = new Intent(Trang_Ca_Nhan.this, QuanLySanPhamActivity.class);
+            startActivity(intent);
         });
 
         taikhoan.setOnClickListener(new View.OnClickListener() {
@@ -70,13 +72,13 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
 
 
 
-        trangchu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Trang_Ca_Nhan.this, TrangChuActivity.class);
-                startActivity(intent);
-            }
-        });
+//        trangchu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Trang_Ca_Nhan.this, TrangChuActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 //        yeuthich.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -84,13 +86,13 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
-        giohang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Trang_Ca_Nhan.this, Gio_Hang.class);
-                startActivity(intent);
-            }
-        });
+//        giohang.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Trang_Ca_Nhan.this, Gio_Hang.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
     }

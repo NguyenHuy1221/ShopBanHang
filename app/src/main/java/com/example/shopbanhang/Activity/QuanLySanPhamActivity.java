@@ -39,6 +39,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,9 +59,11 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class QuanLySanPhamActivity extends AppCompatActivity {
 
@@ -145,10 +149,11 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
 
 
     private void addProducts() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_them_san_pham,null);
-        builder.setView(view);
-        AlertDialog dialog = builder.create();
+
+        BottomSheetDialog dialog;
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_them_san_pham, null);
+        dialog = new BottomSheetDialog(context);
+        dialog.setContentView(view);
         dialog.show();
 
 
@@ -156,6 +161,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         ImageView img_ct = view.findViewById(R.id.image_ct);
         EditText edt_masp = view.findViewById(R.id.edt_ma_sp);
         EditText edt_tensp = view.findViewById(R.id.edt_ten_sp);
+        EditText edt_so_luong_sp = view.findViewById(R.id.edt_so_luong);
         EditText edt_gia_nhap = view.findViewById(R.id.edt_gia_sp);
         EditText edt_gia_ban = view.findViewById(R.id.edt_gia_ban_sp);
         Spinner spn_loaisp = view.findViewById(R.id.spn_loai_sp);
@@ -217,6 +223,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String masp = edt_masp.getText().toString().trim();
                 String tensp = edt_tensp.getText().toString().trim();
+                String solgspString  = edt_so_luong_sp.getText().toString().trim();
                 String gianhap = (edt_gia_nhap.getText().toString().trim());
                 String giaban = (edt_gia_ban.getText().toString().trim());
                 String loaisp = spn_loaisp.getSelectedItem().toString();
@@ -225,7 +232,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                 String trangthaisp = spn_trang_thai.getSelectedItem().toString();
                 String ghichu = edt_ghi_chu.getText().toString().trim();
 
-                if (masp.isEmpty() || tensp.isEmpty() || gianhap.isEmpty() || giaban.isEmpty() ||
+                if (masp.isEmpty() || tensp.isEmpty() || solgspString.isEmpty() || gianhap.isEmpty() || giaban.isEmpty() ||
                         loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
                     Toast.makeText(context, "Chưa nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
                 }else {
@@ -239,17 +246,17 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                             return;
                         }
                     }
-                    uploadSanPhamToFirebase(mImageUri,Integer.parseInt(masp),tensp,Integer.parseInt(gianhap),Integer.parseInt(giaban),loaisp,mausp,sizesp,trangthaisp,ghichu);
+                    int solgsp;
+                    solgsp = Integer.parseInt(solgspString);
+//                    uploadSanPhamToFirebase(mImageUri,Integer.parseInt(masp),tensp,Integer.parseInt(solgsp),Integer.parseInt(gianhap),Integer.parseInt(giaban),loaisp,mausp,sizesp,trangthaisp,ghichu);
+                    uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
+
                 }
 
             }
         });
 
-
-
     }
-
-
 
     private void oppenFile() {
         Intent intent = new Intent();
@@ -315,32 +322,159 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadSanPhamToFirebase(Uri mImageUri,int masp,String tensp,double gianhap,double giaban,String thuonghieu,String mau, String size,String trangthai,String ghichu){
+//    private void uploadSanPhamToFirebase(Uri mImageUri,int masp,String tensp,int solgsp,double gianhap,double giaban,String thuonghieu,String mau, String size,String trangthai,String ghichu,List<Uri> uriList){
+//        FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
+//        ProgressDialog progressDialog = ProgressDialog.show(context, "Chờ Chút", "Đang tải sản phẩm...", true);
+//
+//        imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        SanPhamDAO sanPhamDAO = new SanPhamDAO();
+////                        sanPhamDAO.insertProducts(new SanPham(masp,tensp,gianhap,giaban,thuonghieu,mau,size,trangthai,ghichu,uri.toString()));
+//                        progressDialog.dismiss();
+//                    }
+//                });
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(context, "Thêm sản phẩm không thành công", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+//    private void uploadSanPhamToFirebase(Uri mImageUri, int masp, String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu, String mau, String size, String trangthai, String ghichu, List<Uri> uriList) {
+//        FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
+//        ProgressDialog progressDialog = ProgressDialog.show(context, "Chờ Chút", "Đang tải sản phẩm...", true);
+//
+//        imageRef.putFile(mImageUri).addOnSuccessListener(taskSnapshot -> {
+//            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+//                // Hình chính đã được tải lên, bây giờ ta cần tải lên các hình chi tiết
+//                List<String> urlList = new ArrayList<>(); // Danh sách URL của các hình chi tiết
+//
+//                // Sử dụng CountDownLatch để đồng bộ việc tải lên nhiều hình ảnh
+//                CountDownLatch latch = new CountDownLatch(uriList.size());
+//
+//                // Tải lên từng hình chi tiết và lấy URL
+//                for (Uri uriChiTiet : uriList) {
+//                    StorageReference chiTietRef = storageRef.child(System.currentTimeMillis() + "_CT.PNG");
+//
+//                    chiTietRef.putFile(uriChiTiet).addOnSuccessListener(chiTietTaskSnapshot -> {
+//                        chiTietRef.getDownloadUrl().addOnSuccessListener(uriChiTietDownload -> {
+//                            urlList.add(uriChiTietDownload.toString());
+//                            latch.countDown(); // Đánh dấu là một tác vụ đã hoàn thành
+//                        });
+//                    }).addOnFailureListener(e -> {
+//                        Toast.makeText(context, "Thêm hình chi tiết không thành công", Toast.LENGTH_SHORT).show();
+//                        latch.countDown();
+//                    });
+//                }
+//
+//                // Đợi tất cả các tác vụ tải lên hình chi tiết hoàn thành
+//                try {
+//                    latch.await();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                // Sau khi tất cả các hình chi tiết đã được tải lên, ta có thể thêm sản phẩm vào Firebase
+//                SanPhamDAO sanPhamDAO = new SanPhamDAO();
+//                SanPham sanPham = new SanPham(
+//                        System.currentTimeMillis(),
+//                        masp,
+//                        tensp,
+//                        solgsp,
+//                        solgban,
+//                        gianhap,
+//                        giaban,
+//                        thuonghieu,
+//                        mau,
+//                        size,
+//                        trangthai,
+//                        ghichu,
+//                        uri.toString(),
+//                        urlList // Danh sách URL chi tiết
+//                );
+//                sanPhamDAO.insertProducts(sanPham);
+//                progressDialog.dismiss();
+//            });
+//        }).addOnFailureListener(e -> {
+//            Toast.makeText(context, "Thêm sản phẩm không thành công", Toast.LENGTH_SHORT).show();
+//            progressDialog.dismiss();
+//        });
+//    }
+
+    private void uploadSanPhamToFirebase(Uri mImageUri, int masp, String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu, String mau, String size, String trangthai, String ghichu, List<Uri> uriList) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
         ProgressDialog progressDialog = ProgressDialog.show(context, "Chờ Chút", "Đang tải sản phẩm...", true);
 
-        imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        SanPhamDAO sanPhamDAO = new SanPhamDAO();
-                        sanPhamDAO.insertProducts(new SanPham(masp,tensp,gianhap,giaban,thuonghieu,mau,size,trangthai,ghichu,uri.toString()));
-                        progressDialog.dismiss();
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "Thêm sản phẩm không thành công", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+        // Tải lên hình chính
+        imageRef.putFile(mImageUri)
+                .continueWithTask(taskSnapshot -> imageRef.getDownloadUrl())
+                .addOnSuccessListener(uri -> {
 
+                    // Sử dụng CountDownLatch để đồng bộ việc tải lên nhiều hình ảnh
+                    CountDownLatch latch = new CountDownLatch(uriList.size());
+                    // Tạo danh sách URL của các hình chi tiết
+                    List<String> urlList = new ArrayList<>();
+                    // Tải lên từng hình chi tiết và lấy URL
+                    for (Uri uriChiTiet : uriList) {
+                        StorageReference chiTietRef = storageRef.child(System.currentTimeMillis() + "_CT.PNG");
+
+                        chiTietRef.putFile(uriChiTiet)
+                                .continueWithTask(chiTietTaskSnapshot -> chiTietRef.getDownloadUrl())
+                                .addOnSuccessListener(uriChiTietDownload -> {
+                                    urlList.add(uriChiTietDownload.toString());
+                                    latch.countDown(); // Đánh dấu là một tác vụ đã hoàn thành
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Thêm hình chi tiết không thành công", Toast.LENGTH_SHORT).show();
+                                    latch.countDown();
+                                });
+                    }
+
+                    // Đợi tất cả các tác vụ tải lên hình chi tiết hoàn thành
+                    new Thread(() -> {
+                        try {
+                            latch.await();
+                            SanPhamDAO sanPhamDAO = new SanPhamDAO();
+                            SanPham sanPham = new SanPham(
+                                    System.currentTimeMillis(),
+                                    masp,
+                                    tensp,
+                                    solgsp,
+                                    solgban,
+                                    gianhap,
+                                    giaban,
+                                    thuonghieu,
+                                    mau,
+                                    size,
+                                    trangthai,
+                                    ghichu,
+                                    uri.toString(),
+                                    urlList
+                            );
+                            sanPhamDAO.insertProducts(sanPham);
+                            progressDialog.dismiss();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Thêm sản phẩm không thành công", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                });
+    }
 
 
 
