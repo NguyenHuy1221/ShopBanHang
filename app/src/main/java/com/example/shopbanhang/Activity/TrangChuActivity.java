@@ -9,9 +9,11 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.CategoryMainAdapter;
@@ -39,6 +41,7 @@ public class TrangChuActivity extends AppCompatActivity {
     private RecyclerView.Adapter sanPhamMainAdapter;
     private List<ThuongHieu> mThuongHieu;
     private Context context = this;
+    private LinearLayout Lme;
 
 
 
@@ -52,9 +55,18 @@ public class TrangChuActivity extends AppCompatActivity {
         sendCategoryFirebase();
         sendProductsFirebase();
 
+        Lme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TrangChuActivity.this, Trang_Ca_Nhan.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void anhxa(){
+        Lme = findViewById(R.id.Lme);
         viewPager2 = findViewById(R.id.viewpagerSlider);
         recyclerViewCategory = findViewById(R.id.rcy_category);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
