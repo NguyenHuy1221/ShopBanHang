@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.example.shopbanhang.R;
 
 public class Trang_Ca_Nhan extends AppCompatActivity {
-    TextView sanpham,taikhoan,hoadon,doanhthu,khuyenmai,lichsumua,thongtinchitiet,doimatkhau;
+    TextView sanpham,taikhoan,hoadon,doanhthu,khuyenmai,lichsumua,thongtinchitiet,doimatkhau,dangxuat;
     LinearLayout trangchu,yeuthich,giohang;
     ImageView backBtn;
     @SuppressLint("WrongViewCast")
@@ -28,6 +28,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         doanhthu = findViewById(R.id.GO_qldt);
         khuyenmai = findViewById(R.id.GO_qlkm);
         backBtn = findViewById(R.id.backBtn);
+        dangxuat = findViewById(R.id.GO_dangxuat);
 
         backBtn.setOnClickListener(v -> finish());
 //        trangchu = findViewById(R.id.GO_trangchu);
@@ -67,6 +68,13 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Trang_Ca_Nhan.this, quan_ly_khuyen_mai.class);
+                startActivity(intent);
+            }
+        });
+        dangxuat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
