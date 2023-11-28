@@ -2,6 +2,9 @@ package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shopbanhang.Adapter.HienThiChiTietMain;
+import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -23,21 +28,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class ChiTietSanPhamActivity extends AppCompatActivity {
 
     private ImageView imgPic, imgback;
     private TextView txtName, txtPrice, txtTitle;
     private Button btnadd;
     private Context context = this;
-
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
-
+    private RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
         anhXa();
         getIntentSanPham();
+
     }
 
     private void anhXa() {
@@ -45,6 +51,8 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         txtName = findViewById(R.id.titleTxt);
         txtPrice = findViewById(R.id.priceTxt);
         txtTitle = findViewById(R.id.moTaTxt);
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         imgback = findViewById(R.id.backBtn);
         imgback.setOnClickListener(v -> finish());
         btnadd = findViewById(R.id.btnAdd);
@@ -57,6 +65,16 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String ghiChu = intent.getStringExtra("ghichu");
         String imageUrl = intent.getStringExtra("imageUrl");
+
+        if (intent.hasExtra("urlChiTiet")) {
+            List<String> anhChiTiet = getIntent().getStringArrayListExtra("urlChiTiet");
+            if (anhChiTiet != null && !anhChiTiet.isEmpty()) {
+                HienThiChiTietMain adapter = new HienThiChiTietMain(context,anhChiTiet);
+                recyclerView.setAdapter(adapter);
+            }
+        }else {
+
+        }
 
         txtName.setText(tenSP);
         txtPrice.setText(giaban + " VND ");

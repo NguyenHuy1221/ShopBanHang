@@ -20,6 +20,9 @@ public class SanPham {
     private String ghichu;
     private String imageUrl;
     private List<String> urlChiTiet;
+    private List<String> nhieusize;
+    private List<String> nhieumau;
+    private List<Integer> nhieusoluong;
 
 
     public SanPham() {
@@ -41,6 +44,26 @@ public class SanPham {
         this.ghichu = ghichu;
         this.imageUrl = imageUrl;
         this.urlChiTiet = urlChiTiet;
+    }
+
+    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet, List<String> nhieusize, List<String> nhieumau, List<Integer> nhieusoluong) {
+        this.timestamp = timestamp;
+        this.masp = masp;
+        this.tensp = tensp;
+        this.soluongnhap = soluongnhap;
+        this.soluongban = soluongban;
+        this.gianhap = gianhap;
+        this.giaban = giaban;
+        this.thuonghieu = thuonghieu;
+        this.mausp = mausp;
+        this.sizesp = sizesp;
+        this.trangthai = trangthai;
+        this.ghichu = ghichu;
+        this.imageUrl = imageUrl;
+        this.urlChiTiet = urlChiTiet;
+        this.nhieusize = nhieusize;
+        this.nhieumau = nhieumau;
+        this.nhieusoluong = nhieusoluong;
     }
 
     public int getMasp() {
@@ -155,38 +178,50 @@ public class SanPham {
         this.urlChiTiet = urlChiTiet;
     }
 
-
-
-    // Phương thức để cập nhật số lượng sau khi bán hàng
-    public void sell(int soluong) {
-        if (soluong <= soluongnhap) {
-            soluongnhap -= soluong;
-            soluongban += soluong;
-            System.out.println("Đã bán " + soluong + " sản phẩm '" + tensp + "'.");
-        } else {
-            System.out.println("Không đủ số lượng trong kho để bán.");
-        }
+    public List<String> getNhieusize() {
+        return nhieusize;
     }
 
-
-    // Phương thức để cập nhật số lượng sau khi nhập hàng vào kho
-    public void restock(int soluong) {
-        soluongban += soluong;
-        System.out.println("Đã nhập thêm " + soluong + " sản phẩm '" + tensp + "' vào kho.");
+    public void setNhieusize(List<String> nhieusize) {
+        this.nhieusize = nhieusize;
     }
 
-    public Map<String, Object> toMap(){
-        HashMap<String,Object> result = new HashMap<>();
-        result.put("tensp",tensp);
-        result.put("gianhap",gianhap);
-        result.put("giaban",giaban);
-        result.put("thuonghieu",thuonghieu);
-        result.put("mausp",mausp);
-        result.put("sizesp",sizesp);
-        result.put("trangthai",trangthai);
-        result.put("ghichu",ghichu);
-        result.put("imageUrl",imageUrl);
+    public List<String> getNhieumau() {
+        return nhieumau;
+    }
 
+    public void setNhieumau(List<String> nhieumau) {
+        this.nhieumau = nhieumau;
+    }
+
+    public List<Integer> getNhieusoluong() {
+        return nhieusoluong;
+    }
+
+    public void setNhieusoluong(List<Integer> nhieusoluong) {
+        this.nhieusoluong = nhieusoluong;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("timestamp", timestamp);
+        result.put("masp", masp);
+        result.put("tensp", tensp);
+        result.put("soluongnhap", soluongnhap);
+        result.put("soluongban", soluongban);
+        result.put("gianhap", gianhap);
+        result.put("giaban", giaban);
+        result.put("thuonghieu", thuonghieu);
+        result.put("mausp", mausp);
+        result.put("sizesp", sizesp);
+        result.put("trangthai", trangthai);
+        result.put("ghichu", ghichu);
+        result.put("imageUrl", imageUrl);
+        result.put("urlChiTiet", urlChiTiet);
+        result.put("nhieusize", nhieusize);
+        result.put("nhieumau", nhieumau);
+        result.put("nhieusoluong", nhieusoluong);
         return result;
     }
+
 }
