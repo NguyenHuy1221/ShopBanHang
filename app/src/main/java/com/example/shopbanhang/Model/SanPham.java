@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SanPham {
+    private long timestamp;
     private int masp;
     private String tensp;
+    private int soluongnhap;
+    private int soluongban;
     private double gianhap;
     private double giaban;
     private String thuonghieu;
@@ -17,15 +20,21 @@ public class SanPham {
     private String ghichu;
     private String imageUrl;
     private List<String> urlChiTiet;
+    private List<String> nhieusize;
+    private List<String> nhieumau;
+    private List<Integer> nhieusoluong;
 
 
     public SanPham() {
 
     }
 
-    public SanPham(int masp, String tensp, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet) {
+    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet) {
+        this.timestamp = timestamp;
         this.masp = masp;
         this.tensp = tensp;
+        this.soluongnhap = soluongnhap;
+        this.soluongban = soluongban;
         this.gianhap = gianhap;
         this.giaban = giaban;
         this.thuonghieu = thuonghieu;
@@ -37,9 +46,12 @@ public class SanPham {
         this.urlChiTiet = urlChiTiet;
     }
 
-    public SanPham(int masp, String tensp, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl) {
+    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet, List<String> nhieusize, List<String> nhieumau, List<Integer> nhieusoluong) {
+        this.timestamp = timestamp;
         this.masp = masp;
         this.tensp = tensp;
+        this.soluongnhap = soluongnhap;
+        this.soluongban = soluongban;
         this.gianhap = gianhap;
         this.giaban = giaban;
         this.thuonghieu = thuonghieu;
@@ -48,6 +60,10 @@ public class SanPham {
         this.trangthai = trangthai;
         this.ghichu = ghichu;
         this.imageUrl = imageUrl;
+        this.urlChiTiet = urlChiTiet;
+        this.nhieusize = nhieusize;
+        this.nhieumau = nhieumau;
+        this.nhieusoluong = nhieusoluong;
     }
 
     public int getMasp() {
@@ -64,6 +80,22 @@ public class SanPham {
 
     public void setTensp(String tensp) {
         this.tensp = tensp;
+    }
+
+    public int getSoluongnhap() {
+        return soluongnhap;
+    }
+
+    public void setSoluongnhap(int soluongnhap) {
+        this.soluongnhap = soluongnhap;
+    }
+
+    public int getSoluongban() {
+        return soluongban;
+    }
+
+    public void setSoluongban(int soluongban) {
+        this.soluongban = soluongban;
     }
 
     public double getGianhap() {
@@ -130,6 +162,14 @@ public class SanPham {
         this.imageUrl = imageUrl;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public List<String> getUrlChiTiet() {
         return urlChiTiet;
     }
@@ -138,18 +178,50 @@ public class SanPham {
         this.urlChiTiet = urlChiTiet;
     }
 
-    public Map<String, Object> toMap(){
-        HashMap<String,Object> result = new HashMap<>();
-        result.put("tensp",tensp);
-        result.put("gianhap",gianhap);
-        result.put("giaban",giaban);
-        result.put("thuonghieu",thuonghieu);
-        result.put("mausp",mausp);
-        result.put("sizesp",sizesp);
-        result.put("trangthai",trangthai);
-        result.put("ghichu",ghichu);
-        result.put("imageUrl",imageUrl);
+    public List<String> getNhieusize() {
+        return nhieusize;
+    }
 
+    public void setNhieusize(List<String> nhieusize) {
+        this.nhieusize = nhieusize;
+    }
+
+    public List<String> getNhieumau() {
+        return nhieumau;
+    }
+
+    public void setNhieumau(List<String> nhieumau) {
+        this.nhieumau = nhieumau;
+    }
+
+    public List<Integer> getNhieusoluong() {
+        return nhieusoluong;
+    }
+
+    public void setNhieusoluong(List<Integer> nhieusoluong) {
+        this.nhieusoluong = nhieusoluong;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("timestamp", timestamp);
+        result.put("masp", masp);
+        result.put("tensp", tensp);
+        result.put("soluongnhap", soluongnhap);
+        result.put("soluongban", soluongban);
+        result.put("gianhap", gianhap);
+        result.put("giaban", giaban);
+        result.put("thuonghieu", thuonghieu);
+        result.put("mausp", mausp);
+        result.put("sizesp", sizesp);
+        result.put("trangthai", trangthai);
+        result.put("ghichu", ghichu);
+        result.put("imageUrl", imageUrl);
+        result.put("urlChiTiet", urlChiTiet);
+        result.put("nhieusize", nhieusize);
+        result.put("nhieumau", nhieumau);
+        result.put("nhieusoluong", nhieusoluong);
         return result;
     }
+
 }

@@ -11,7 +11,7 @@
         android:layout_marginTop="90dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="Đăng nhập"
         android:textColor="@color/black"
         android:textSize="35sp"
         android:layout_marginLeft="25dp"
@@ -46,68 +46,71 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="Mật khẩu"
             android:inputType="textPassword"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/txtquenmk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_margin="20dp"
-        android:text="Forgot your password?"
+        android:text="Quên mật khẩu?"
         tools:ignore="ExtraText" />
 
     <Button
+        android:id="@+id/btnlogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="25dp"
         android:backgroundTint="#DB3022"
-        android:text="LOGIN"
+        android:text="Đăng nhập"
         android:textSize="17sp"
         android:textStyle="normal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+<!--    <TextView-->
+<!--        android:id="@+id/txtdangky"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
 
-        android:layout_margin="20dp"
-        android:text="Or sign up with social account"
-        tools:ignore="ExtraText" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-        <LinearLayout
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:layout_margin="20dp"
-            android:background="@drawable/custom_logo"
-            >
-            <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/logoface"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="20dp"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:background="@drawable/custom_logo"
-            >
-            <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/logogg"/>
-        </LinearLayout>
+<!--        android:layout_margin="20dp"-->
+<!--        android:text="Or sign up with social account"-->
+<!--        tools:ignore="ExtraText" />-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:background="@drawable/custom_logo"-->
+<!--            >-->
+<!--            <ImageButton-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:background="@drawable/logoface"/>-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:gravity="center"-->
+<!--            android:background="@drawable/custom_logo"-->
+<!--            >-->
+<!--            <ImageButton-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:background="@drawable/logogg"/>-->
+<!--        </LinearLayout>-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 
 </LinearLayout>
