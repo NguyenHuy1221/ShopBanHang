@@ -7,17 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.service.controls.actions.FloatAction;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import com.example.shopbanhang.Adapter.KhuyenMaiAdapter;
 import com.example.shopbanhang.Adapter.TaiKhoanAdapter;
-import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
