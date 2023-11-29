@@ -17,6 +17,7 @@ import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.ViewHodel> {
@@ -53,6 +54,10 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
                 intent.putExtra("giaban",sanPham.getGiaban());
                 intent.putExtra("ghichu",sanPham.getGhichu());
                 intent.putExtra("imageUrl",sanPham.getImageUrl());
+                List<String> urlChiTiet = sanPham.getUrlChiTiet();
+                if (urlChiTiet!= null){
+                    intent.putStringArrayListExtra("urlChiTiet",new ArrayList<>(urlChiTiet));
+                }
                 holder.itemView.getContext().startActivity(intent);
             }
         });

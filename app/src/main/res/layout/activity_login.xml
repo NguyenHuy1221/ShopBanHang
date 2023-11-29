@@ -52,6 +52,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/txtquenmk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -60,6 +61,7 @@
         tools:ignore="ExtraText" />
 
     <Button
+        android:id="@+id/btnlogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
@@ -71,6 +73,7 @@
         android:textStyle="normal" />
 
     <TextView
+        android:id="@+id/txtdangky"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

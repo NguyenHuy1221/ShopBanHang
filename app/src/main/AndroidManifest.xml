@@ -16,16 +16,19 @@
         android:theme="@style/Theme.ShopBanHang"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.ThemSanPhamActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Trang_Ca_Nhan"
             android:exported="false" />
         <activity
             android:name=".Activity.ChiTietSanPhamActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.QuanLySanPhamActivity"
+            android:name=".Activity.TrangChuActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+            android:name=".Activity.QuanLyTaiKhoanActivity"
             android:exported="false" />
         <activity
             android:name=".DialogThemTaiKhoanActivity"
@@ -40,17 +43,16 @@
             android:name=".Activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".Activity.QuanLyKhoActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.QuanLyKhoActivity"
+            android:name=".Activity.Gio_Hang"
             android:exported="false" />
         <activity
             android:name=".Activity.ThuongHieuActivity"
             android:exported="false" />
         <activity
-
-            android:name=".Activity.QuanLyTaiKhoanActivity"
+            android:name=".Activity.QuanLySanPhamActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

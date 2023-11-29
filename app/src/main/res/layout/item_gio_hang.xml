@@ -2,6 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="120dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="15dp"
     android:orientation="horizontal"
@@ -15,6 +17,7 @@
         >
 
         <ImageView
+            android:id="@+id/img_pic_gh"
             android:scaleType="centerCrop"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -27,9 +30,11 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="vertical"
+            android:background="#FFDFEA"
             >
 
             <TextView
+                android:id="@+id/txt_ten_gh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tên"
@@ -51,6 +56,7 @@
                     android:layout_marginLeft="18dp"
                     />
                 <TextView
+                    android:id="@+id/txt_mau_gh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Màu"
@@ -69,6 +75,7 @@
                     android:layout_marginLeft="18dp"
                     />
                 <TextView
+                    android:id="@+id/txt_size_gh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="L"
@@ -86,46 +93,54 @@
                 >
 
 
-                <TextView
-                    android:id="@+id/apart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="40sp"
-                    android:text="-"
-                    android:textStyle="bold"
-
-                    />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/txtSoLuongSanPham"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="40sp"
-                    android:text="1"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:textColor="@color/red"
-                    />
-
-                <TextView
-                    android:id="@+id/add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="40sp"
+                    android:id="@+id/tvCong"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/hinh_tron_background"
+                    android:gravity="center"
                     android:text="+"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvtru"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/hinh_tron_background"
+                    android:gravity="center"
+                    android:text="-"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
-                    />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvSo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tvCong"
+                    app:layout_constraintStart_toEndOf="@+id/tvtru"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
-
-
-
-
         </LinearLayout>
-
     </LinearLayout>
-
-
-
-
 </androidx.cardview.widget.CardView>
