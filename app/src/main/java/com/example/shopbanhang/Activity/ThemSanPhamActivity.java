@@ -29,6 +29,7 @@ import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.SanPhamDAO;
 import com.example.shopbanhang.Model.ChiTietSanPham;
+import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
@@ -47,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 public class ThemSanPhamActivity extends AppCompatActivity {
@@ -150,6 +152,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 newLinearLayout.addView(editTextSoLuong);
                 newLinearLayout.addView(btnXoa);
 
+
                 // Tạo một tag duy nhất cho newLinearLayout
                 String uniqueTag = "layout_" + System.currentTimeMillis();
 
@@ -179,6 +182,22 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
                 sizeLayout.addView(newLinearLayout);
 
+
+                String masp2 = edt_masp.getText().toString().trim();
+                String sizesp2 = spinnerSize.getSelectedItem().toString();
+                String mausp2 = spinnerMau.getSelectedItem().toString();
+                String soluongString = editTextSoLuong.getText().toString().trim();
+
+
+                int soluong2 = -1;
+                if (soluongString.isEmpty()) { soluong2 = 0; Toast.makeText(ThemSanPhamActivity.this, "Vui lòng nhập số lượng", Toast.LENGTH_SHORT).show(); }
+                else { soluong2 = Integer.parseInt(soluongString); }
+                if (soluong2 >-1) {
+//                    String id = UUID.randomUUID().toString();
+//                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
+//                    pushData(chiTietSanPham);
+
+                }
             }
         });
     }
@@ -281,6 +300,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     }
                     int solgsp;
                     solgsp = Integer.parseInt(solgspString);
+//                    String id = UUID.randomUUID().toString();
+//                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
+//                    pushData(chiTietSanPham);
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
 
                 }
@@ -374,5 +396,16 @@ public class ThemSanPhamActivity extends AppCompatActivity {
             mImageUri = data.getData();
             Picasso.get().load(mImageUri).into(img_chinh);
         }
+
+
     }
+
+//    private void pushData(ChiTietSanPham chiTietSanPham) {
+//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+//        DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
+//
+//        String pathObj = chiTietSanPham.getIdchitietsanpham();
+//        databaseReference.child(pathObj).setValue(chiTietSanPham);
+//
+//    }
 }

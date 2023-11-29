@@ -1,24 +1,34 @@
 package com.example.shopbanhang.Model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ChiTietSanPham {
 
+    private String idchitietsanpham;
     private int masp;
-    private List<String> urlImages;
+    private String kichco;
+    private String mau;
+    private int soluong;
 
 
     public ChiTietSanPham () {
 
     }
 
-
-    public ChiTietSanPham(int masp, List<String> urlImages) {
+    public ChiTietSanPham(String idchitietsanpham, int masp, String kichco, String mau, int soluong) {
+        this.idchitietsanpham = idchitietsanpham;
         this.masp = masp;
-        this.urlImages = urlImages;
+        this.kichco = kichco;
+        this.mau = mau;
+        this.soluong = soluong;
+    }
+
+    public String getIdchitietsanpham() {
+        return idchitietsanpham;
+    }
+
+    public void setIdchitietsanpham(String idchitietsanpham) {
+        this.idchitietsanpham = idchitietsanpham;
     }
 
     public int getMasp() {
@@ -29,11 +39,41 @@ public class ChiTietSanPham {
         this.masp = masp;
     }
 
-    public List<String> getUrlImages() {
-        return urlImages;
+    public String getKichco() {
+        return kichco;
     }
 
-    public void setUrlImages(List<String> urlImages) {
-        this.urlImages = urlImages;
+    public void setKichco(String kichco) {
+        this.kichco = kichco;
     }
+
+    public String getMau() {
+        return mau;
+    }
+
+    public void setMau(String mau) {
+        this.mau = mau;
+    }
+
+    public int getSoluong() {
+        return soluong;
+    }
+
+    public void setSoluong(int soluong) {
+        this.soluong = soluong;
+    }
+
+
+    public HashMap<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("idchitietsanpham",idchitietsanpham);
+        result.put("masp",masp);
+        result.put("kichco",kichco);
+        result.put("mau",mau);
+        result.put("soluong",soluong);
+        return result;
+    }
+
+
+
 }

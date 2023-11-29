@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         button = findViewById(R.id.btnlogin);
-        dangky = findViewById(R.id.txtdangky);
+//        dangky = findViewById(R.id.txtdangky);
         quenmatkhau = findViewById(R.id.txtquenmk);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,13 +30,13 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        dangky.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(intent);
-            }
-        });
+//        dangky.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         quenmatkhau.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
