@@ -49,6 +49,7 @@ TaiKhoanAdapter TaiKhoanAdapter;
         list.add(new TaiKhoan("1","@drawable/h1.jpg","ngoquoctuan","123"));
         list.add(new TaiKhoan("2","@drawable/h1.jpg","hoduchau","123"));
         list.add(new TaiKhoan("3","@drawable/h1.jpg","phanhuythanh","123"));
+        list.add(new TaiKhoan("4","@drawable/h1.jpg","nguyenquanghuy","123"));
         return list;
     }
 
