@@ -31,7 +31,7 @@
             android:name=".DialogThemTaiKhoanActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.quan_ly_khuyen_mai"
+            android:name=".Activity.TrangChuActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.ForgotpwActivity"
@@ -49,7 +49,7 @@
             android:name=".Activity.ThuongHieuActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+             android:name=".Activity.quan_ly_khuyen_mai"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

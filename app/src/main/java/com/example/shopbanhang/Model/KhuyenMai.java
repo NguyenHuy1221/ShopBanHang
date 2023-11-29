@@ -1,5 +1,7 @@
 package com.example.shopbanhang.Model;
 
+import java.util.HashMap;
+
 public class KhuyenMai {
     private String idKhuyenMai;
     private String imgKhuyenMai;
@@ -67,5 +69,15 @@ public class KhuyenMai {
 
     public void setPhanTramKhuyenMai(String phanTramKhuyenMai) {
         this.phanTramKhuyenMai = phanTramKhuyenMai;
+    }
+
+    public HashMap<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("imgKhuyenMai",imgKhuyenMai);
+        result.put("tenKhuyenMai",tenKhuyenMai);
+        result.put("ngayBatDau",ngayBatDau);
+        result.put("ngayKetThuc",ngayKetThuc);
+        result.put("phanTramKhuyenMai",phanTramKhuyenMai);
+        return result;
     }
 }

@@ -29,6 +29,7 @@
             />
 
         <ImageView
+            android:id="@+id/imgAddKM"
             android:layout_width="300dp"
             android:layout_height="200dp"
             android:src="@drawable/no_image"
@@ -47,6 +48,7 @@
             />
 
         <EditText
+            android:id="@+id/txtNameAddKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -62,6 +64,7 @@
             />
 
         <EditText
+            android:id="@+id/txtPhanTramAddKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -77,6 +80,7 @@
             />
 
         <EditText
+            android:id="@+id/txtNgayBatDauAddKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -92,12 +96,14 @@
             />
 
         <EditText
+            android:id="@+id/txtNgayKetThucAddKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             />
 
         <Button
+            android:id="@+id/btnThemKM"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Thêm Khuyến Mãi"

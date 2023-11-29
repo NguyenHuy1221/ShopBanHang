@@ -29,6 +29,7 @@
             />
 
         <ImageView
+            android:id="@+id/imgEditKM"
             android:layout_width="300dp"
             android:layout_height="200dp"
             android:src="@drawable/no_image"
@@ -47,6 +48,7 @@
             />
 
         <EditText
+            android:id="@+id/txtEditTenKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -62,6 +64,7 @@
             />
 
         <EditText
+            android:id="@+id/txtEditPhanTramKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -77,6 +80,7 @@
             />
 
         <EditText
+            android:id="@+id/txtEditNgayBatDauKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -92,12 +96,14 @@
             />
 
         <EditText
+            android:id="@+id/txtEditNgayKetThucKM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             />
 
         <Button
+            android:id="@+id/btnEdit"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Sửa Khuyến Mãi"

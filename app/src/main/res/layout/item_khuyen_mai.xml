@@ -7,6 +7,7 @@
     android:orientation="horizontal"
     android:layout_marginTop="10dp"
     android:layout_marginStart="10dp"
+    android:id="@+id/crdItemKM"
     >
     
     <LinearLayout
@@ -26,8 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-
-                android:background="@color/red"
+                android:src="@drawable/no_image"
                 />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:text="100%"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="#FD2727"
                 />
         </RelativeLayout>
 
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ngày bắt đầu:"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     />
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12/12/2023"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@color/black"
                     />
             </LinearLayout>
@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ngày kết thúc:"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     />
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12/12/2023"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@color/black"
                     />
             </LinearLayout>
@@ -139,6 +139,7 @@
             >
 
             <ImageView
+                android:id="@+id/imgEditKM"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_edit"
