@@ -1,7 +1,10 @@
 package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.HienThiChiTietMain;
 import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
+import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -28,7 +33,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ChiTietSanPhamActivity extends AppCompatActivity {
 
@@ -37,10 +46,18 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
     private Button btnadd;
     private Context context = this;
     private RecyclerView recyclerView;
+    public static List<GioHang> mGioHangToFirebase;
+    private String Color = null;
+    private String Size = null;
+    private int so = 1;
+    BottomSheetDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
+
+        mGioHangToFirebase = new ArrayList<>();
+
         anhXa();
         getIntentSanPham();
 
@@ -77,13 +94,13 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         }
 
         txtName.setText(tenSP);
-        txtPrice.setText(giaban + " VND ");
+        txtPrice.setText(giaban + " đ ");
         txtTitle.setText(ghiChu);
         Picasso.get().load(imageUrl).into(imgPic);
     }
 
     public void addToCart() {
-        BottomSheetDialog dialog;
+
         View dialogsheetview = LayoutInflater.from(context).inflate(R.layout.dialog_add_to_cart, null);
         dialog = new BottomSheetDialog(context);
         dialog.setContentView(dialogsheetview);
@@ -91,6 +108,9 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
         ImageView imgPic = dialogsheetview.findViewById(R.id.itemPicCt);
         TextView txtTien = dialogsheetview.findViewById(R.id.txtMoney);
+        TextView txtCong = dialogsheetview.findViewById(R.id.tvCong);
+        TextView txtSo = dialogsheetview.findViewById(R.id.tvSo);
+        TextView txtTru = dialogsheetview.findViewById(R.id.tvtru);
         Button btnadd = dialogsheetview.findViewById(R.id.btnAddCt);
         Intent intent = getIntent();
         double giaban = intent.getDoubleExtra("giaban", 0.0);
@@ -99,73 +119,213 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         txtTien.setText(giaban + "đ");
         Picasso.get().load(imageUrl).into(imgPic);
 
+        setBackGroundColor(dialogsheetview);
+        setBackgroundSize(dialogsheetview);
+
+        txtTru.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (so > 1) {
+                    so--;
+                    txtSo.setText(String.valueOf(so));
+                }
+            }
+        });
+
+        txtCong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                so++;
+                txtSo.setText(String.valueOf(so));
+            }
+        });
+
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                passProductToCart();
-                dialog.dismiss();
+
+                addProductToCart();
+
             }
         });
     }
 
-    private void passProductToCart() {
+    private void addProductToCart() {
         Intent intent = getIntent();
+        int masp = intent.getIntExtra("masp",0);
         String tenSP = intent.getStringExtra("tensp");
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String ghiChu = intent.getStringExtra("ghichu");
         String imageUrl = intent.getStringExtra("imageUrl");
 
-        SanPham selectedProduct = new SanPham(System.currentTimeMillis(), generateUniqueProductId(), tenSP, 1, 0, 0.0, giaban, "", "", "", "", ghiChu, imageUrl, null
-        );
-        addToFirebase(selectedProduct);
-        Toast.makeText(ChiTietSanPhamActivity.this, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        if (Color == null || Size == null) {
+            Toast.makeText(context, "Chưa chọn màu hoặc size", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("giohang");
+
+        String newKey = myRef.push().getKey();
+
+        myRef.child(newKey).setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color))
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        Color = null;
+                        Size = null;
+                    } else {
+                        Toast.makeText(context, "Lỗi khi thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
-    private void addToFirebase(SanPham sanPham) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
-        databaseReference.child(String.valueOf(sanPham.getTimestamp())).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Sản phẩm đã tồn tại, cập nhật số lượng
-                    updateProductQuantity(sanPham);
-                } else {
-                    // Sản phẩm chưa tồn tại, thêm vào Firebase
-                    databaseReference.child(String.valueOf(sanPham.getTimestamp())).setValue(sanPham);
-                }
-            }
+//    private void addToFirebase(SanPham sanPham) {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
+//        databaseReference.child(String.valueOf(sanPham.getTimestamp())).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    // Sản phẩm đã tồn tại, cập nhật số lượng
+//                    updateProductQuantity(sanPham);
+//                } else {
+//                    // Sản phẩm chưa tồn tại, thêm vào Firebase
+//                    databaseReference.child(String.valueOf(sanPham.getTimestamp())).setValue(sanPham);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+//
+//    private void updateProductQuantity(SanPham sanPham) {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
+//
+//        databaseReference.child(String.valueOf(sanPham.getTimestamp())).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    // Lấy thông tin sản phẩm từ Firebase
+//                    SanPham existingProduct = dataSnapshot.getValue(SanPham.class);
+//
+//                    // Tăng số lượng sản phẩm
+//                    int newQuantity = existingProduct.getSoluongnhap() + 1;
+//
+//                    databaseReference.child(String.valueOf(sanPham.getTimestamp())).child("soluongnhap").setValue(newQuantity);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
+//    }
+//
+//    private int generateUniqueProductId() {
+//        return (int) System.currentTimeMillis();
+//    }
 
+    private void setBackGroundColor(View dialogsheetview) {
+        CardView colorBlack = dialogsheetview.findViewById(R.id.color_black);
+        CardView colorWhite = dialogsheetview.findViewById(R.id.color_white);
+        CardView colorOrange = dialogsheetview.findViewById(R.id.color_orange);
+        CardView colorBlue = dialogsheetview.findViewById(R.id.color_blue);
+
+        colorWhite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onClick(View view) {
+                colorWhite.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
+                colorBlack.setBackground(null);
+                colorBlue.setBackground(null);
+                colorOrange.setBackground(null);
+                Color = "Trắng";
+            }
+        });
+        colorBlack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                colorBlack.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
+                colorWhite.setBackground(null);
+                colorBlue.setBackground(null);
+                colorOrange.setBackground(null);
+                Color = "Đen";
 
             }
         });
-    }
-
-    private void updateProductQuantity(SanPham sanPham) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
-
-        databaseReference.child(String.valueOf(sanPham.getTimestamp())).addListenerForSingleValueEvent(new ValueEventListener() {
+        colorBlue.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Lấy thông tin sản phẩm từ Firebase
-                    SanPham existingProduct = dataSnapshot.getValue(SanPham.class);
-
-                    // Tăng số lượng sản phẩm
-                    int newQuantity = existingProduct.getSoluongnhap() + 1;
-
-                    databaseReference.child(String.valueOf(sanPham.getTimestamp())).child("soluongnhap").setValue(newQuantity);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onClick(View view) {
+                colorBlue.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
+                colorBlack.setBackground(null);
+                colorWhite.setBackground(null);
+                colorOrange.setBackground(null);
+                Color = "Xanh";
             }
         });
+        colorOrange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                colorOrange.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
+                colorBlack.setBackground(null);
+                colorBlue.setBackground(null);
+                colorWhite.setBackground(null);
+                Color = "Cam";
+            }
+        });
+
     }
 
-    private int generateUniqueProductId() {
-        return (int) System.currentTimeMillis();
+    private void setBackgroundSize(View dialogsheetview) {
+        TextView sizeM = dialogsheetview.findViewById(R.id.sizeM);
+        TextView sizeL = dialogsheetview.findViewById(R.id.sizeL);
+        TextView sizeXL = dialogsheetview.findViewById(R.id.sizeXl);
+        TextView sizeXXL = dialogsheetview.findViewById(R.id.sizeXXL);
+        sizeM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                Size = "M";
+            }
+        });
+        sizeL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                Size = "L";
+            }
+        });
+        sizeXL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                Size = "XL";
+
+            }
+        });
+        sizeXXL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                Size = "XL";
+
+            }
+        });
     }
 }

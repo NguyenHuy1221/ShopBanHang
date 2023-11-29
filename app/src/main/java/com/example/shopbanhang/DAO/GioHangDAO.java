@@ -9,8 +9,8 @@ public class GioHangDAO {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("sanpham");
 
-    public void insertProducts(GioHang gioHang){
-        myRef.child(gioHang.getSanPhamList().toString());
-    }
+//    public void insertProducts(GioHang gioHang){
+//        myRef.child(gioHang.getSanPhamList().toString());
+//    }
 
 }

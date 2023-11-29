@@ -176,7 +176,6 @@
                         android:id="@+id/sizeM"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#CFCECE"
                         android:padding="5dp"
                         android:text="M:42-53kg-1m63" />
                 </androidx.cardview.widget.CardView>
@@ -193,7 +192,6 @@
                         android:id="@+id/sizeL"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#CFCECE"
                         android:padding="5dp"
                         android:text="L:54-60kg-1m70" />
                 </androidx.cardview.widget.CardView>
@@ -210,7 +208,6 @@
                         android:id="@+id/sizeXl"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#CFCECE"
                         android:padding="5dp"
                         android:text="XL:61-69kg-1m73" />
                 </androidx.cardview.widget.CardView>
@@ -226,7 +223,6 @@
                         android:id="@+id/sizeXXL"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#CFCECE"
                         android:padding="5dp"
                         android:text="XXL:70-76kg-1m78" />
                 </androidx.cardview.widget.CardView>
@@ -285,7 +281,7 @@
                         android:id="@+id/tvSo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="1"
                         android:textColor="@color/black"
                         android:textSize="18dp"
                         android:textStyle="bold"

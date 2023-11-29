@@ -24,30 +24,33 @@
                 android:padding="16dp">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/btnBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    tools:srcCompat="@drawable/arrow" />
+                    android:src="@drawable/arrow"
+                    />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/textView6"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:text="Giỏ hàng"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="25dp"-->
-<!--                    android:textStyle="bold" />-->
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Giỏ hàng"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcy_cart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp" />
+                android:layout_margin="16dp"
+                android:layout_marginBottom="20dp"
+                />
 
         </LinearLayout>
     </ScrollView>
@@ -58,6 +61,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="#F6B9B4"
         >
 
         <TextView
@@ -96,6 +100,4 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

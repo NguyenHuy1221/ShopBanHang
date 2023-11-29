@@ -5,48 +5,80 @@ import java.util.List;
 
 public class GioHang {
 
-    private List<SanPham> sanPhamList;
+    private int masp;
+    private String tensp;
+    private double giasp;
+    private int soluong;
+    private String url;
+    private String size;
+    private String color;
 
-    public GioHang(){
-        this.sanPhamList = new ArrayList<>();
+    public GioHang() {
     }
 
-    public List<SanPham> getSanPhamList(){
-        return sanPhamList;
+    public GioHang(int masp, String tensp, double giasp, int soluong, String url, String size, String color) {
+        this.masp = masp;
+        this.tensp = tensp;
+        this.giasp = giasp;
+        this.soluong = soluong;
+        this.url = url;
+        this.size = size;
+        this.color = color;
     }
 
-    public void addToCart(SanPham sanPham) {
-        // kiểm tra xem sản phẩm có trong giỏ hàng hay chưa
-        boolean sanPhamExists = false;
+    public int getMasp() {
+        return masp;
+    }
 
-        for (SanPham sp : sanPhamList) {
-            if (sp.getMasp() == sanPham.getMasp()) {
-                // Nếu sản phẩm đã tồn tại trong giỏ hàng, tăng số lượng lên 1
-                sp.setSoluongban(sp.getSoluongban() + 1);
-                sanPhamExists = true;
-                break;
-            }
-        }
+    public void setMasp(int masp) {
+        this.masp = masp;
+    }
 
-        if (!sanPhamExists) {
-            // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm vào giỏ hàng với số lượng là 1
-            SanPham newSanPham = new SanPham(
-                    System.currentTimeMillis(),
-                    sanPham.getMasp(),
-                    sanPham.getTensp(),
-                    sanPham.getSoluongnhap(),
-                    1,  // Số lượng là 1
-                    sanPham.getGianhap(),
-                    sanPham.getGiaban(),
-                    sanPham.getThuonghieu(),
-                    sanPham.getMausp(),
-                    sanPham.getSizesp(),
-                    sanPham.getTrangthai(),
-                    sanPham.getGhichu(),
-                    sanPham.getImageUrl(),
-                    sanPham.getUrlChiTiet()
-            );
-            sanPhamList.add(newSanPham);
-        }
+    public String getTensp() {
+        return tensp;
+    }
+
+    public void setTensp(String tensp) {
+        this.tensp = tensp;
+    }
+
+    public double getGiasp() {
+        return giasp;
+    }
+
+    public void setGiasp(double giasp) {
+        this.giasp = giasp;
+    }
+
+    public int getSoluong() {
+        return soluong;
+    }
+
+    public void setSoluong(int soluong) {
+        this.soluong = soluong;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
