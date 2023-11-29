@@ -103,6 +103,13 @@ public class ThemSanPhamActivity extends AppCompatActivity {
     }
 
     public void addSizeAndColor() {
+
+
+
+
+
+
+
         buttonAddSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,6 +118,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
 
                 List<String> sizeMoi = new ArrayList<>();
+                sizeMoi.add("none");
                 sizeMoi.add("M");
                 sizeMoi.add("L");
                 sizeMoi.add("Xl");
@@ -125,6 +133,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
 
                 List<String> color = new ArrayList<>();
+                color.add("none");
                 color.add("Trắng");
                 color.add("Vàng");
                 color.add("Xanh");
@@ -139,9 +148,11 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 editTextSoLuong.setHint("Số lượng");
                 editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-
+                Button btnthem = new Button(ThemSanPhamActivity.this);
+                btnthem.setText("them");
                 Button btnXoa = new Button(ThemSanPhamActivity.this);
                 btnXoa.setText("Xóa");
+
 
                 LinearLayout newLinearLayout = new LinearLayout(ThemSanPhamActivity.this);
                 newLinearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -150,10 +161,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 newLinearLayout.addView(spinnerSize);
                 newLinearLayout.addView(spinnerMau);
                 newLinearLayout.addView(editTextSoLuong);
+                newLinearLayout.addView(btnthem);
                 newLinearLayout.addView(btnXoa);
-
-
-                // Tạo một tag duy nhất cho newLinearLayout
+// Tạo một tag duy nhất cho newLinearLayout
                 String uniqueTag = "layout_" + System.currentTimeMillis();
 
                 // Đặt tag duy nhất cho newLinearLayout
@@ -179,27 +189,35 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         }
                     }
                 });
+                btnthem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String masp2 = edt_masp.getText().toString().trim();
+                        String sizesp2 = spinnerSize.getSelectedItem().toString();
+                        String mausp2 = spinnerMau.getSelectedItem().toString();
+                        String soluongString = editTextSoLuong.getText().toString().trim();
+                        int soluong2 = -1;
+                        if (soluongString.isEmpty()) { soluong2 = -1; }
+                        else { soluong2 = Integer.parseInt(soluongString); }
+                        if (soluong2 >-1) {
+                            String id = UUID.randomUUID().toString();
+                            ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
+                            pushData(chiTietSanPham);
+
+                        }
+                    }
+                });
 
                 sizeLayout.addView(newLinearLayout);
 
 
-                String masp2 = edt_masp.getText().toString().trim();
-                String sizesp2 = spinnerSize.getSelectedItem().toString();
-                String mausp2 = spinnerMau.getSelectedItem().toString();
-                String soluongString = editTextSoLuong.getText().toString().trim();
 
 
-                int soluong2 = -1;
-                if (soluongString.isEmpty()) { soluong2 = 0; Toast.makeText(ThemSanPhamActivity.this, "Vui lòng nhập số lượng", Toast.LENGTH_SHORT).show(); }
-                else { soluong2 = Integer.parseInt(soluongString); }
-                if (soluong2 >-1) {
-//                    String id = UUID.randomUUID().toString();
-//                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
-//                    pushData(chiTietSanPham);
 
-                }
             }
         });
+
+
     }
 
     public void themSanPham(){
@@ -300,9 +318,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     }
                     int solgsp;
                     solgsp = Integer.parseInt(solgspString);
-//                    String id = UUID.randomUUID().toString();
-//                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
-//                    pushData(chiTietSanPham);
+                    String id = UUID.randomUUID().toString();
+                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
+                    pushData(chiTietSanPham);
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
 
                 }
@@ -400,12 +418,12 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
     }
 
-//    private void pushData(ChiTietSanPham chiTietSanPham) {
-//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-//        DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
-//
-//        String pathObj = chiTietSanPham.getIdchitietsanpham();
-//        databaseReference.child(pathObj).setValue(chiTietSanPham);
-//
-//    }
+    private void pushData(ChiTietSanPham chiTietSanPham) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
+
+        String pathObj = chiTietSanPham.getIdchitietsanpham();
+        databaseReference.child(pathObj).setValue(chiTietSanPham);
+
+    }
 }
