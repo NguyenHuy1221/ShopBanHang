@@ -40,13 +40,13 @@
             android:name=".Activity.LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".Activity.MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.QuanLyKhoActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.ThuongHieuActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.ThemSanPhamActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.TrangChuActivity"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,36 +13,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thêm tài khoản"
+            android:text="Sửa Tài Khoản"
             android:textColor="@color/black"
             android:textSize="24dp"
             android:textStyle="bold"
             android:layout_gravity="center"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hình"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            />
+
         <ImageView
-            android:id="@+id/imgtk"
-            android:layout_width="200dp"
+            android:id="@+id/imgEditKM"
+            android:layout_width="300dp"
             android:layout_height="200dp"
-            android:layout_marginTop="5dp"
+            android:src="@drawable/no_image"
             android:layout_gravity="center"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_marginBottom="16dp"/>
-<!--        <TextView-->
-
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="ID:"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="18dp"-->
-<!--            android:layout_marginTop="18dp"-->
-<!--            />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/edtidtk"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            />-->
+            android:layout_marginTop="18dp"
+            android:scaleType="centerCrop"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,13 +77,13 @@
             android:textSize="18dp"
             android:layout_marginTop="18dp"
             />
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/edtmktk"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="10dp"
-              android:inputType="textPassword"
-              />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtmktk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -154,17 +148,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             />
+
         <Button
-            android:id="@+id/btnttk"
+            android:id="@+id/btnEdit"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:text="Thêm tài khoản"
+            android:text="Sửa Tài Khoản"
             android:textSize="18sp"
             android:backgroundTint="@color/red"
             android:layout_marginTop="18dp"
             />
     </LinearLayout>
-
 
 
 </ScrollView>
