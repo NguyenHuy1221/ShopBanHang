@@ -293,7 +293,7 @@
             android:id="@+id/btn_them_sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm"
+            android:text="Sửa"
             android:background="@color/red"
             app:backgroundTint="@null"/>
     </LinearLayout>

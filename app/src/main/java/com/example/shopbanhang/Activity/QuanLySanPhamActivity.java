@@ -4,14 +4,15 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -132,13 +133,32 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     }
 
     private void DeleteProducts(SanPham sanPham) {
+        new AlertDialog.Builder(this)
+                .setTitle("Shop Quần Áo")
+                .setMessage("Xác Nhận Xóa ??")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("sanpham");
+
+                        myRef.child(String.valueOf(sanPham.getMasp())).removeValue();
+
+                    }
+                })
+
+                .setNegativeButton("Cancel",null)
+                .show();
+
     }
 
     private void EditProducts(SanPham sanPham) {
         Log.d("HUY", "SanPham before putExtra: " + sanPham.toString());
 
+
         Intent intent = new Intent(QuanLySanPhamActivity.this, SuaSanPhamActivity.class);
         intent.putExtra("SAN_PHAM", sanPham);
+        intent.putExtra("masanpham", sanPham.getMasp());
         startActivity(intent);
 
         Log.d("HUY", "SanPham after putExtra: " + sanPham.toString());

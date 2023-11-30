@@ -63,7 +63,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
     private ImageView img_chinh;
     private ImageChiTietAdapter imageChiTietAdapter;
     private ImageView img_ct;
-    private EditText edt_masp, edt_tensp, edt_so_luong_sp, edt_gia_nhap, edt_gia_ban, edt_ghi_chu;
+    private EditText edt_masp, edt_tensp, edt_so_luong_sp, edt_gia_nhap, edt_gia_ban, edt_ghi_chu,Edt_so_luong_sp;
     private Spinner spn_loaisp, spn_mausp, spn_sizesp, spn_trang_thai;
     private Button btnAdd;
     private RecyclerView rcy_ct_anh;
@@ -99,6 +99,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         sizeLayout = findViewById(R.id.sizeLayout);
         buttonAddSize = findViewById(R.id.buttonAddSize);
         btnAdd = findViewById(R.id.btn_them_sp);
+        edt_so_luong_sp = findViewById(R.id.edt_so_luong_sp);
 
     }
 
@@ -291,9 +292,10 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 String sizesp = spn_sizesp.getSelectedItem().toString();
                 String trangthaisp = spn_trang_thai.getSelectedItem().toString();
                 String ghichu = edt_ghi_chu.getText().toString().trim();
+                String soluongsizecolor = edt_so_luong_sp.getText().toString().trim();
 
                 if (masp.isEmpty() || tensp.isEmpty() || solgspString.isEmpty() || gianhap.isEmpty() || giaban.isEmpty() ||
-                        ghichu.isEmpty() || loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
+                        ghichu.isEmpty() || soluongsizecolor.isEmpty() || loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
                     Toast.makeText(context, "Chưa nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
                 }else {
                     if (mImageUri == null){
@@ -309,7 +311,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     int solgsp;
                     solgsp = Integer.parseInt(solgspString);
                     String id = UUID.randomUUID().toString();
-                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
+                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
                     pushData(chiTietSanPham);
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
 
