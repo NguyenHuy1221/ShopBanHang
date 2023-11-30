@@ -1,12 +1,5 @@
 package com.example.shopbanhang.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +8,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,15 +17,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
-import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.SanPhamDAO;
 import com.example.shopbanhang.Model.ChiTietSanPham;
-import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,7 +46,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
-public class ThemSanPhamActivity extends AppCompatActivity {
+public class SuaSanPhamActivity extends AppCompatActivity {
 
     private List<SanPham> sanPhams = new ArrayList<>();
     private List<String> spinerThuongHieu = new ArrayList<>();
@@ -74,12 +69,22 @@ public class ThemSanPhamActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_them_san_pham);
+        setContentView(R.layout.activity_sua_san_pham);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("SAN_PHAM")) {
+            SanPham sanPham = (SanPham) intent.getSerializableExtra("SAN_PHAM");
+            Log.d("HUY", "Received SanPham: " + sanPham.toString());
+        }else {
+            Log.e("HUY", "Intent does not have SANPHAM_EXTRA");
+        }
+
 
 
         anhxa();
-        addSizeAndColor();
-        themSanPham();
+//        addSizeAndColor();
+//        themSanPham();
+
 
     }
 
@@ -107,9 +112,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         buttonAddSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView tvName = new TextView(ThemSanPhamActivity.this);
+                TextView tvName = new TextView(SuaSanPhamActivity.this);
                 tvName.setText("Thêm sản phẩm ");
-                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
+                Spinner spinnerSize = new Spinner(SuaSanPhamActivity.this);
 
                 List<String> sizeMoi = new ArrayList<>();
                 sizeMoi.add("none");
@@ -118,13 +123,13 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 sizeMoi.add("Xl");
                 sizeMoi.add("XXL");
 
-                ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, sizeMoi);
+                ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(SuaSanPhamActivity.this, android.R.layout.simple_spinner_item, sizeMoi);
                 sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerSize.setAdapter(sizeAdapter);
 
-                TextView tvMau = new TextView(ThemSanPhamActivity.this);
+                TextView tvMau = new TextView(SuaSanPhamActivity.this);
                 tvMau.setText("Màu");
-                Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
+                Spinner spinnerMau = new Spinner(SuaSanPhamActivity.this);
 
                 List<String> color = new ArrayList<>();
                 color.add("none");
@@ -134,21 +139,21 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 color.add("Đen");
                 color.add("Đỏ");
 
-                ArrayAdapter<String> mauAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, color);
+                ArrayAdapter<String> mauAdapter = new ArrayAdapter<>(SuaSanPhamActivity.this, android.R.layout.simple_spinner_item, color);
                 mauAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerMau.setAdapter(mauAdapter);
 
-                EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
+                EditText editTextSoLuong = new EditText(SuaSanPhamActivity.this);
                 editTextSoLuong.setHint("Số lượng");
                 editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                Button btnthem = new Button(ThemSanPhamActivity.this);
+                Button btnthem = new Button(SuaSanPhamActivity.this);
                 btnthem.setText("them");
-                Button btnXoa = new Button(ThemSanPhamActivity.this);
+                Button btnXoa = new Button(SuaSanPhamActivity.this);
                 btnXoa.setText("Xóa");
 
 
-                LinearLayout newLinearLayout = new LinearLayout(ThemSanPhamActivity.this);
+                LinearLayout newLinearLayout = new LinearLayout(SuaSanPhamActivity.this);
                 newLinearLayout.setOrientation(LinearLayout.VERTICAL);
 
                 newLinearLayout.addView(tvName);
@@ -393,7 +398,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     selectedImages.add(imageUri);
                 }
             } else if (data.getData() != null) {
-                // Chọn một ảnh
+                // Chọn một ảnhQ
                 Uri imageUri = data.getData();
                 selectedImages.add(imageUri);
             }

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,8 +83,8 @@ public class TrangChuActivity extends AppCompatActivity {
         recyclerViewCategory = findViewById(R.id.rcy_category);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recyclerViewProducts = findViewById(R.id.rcy_products);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context,2);
-        recyclerViewProducts.setLayoutManager(gridLayoutManager);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(context,2);
+        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
     }
 
     private void banner() {
@@ -170,6 +171,7 @@ public class TrangChuActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     SanPham sanPham = dataSnapshot.getValue(SanPham.class);
                     mSanPham.add(sanPham);
+                    Log.d("HUYNE", String.valueOf(mSanPham.size()));
                 }
                 sanPhamMainAdapter = new SanPhamMainAdapter(context,mSanPham);
                 recyclerViewProducts.setAdapter(sanPhamMainAdapter);

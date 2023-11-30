@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +50,7 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     @Override
     public void onBindViewHolder(@NonNull SanPhamMainAdapter.ViewHodel holder, int position) {
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
-
+//        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
         sanPham = mSanPham.get(position);
         holder.txt_name.setText(sanPham.getTensp());
         holder.txt_pirce.setText(String.valueOf(sanPham.getGiaban()));
@@ -58,19 +58,21 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 
         holder.img_tym.setColorFilter(Color.BLACK);
 
-        holder.img_tym.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (clickTym){
-                    holder.img_tym.setColorFilter(Color.BLACK);
-                    removeProductFromFavorites();
-                }else {
-                    holder.img_tym.setColorFilter(Color.RED);
-                    addProductToFavorites();
-                }
-                clickTym = !clickTym;
-            }
-        });
+//        holder.img_tym.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (clickTym){
+//                    holder.img_tym.setColorFilter(Color.BLACK);
+//                    removeProductFromFavorites();
+//                }else {
+//                    holder.img_tym.setColorFilter(Color.RED);
+//                    addProductToFavorites();
+//                }
+//                clickTym = !clickTym;
+//            }
+//        });
+
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,18 +92,18 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         });
     }
 
-    private void addProductToFavorites() {
-        String productId = String.valueOf(sanPham.getMasp());
-        databaseReference.child(productId).setValue(true);
-    }
+//    private void addProductToFavorites() {
+//        String productId = String.valueOf(sanPham.getMasp());
+//        databaseReference.child(productId).setValue(true);
+//    }
 
 
 
-    private void removeProductFromFavorites() {
-        String productId = String.valueOf(sanPham.getMasp());
-
-        databaseReference.child(productId).removeValue();
-    }
+//    private void removeProductFromFavorites() {
+//        String productId = String.valueOf(sanPham.getMasp());
+//
+//        databaseReference.child(productId).removeValue();
+//    }
 
 
     @Override
