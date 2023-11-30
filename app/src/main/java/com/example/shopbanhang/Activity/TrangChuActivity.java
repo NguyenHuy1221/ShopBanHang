@@ -2,6 +2,7 @@ package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -13,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -41,7 +43,7 @@ public class TrangChuActivity extends AppCompatActivity {
     private RecyclerView.Adapter sanPhamMainAdapter;
     private List<ThuongHieu> mThuongHieu;
     private Context context = this;
-    private LinearLayout Lme,next_gio_hang;
+    private LinearLayout Lme,next_gio_hang,nextTym;
 
 
 
@@ -65,16 +67,23 @@ public class TrangChuActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        nextTym.setOnClickListener(v -> {
+            Intent intent = new Intent(TrangChuActivity.this, SanPhamYeuThichMainActivity.class);
+            startActivity(intent);
+        });
+
     }
 
     public void anhxa(){
         Lme = findViewById(R.id.Lme);
         next_gio_hang = findViewById(R.id.next_gio_hang);
+        nextTym = findViewById(R.id.next_tym);
         viewPager2 = findViewById(R.id.viewpagerSlider);
         recyclerViewCategory = findViewById(R.id.rcy_category);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recyclerViewProducts = findViewById(R.id.rcy_products);
-        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context,2);
+        recyclerViewProducts.setLayoutManager(gridLayoutManager);
     }
 
     private void banner() {

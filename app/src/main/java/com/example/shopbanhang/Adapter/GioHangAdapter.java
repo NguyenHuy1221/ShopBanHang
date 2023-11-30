@@ -21,14 +21,16 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHolder>{
-
-    private List<GioHang> productList;
     private Context context;
 
+    private List<GioHang> productList;
+    private final IclickListener iclickListener;
 
-    public GioHangAdapter(List<GioHang> productList, Context context) {
-        this.productList = productList;
+
+    public GioHangAdapter(Context context, List<GioHang> productList, IclickListener iclickListener) {
         this.context = context;
+        this.productList = productList;
+        this.iclickListener = iclickListener;
     }
 
     @NonNull
@@ -44,9 +46,47 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
         holder.txtName.setText(gioHang.getTensp());
         holder.txtMau.setText(gioHang.getColor());
         holder.txtSize.setText(gioHang.getSize());
-        holder.txtGia.setText(gioHang.getGiasp() +" đ");
-        holder.txtSo.setText(gioHang.getSoluong()+"");
+        holder.txtGia.setText(gioHang.getTongtien() +" đ");
+        holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
         Picasso.get().load(gioHang.getUrl()).into(holder.imgPic);
+
+        holder.txtCong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gioHang.setSoluong(gioHang.getSoluong() + 1);
+                gioHang.setTongtien(gioHang.getGiasp() * gioHang.getSoluong());
+
+                holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
+                holder.txtGia.setText(gioHang.getTongtien()+" đ");
+                iclickListener.onItemChanged(gioHang);
+            }
+        });
+
+        holder.txtTru.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (gioHang.getSoluong() > 1) {
+                    gioHang.setSoluong(gioHang.getSoluong() - 1);
+                    gioHang.setTongtien(gioHang.getGiasp() * gioHang.getSoluong());
+
+                    holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
+                    holder.txtGia.setText(gioHang.getTongtien()+" đ");
+                    iclickListener.onItemChanged(gioHang);
+                }
+            }
+        });
+
+        holder.txtXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iclickListener.onclickDeleteCart(gioHang);
+            }
+        });
+    }
+
+    public interface IclickListener {
+        void onItemChanged(GioHang gioHang);
+        void onclickDeleteCart(GioHang gioHang);
     }
 
     @Override
@@ -57,7 +97,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgPic;
-        TextView txtName,txtGia,txtMau,txtSize,txtCong,txtSo,txtTru;
+        TextView txtName,txtGia,txtMau,txtSize,txtCong,txtSo,txtTru,txtXoa;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgPic = itemView.findViewById(R.id.img_pic_gh);
@@ -68,6 +108,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
             txtCong = itemView.findViewById(R.id.tvCong);
             txtSo = itemView.findViewById(R.id.tvSo);
             txtTru = itemView.findViewById(R.id.tvtru);
+            txtXoa = itemView.findViewById(R.id.txtXoa);
         }
     }
 }

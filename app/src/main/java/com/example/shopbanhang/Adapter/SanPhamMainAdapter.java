@@ -2,6 +2,8 @@ package com.example.shopbanhang.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import com.example.shopbanhang.Activity.ChiTietSanPhamActivity;
 import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,6 +28,11 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 
     private Context context;
     private List<SanPham> mSanPham;
+    private boolean clickTym = false;
+    private DatabaseReference databaseReference;
+    private SanPham sanPham;
+
+
 
     public SanPhamMainAdapter(Context context, List<SanPham> mSanPham) {
         this.context = context;
@@ -40,10 +49,28 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     @Override
     public void onBindViewHolder(@NonNull SanPhamMainAdapter.ViewHodel holder, int position) {
 
-        SanPham sanPham = mSanPham.get(position);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
+
+        sanPham = mSanPham.get(position);
         holder.txt_name.setText(sanPham.getTensp());
         holder.txt_pirce.setText(String.valueOf(sanPham.getGiaban()));
         Picasso.get().load(sanPham.getImageUrl()).into(holder.img_main);
+
+        holder.img_tym.setColorFilter(Color.BLACK);
+
+        holder.img_tym.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickTym){
+                    holder.img_tym.setColorFilter(Color.BLACK);
+                    removeProductFromFavorites();
+                }else {
+                    holder.img_tym.setColorFilter(Color.RED);
+                    addProductToFavorites();
+                }
+                clickTym = !clickTym;
+            }
+        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +89,20 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
             }
         });
     }
+
+    private void addProductToFavorites() {
+        String productId = String.valueOf(sanPham.getMasp());
+        databaseReference.child(productId).setValue(true);
+    }
+
+
+
+    private void removeProductFromFavorites() {
+        String productId = String.valueOf(sanPham.getMasp());
+
+        databaseReference.child(productId).removeValue();
+    }
+
 
     @Override
     public int getItemCount() {

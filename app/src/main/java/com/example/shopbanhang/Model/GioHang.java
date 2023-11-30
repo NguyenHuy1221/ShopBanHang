@@ -13,10 +13,12 @@ public class GioHang {
     private String size;
     private String color;
 
+    private String key;
+    private double tongtien;
     public GioHang() {
     }
 
-    public GioHang(int masp, String tensp, double giasp, int soluong, String url, String size, String color) {
+    public GioHang(int masp, String tensp, double giasp, int soluong, String url, String size, String color, double tongtien) {
         this.masp = masp;
         this.tensp = tensp;
         this.giasp = giasp;
@@ -24,6 +26,7 @@ public class GioHang {
         this.url = url;
         this.size = size;
         this.color = color;
+        this.tongtien = tongtien;
     }
 
     public int getMasp() {
@@ -80,5 +83,21 @@ public class GioHang {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public double getTongtien() {
+        return tongtien;
+    }
+
+    public void setTongtien(double tongtien) {
+        this.tongtien = tongtien;
     }
 }

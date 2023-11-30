@@ -155,8 +155,9 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         int masp = intent.getIntExtra("masp",0);
         String tenSP = intent.getStringExtra("tensp");
         double giaban = intent.getDoubleExtra("giaban", 0.0);
-        String ghiChu = intent.getStringExtra("ghichu");
         String imageUrl = intent.getStringExtra("imageUrl");
+
+        double tongTien = giaban * so;
 
         if (Color == null || Size == null) {
             Toast.makeText(context, "Chưa chọn màu hoặc size", Toast.LENGTH_SHORT).show();
@@ -168,7 +169,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
         String newKey = myRef.push().getKey();
 
-        myRef.child(newKey).setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color))
+        myRef.child(newKey).setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color,tongTien))
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
@@ -181,54 +182,6 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
                 });
 
     }
-
-//    private void addToFirebase(SanPham sanPham) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
-//        databaseReference.child(String.valueOf(sanPham.getTimestamp())).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    // Sản phẩm đã tồn tại, cập nhật số lượng
-//                    updateProductQuantity(sanPham);
-//                } else {
-//                    // Sản phẩm chưa tồn tại, thêm vào Firebase
-//                    databaseReference.child(String.valueOf(sanPham.getTimestamp())).setValue(sanPham);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-//
-//    private void updateProductQuantity(SanPham sanPham) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("giohang");
-//
-//        databaseReference.child(String.valueOf(sanPham.getTimestamp())).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    // Lấy thông tin sản phẩm từ Firebase
-//                    SanPham existingProduct = dataSnapshot.getValue(SanPham.class);
-//
-//                    // Tăng số lượng sản phẩm
-//                    int newQuantity = existingProduct.getSoluongnhap() + 1;
-//
-//                    databaseReference.child(String.valueOf(sanPham.getTimestamp())).child("soluongnhap").setValue(newQuantity);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
-//    }
-//
-//    private int generateUniqueProductId() {
-//        return (int) System.currentTimeMillis();
-//    }
 
     private void setBackGroundColor(View dialogsheetview) {
         CardView colorBlack = dialogsheetview.findViewById(R.id.color_black);
