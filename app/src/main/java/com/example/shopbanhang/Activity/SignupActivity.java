@@ -36,7 +36,7 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
+        button = findViewById(R.id.btnsignup);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,10 +63,10 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
 
 
                 String id = UUID.randomUUID().toString();
-                String hotenkh = hoten.getEditText().toString().trim();
-                String emailkh = email.getEditText().toString().trim();
-                String matkhaukh = matkhau.getEditText().toString().trim();
-                String nhaplaimatkhau = nhaplaimk.getEditText().toString().trim();
+                String hotenkh = hoten.getEditText().getText().toString().trim();
+                String emailkh = email.getEditText().getText().toString().trim();
+                String matkhaukh = matkhau.getEditText().getText().toString().trim();
+                String nhaplaimatkhau = nhaplaimk.getEditText().getText().toString().trim();
                 if (hotenkh.equals("")){
                     Toast.makeText(SignupActivity.this, "Chưa nhập tên khách hàng", Toast.LENGTH_SHORT).show();
                     return;
@@ -79,11 +79,13 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
                 } else if (nhaplaimatkhau.equals("")){
                     Toast.makeText(SignupActivity.this, "Chưa nhập ngày lại mật khẩu", Toast.LENGTH_SHORT).show();
                     return;
-                }else if (!matkhaukh.equals(nhaplaimatkhau)){
+                }
+                else if (!matkhaukh.equals(nhaplaimatkhau)){
                     Toast.makeText(SignupActivity.this, "mật khẩu phải giống với nhập lại mật khẩu", Toast.LENGTH_SHORT).show();
                     return;
-                } else {
-                    TaiKhoan taiKhoan = new TaiKhoan(id,null,hotenkh,emailkh,matkhaukh,null,null,null,null);
+                }
+                else {
+                    TaiKhoan taiKhoan = new TaiKhoan(id,"none",hotenkh,emailkh,matkhaukh,"none","none","none","none");
                     pushData(taiKhoan);
                     Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                     startActivity(intent);
@@ -96,7 +98,7 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
 
     private void pushData(TaiKhoan taiKhoan) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("taikhoan");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("TaiKhoan");
 
         String pathObj = taiKhoan.getIdtk();
         databaseReference.child(pathObj).setValue(taiKhoan);
