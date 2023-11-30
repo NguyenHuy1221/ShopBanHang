@@ -116,14 +116,19 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                 String ngayKetThuc = txtNgayKetThucAddKM.getText().toString().trim();
                 if (tenKM.equals("")){
                     Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+                    return;
                 } else if (phanTramKM.equals("")){
                     Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                    return;
                 } else if (ngayBatDau.equals("")){
                     Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
+                    return;
                 } else if (ngayKetThuc.equals("")){
                     Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
+                    return;
                 } else if (uri == null) {
                     Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("KhuyenMai").child(uri.getLastPathSegment());
                     storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
