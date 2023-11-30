@@ -31,7 +31,7 @@
             android:name=".Activity.QuanLySanPhamActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.QuanLyTaiKhoanActivity"
+            android:name=".Activity.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".DialogThemTaiKhoanActivity"
@@ -46,7 +46,10 @@
             android:name=".Activity.ThemSanPhamActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name=".Activity.TrangChuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Gio_Hang"
@@ -58,7 +61,7 @@
             android:name=".Activity.ThuongHieuActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+          android:name=".Activity.QuanLyTaiKhoanActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

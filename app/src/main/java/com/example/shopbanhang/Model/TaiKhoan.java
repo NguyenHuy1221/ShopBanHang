@@ -104,6 +104,7 @@ public class TaiKhoan {
         result.put("imgtk",imgtk);
         result.put("tentk",tentk);
         result.put("emailtk",emailtk);
+        result.put("matkhautk", matkhautk);
         result.put("sdttk",sdttk);
         result.put("diachitk",diachitk);
         result.put("ngaytaotk",ngaytaotk);
