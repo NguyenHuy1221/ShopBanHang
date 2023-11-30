@@ -17,6 +17,7 @@
         android:layout_marginLeft="25dp"
         android:textStyle="bold" />
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/hotendangky"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
@@ -25,7 +26,6 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/hotendangky"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Họ và tên"
@@ -33,6 +33,7 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emaildangky"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
@@ -41,7 +42,6 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emaildangky"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
@@ -51,6 +51,7 @@
 
     <!--    nhap pass-->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/matkhaudangky"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
@@ -60,7 +61,6 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/matkhaudangky"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mật khẩu"
@@ -69,6 +69,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nhaplaimatkhaudangky"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
@@ -78,7 +79,6 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nhaplaimatkhaudangky"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nhập lại mật khẩu"

@@ -14,10 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopbanhang.Model.KhuyenMai;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,7 +30,7 @@ import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
 
-TextInputEditText hoten,email,matkhau,nhaplaimk;
+TextInputLayout hoten,email,matkhau,nhaplaimk;
     Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,7 @@ TextInputEditText hoten,email,matkhau,nhaplaimk;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                startActivity(intent);
+                themKhuyenMai();
             }
         });
     }
@@ -57,18 +58,15 @@ TextInputEditText hoten,email,matkhau,nhaplaimk;
 
 
 
-        Button btnThemKM = findViewById(R.id.btnThemKM);
 
 
 
-        btnThemKM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
                 String id = UUID.randomUUID().toString();
-                String hotenkh = hoten.getText().toString().trim();
-                String emailkh = email.getText().toString().trim();
-                String matkhaukh = matkhau.getText().toString().trim();
-                String nhaplaimatkhau = nhaplaimk.getText().toString().trim();
+                String hotenkh = hoten.getEditText().toString().trim();
+                String emailkh = email.getEditText().toString().trim();
+                String matkhaukh = matkhau.getEditText().toString().trim();
+                String nhaplaimatkhau = nhaplaimk.getEditText().toString().trim();
                 if (hotenkh.equals("")){
                     Toast.makeText(SignupActivity.this, "Chưa nhập tên khách hàng", Toast.LENGTH_SHORT).show();
                     return;
@@ -85,20 +83,23 @@ TextInputEditText hoten,email,matkhau,nhaplaimk;
                     Toast.makeText(SignupActivity.this, "mật khẩu phải giống với nhập lại mật khẩu", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
+                    TaiKhoan taiKhoan = new TaiKhoan(id,null,hotenkh,emailkh,matkhaukh,null,null,null,null);
+                    pushData(taiKhoan);
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                    startActivity(intent);
 
                 }
 
-            }
-        });
+
 
     }
 
-    private void pushData(KhuyenMai khuyenMai) {
+    private void pushData(TaiKhoan taiKhoan) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("khachhang");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("taikhoan");
 
-        String pathObj = khuyenMai.getIdKhuyenMai();
-        databaseReference.child(pathObj).setValue(khuyenMai);
+        String pathObj = taiKhoan.getIdtk();
+        databaseReference.child(pathObj).setValue(taiKhoan);
 
     }
 }
