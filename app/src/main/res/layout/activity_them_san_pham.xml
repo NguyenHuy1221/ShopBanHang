@@ -230,45 +230,45 @@
                 android:layout_weight="2"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="số lượng sản phẩm"/>
-            <EditText
-                android:id="@+id/edt_so_luong_sp"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_weight="2"
-                android:inputType="number"
-                android:background="@drawable/custom_khung"
-                />
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:padding="8dp"-->
+<!--            >-->
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="số lượng sản phẩm"/>-->
+<!--            <EditText-->
+<!--                android:id="@+id/edt_so_luong_sp"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_weight="2"-->
+<!--                android:inputType="number"-->
+<!--                android:background="@drawable/custom_khung"-->
+<!--                />-->
+<!--        </LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/sizeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/sizeLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="16dp"-->
+<!--            android:orientation="vertical">-->
 
-            <!-- Linear layout này sẽ chứa các EditText để nhập size -->
-        </LinearLayout>
+<!--            &lt;!&ndash; Linear layout này sẽ chứa các EditText để nhập size &ndash;&gt;-->
+<!--        </LinearLayout>-->
 
-        <Button
-            android:id="@+id/buttonAddSize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thêm sizie và màu"
-            android:textColor="@color/black"
-            android:background="#03A9F4"
-            app:backgroundTint="@null"/>
+<!--        <Button-->
+<!--            android:id="@+id/buttonAddSize"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Thêm sizie và màu"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:background="#03A9F4"-->
+<!--            app:backgroundTint="@null"/>-->
 
 
         <LinearLayout
