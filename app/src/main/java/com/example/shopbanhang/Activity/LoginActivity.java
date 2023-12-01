@@ -69,24 +69,12 @@ public class LoginActivity extends AppCompatActivity {
         txtquenmk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(LoginActivity.this, ForgotpwActivity.class);
-//                startActivity(intent);
-                String email = edtemaillg.getEditText().getText().toString().trim();
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                String emailAddress = email;
-
-                auth.sendPasswordResetEmail(emailAddress)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(LoginActivity.this, "Send Email", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                Intent intent = new Intent(LoginActivity.this, ForgotpwActivity.class);
+                startActivity(intent);
             }
         });
     }
+
     private void signUp() {
         String email = edtemaillg.getEditText().getText().toString().trim();
         String pass = edtmklg.getEditText().getText().toString().trim();

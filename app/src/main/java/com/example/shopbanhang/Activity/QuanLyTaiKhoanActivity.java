@@ -41,6 +41,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class QuanLyTaiKhoanActivity extends AppCompatActivity {
@@ -191,8 +192,8 @@ private List<TaiKhoan> list=new ArrayList<>();
                         edttttk.getText().toString().trim().equals("")||
                         edtnttk.getText().toString().trim().equals("")){
                     Toast.makeText(QuanLyTaiKhoanActivity.this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                } else if (uri==null) {
-                    Toast.makeText(context, "Chưa cho hình ảnh", Toast.LENGTH_SHORT).show();
+//                } else if (uri==null) {
+//                    Toast.makeText(context, "Chưa cho hình ảnh", Toast.LENGTH_SHORT).show();
                 } else {
 
                     Toast.makeText(QuanLyTaiKhoanActivity.this, "Thêm tài khoản thành công", Toast.LENGTH_SHORT).show();
@@ -205,7 +206,8 @@ private List<TaiKhoan> list=new ArrayList<>();
                             while (!uriTask.isComplete());
                             Uri urlimg = uriTask.getResult();
                             String img = urlimg.toString();
-                            String id = UUID.randomUUID().toString();
+                            Random random = new Random();
+                            String id = String.valueOf(random.nextInt(1000000));
                             String email = edtemailtk.getText().toString().trim();
                             String mk = edtmktk.getText().toString().trim();
                             String ten = edttentk.getText().toString().trim();

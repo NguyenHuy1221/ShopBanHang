@@ -7,11 +7,13 @@
     tools:context=".Activity.Doanh_Thu"
     android:orientation="vertical">
     <TextView
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Doanh Thu"
         android:textStyle="bold"
         android:textSize="30sp"
+        android:layout_marginTop="10dp"
         />
     <View
         android:layout_width="match_parent"
@@ -141,7 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Tính doanh thu"
-        android:background="@color/red"
+        android:backgroundTint ="@color/red"
 
         />
 

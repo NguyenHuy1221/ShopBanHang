@@ -46,7 +46,7 @@
             android:name=".Activity.ThemSanPhamActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+            android:name=".Activity.QuanLyTaiKhoanActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SignupActivity"
@@ -61,7 +61,7 @@
             android:name=".Activity.ThuongHieuActivity"
             android:exported="false" />
         <activity
-          android:name=".Activity.QuanLyTaiKhoanActivity"
+            android:name=".Activity.TrangChuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.shopbanhang.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Trang_Ca_Nhan extends AppCompatActivity {
     TextView sanpham,taikhoan,hoadon,doanhthu,khuyenmai,lichsumua,thongtinchitiet,doimatkhau,dangxuat;
@@ -74,6 +75,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         dangxuat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
                 startActivity(intent);
             }

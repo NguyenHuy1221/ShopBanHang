@@ -38,11 +38,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_qltk"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="610dp"
+        android:layout_marginTop="10dp"
         android:padding="10dp"
-        tools:listitem="@layout/item_tai_khoan"/>
+        tools:listitem="@layout/item_tai_khoan" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

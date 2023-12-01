@@ -32,6 +32,7 @@
             android:inputType="text"
             />
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emaildangky"
         android:layout_width="match_parent"
