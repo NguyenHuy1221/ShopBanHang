@@ -341,7 +341,14 @@ private List<TaiKhoan> list=new ArrayList<>();
         addtk = findViewById(R.id.addtk);
         recycle_qltk = findViewById(R.id.recycle_qltk);
         backBtntk = findViewById(R.id.backBtntk);
-        backBtntk.setOnClickListener(v -> finish());
+//        backBtntk.setOnClickListener(v -> finish());
+        backBtntk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(QuanLyTaiKhoanActivity.this,Trang_Ca_Nhan.class);
+                startActivity(intent);
+            }
+        });
     }
     private void oppenFile() {
         Intent intent = new Intent();
