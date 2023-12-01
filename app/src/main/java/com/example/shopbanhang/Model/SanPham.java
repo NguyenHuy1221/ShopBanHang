@@ -21,9 +21,7 @@ public class SanPham implements Serializable {
     private String ghichu;
     private String imageUrl;
     private List<String> urlChiTiet;
-    private List<String> nhieusize;
-    private List<String> nhieumau;
-    private List<Integer> nhieusoluong;
+
 
 
     public SanPham() {
@@ -47,25 +45,6 @@ public class SanPham implements Serializable {
         this.urlChiTiet = urlChiTiet;
     }
 
-    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet, List<String> nhieusize, List<String> nhieumau, List<Integer> nhieusoluong) {
-        this.timestamp = timestamp;
-        this.masp = masp;
-        this.tensp = tensp;
-        this.soluongnhap = soluongnhap;
-        this.soluongban = soluongban;
-        this.gianhap = gianhap;
-        this.giaban = giaban;
-        this.thuonghieu = thuonghieu;
-        this.mausp = mausp;
-        this.sizesp = sizesp;
-        this.trangthai = trangthai;
-        this.ghichu = ghichu;
-        this.imageUrl = imageUrl;
-        this.urlChiTiet = urlChiTiet;
-        this.nhieusize = nhieusize;
-        this.nhieumau = nhieumau;
-        this.nhieusoluong = nhieusoluong;
-    }
 
     public int getMasp() {
         return masp;
@@ -179,29 +158,6 @@ public class SanPham implements Serializable {
         this.urlChiTiet = urlChiTiet;
     }
 
-    public List<String> getNhieusize() {
-        return nhieusize;
-    }
-
-    public void setNhieusize(List<String> nhieusize) {
-        this.nhieusize = nhieusize;
-    }
-
-    public List<String> getNhieumau() {
-        return nhieumau;
-    }
-
-    public void setNhieumau(List<String> nhieumau) {
-        this.nhieumau = nhieumau;
-    }
-
-    public List<Integer> getNhieusoluong() {
-        return nhieusoluong;
-    }
-
-    public void setNhieusoluong(List<Integer> nhieusoluong) {
-        this.nhieusoluong = nhieusoluong;
-    }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -219,9 +175,6 @@ public class SanPham implements Serializable {
         result.put("ghichu", ghichu);
         result.put("imageUrl", imageUrl);
         result.put("urlChiTiet", urlChiTiet);
-        result.put("nhieusize", nhieusize);
-        result.put("nhieumau", nhieumau);
-        result.put("nhieusoluong", nhieusoluong);
         return result;
     }
 

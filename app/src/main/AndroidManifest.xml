@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopBanHang"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.SearchMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.QuanLySanPhamActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.SanPhamYeuThichMainActivity"
             android:exported="false" />
@@ -28,7 +35,7 @@
             android:name=".Activity.ChiTietSanPhamActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+            android:name=".Activity.LichSuHoaDonMainActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.LoginActivity"
@@ -64,7 +71,7 @@
             android:name=".Activity.SuaSanPhamActivity"
             android:exported="false" />
         <activity
-          android:name=".Activity.QuanLySanPhamActivity"
+            android:name=".Activity.TrangChuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

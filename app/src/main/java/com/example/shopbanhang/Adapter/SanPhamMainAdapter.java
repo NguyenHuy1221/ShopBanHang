@@ -31,13 +31,14 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     private List<SanPham> mSanPham;
     private boolean clickTym = false;
     private DatabaseReference databaseReference;
-    private SanPham sanPham;
 
+    private List<SanPham> mFilteredSanPhamList;
 
 
     public SanPhamMainAdapter(Context context, List<SanPham> mSanPham) {
         this.context = context;
         this.mSanPham = mSanPham;
+        this.mFilteredSanPhamList = new ArrayList<>(mSanPham);
     }
 
     @NonNull
@@ -51,7 +52,7 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     public void onBindViewHolder(@NonNull SanPhamMainAdapter.ViewHodel holder, int position) {
 
 //        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
-        sanPham = mSanPham.get(position);
+        SanPham sanPham = mSanPham.get(position);
         holder.txt_name.setText(sanPham.getTensp());
         holder.txt_pirce.setText(String.valueOf(sanPham.getGiaban()));
         Picasso.get().load(sanPham.getImageUrl()).into(holder.img_main);
@@ -105,6 +106,11 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 //        databaseReference.child(productId).removeValue();
 //    }
 
+    public void filterList(List<SanPham> filteredList) {
+        mSanPham.clear();
+        mSanPham.addAll(filteredList);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
