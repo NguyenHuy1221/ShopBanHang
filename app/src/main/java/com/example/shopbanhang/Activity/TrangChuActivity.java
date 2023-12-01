@@ -13,9 +13,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.CategoryMainAdapter;
@@ -45,6 +47,7 @@ public class TrangChuActivity extends AppCompatActivity {
     private Context context = this;
     private LinearLayout Lme,next_gio_hang,nextTym;
 
+    private TextView search;
 
 
     @Override
@@ -72,10 +75,19 @@ public class TrangChuActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TrangChuActivity.this, SearchMainActivity.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
     public void anhxa(){
         Lme = findViewById(R.id.Lme);
+        search = findViewById(R.id.editTextText);
         next_gio_hang = findViewById(R.id.next_gio_hang);
         nextTym = findViewById(R.id.next_tym);
         viewPager2 = findViewById(R.id.viewpagerSlider);
@@ -84,6 +96,7 @@ public class TrangChuActivity extends AppCompatActivity {
         recyclerViewProducts = findViewById(R.id.rcy_products);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context,2);
         recyclerViewProducts.setLayoutManager(gridLayoutManager);
+//        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
     }
 
     private void banner() {
@@ -170,6 +183,7 @@ public class TrangChuActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     SanPham sanPham = dataSnapshot.getValue(SanPham.class);
                     mSanPham.add(sanPham);
+                    Log.d("HUYNE", String.valueOf(mSanPham.size()));
                 }
                 sanPhamMainAdapter = new SanPhamMainAdapter(context,mSanPham);
                 recyclerViewProducts.setAdapter(sanPhamMainAdapter);

@@ -1,6 +1,7 @@
 package com.example.shopbanhang.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shopbanhang.Activity.ChiTietSanPhamActivity;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.ViewHolder> {
@@ -59,6 +62,23 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 onClickItem.onclickDelete(sanPham);
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(holder.itemView.getContext(), ChiTietSanPhamActivity.class);
+                intent.putExtra("masp",sanPham.getMasp());
+                intent.putExtra("tensp",sanPham.getTensp());
+                intent.putExtra("giaban",sanPham.getGiaban());
+                intent.putExtra("ghichu",sanPham.getGhichu());
+                intent.putExtra("imageUrl",sanPham.getImageUrl());
+                List<String> urlChiTiet = sanPham.getUrlChiTiet();
+                if (urlChiTiet!= null){
+                    intent.putStringArrayListExtra("urlChiTiet",new ArrayList<>(urlChiTiet));
+                }
+                holder.itemView.getContext().startActivity(intent);
             }
         });
     }

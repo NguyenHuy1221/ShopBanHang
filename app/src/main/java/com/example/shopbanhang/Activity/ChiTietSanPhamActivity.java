@@ -83,14 +83,18 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         String ghiChu = intent.getStringExtra("ghichu");
         String imageUrl = intent.getStringExtra("imageUrl");
 
+
         if (intent.hasExtra("urlChiTiet")) {
             List<String> anhChiTiet = getIntent().getStringArrayListExtra("urlChiTiet");
             if (anhChiTiet != null && !anhChiTiet.isEmpty()) {
-                HienThiChiTietMain adapter = new HienThiChiTietMain(context,anhChiTiet);
+                HienThiChiTietMain adapter = new HienThiChiTietMain(context, anhChiTiet, new HienThiChiTietMain.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(String imageUrl) {
+                        Picasso.get().load(imageUrl).into(imgPic);
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             }
-        }else {
-
         }
 
         txtName.setText(tenSP);
@@ -98,6 +102,8 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         txtTitle.setText(ghiChu);
         Picasso.get().load(imageUrl).into(imgPic);
     }
+
+
 
     public void addToCart() {
 
@@ -143,9 +149,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 addProductToCart();
-
             }
         });
     }

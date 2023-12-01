@@ -63,7 +63,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
     private ImageView img_chinh;
     private ImageChiTietAdapter imageChiTietAdapter;
     private ImageView img_ct;
-    private EditText edt_masp, edt_tensp, edt_so_luong_sp, edt_gia_nhap, edt_gia_ban, edt_ghi_chu;
+    private EditText edt_masp, edt_tensp, edt_so_luong_sp, edt_gia_nhap, edt_gia_ban, edt_ghi_chu,Edt_so_luong_sp;
     private Spinner spn_loaisp, spn_mausp, spn_sizesp, spn_trang_thai;
     private Button btnAdd;
     private RecyclerView rcy_ct_anh;
@@ -78,7 +78,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
 
         anhxa();
-        addSizeAndColor();
+//        addSizeAndColor();
         themSanPham();
 
     }
@@ -96,129 +96,120 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         spn_sizesp = findViewById(R.id.spn_size_sp);
         spn_trang_thai = findViewById(R.id.spn_trang_thai_sp);
         edt_ghi_chu = findViewById(R.id.edt_ghi_chu_sp);
-        sizeLayout = findViewById(R.id.sizeLayout);
-        buttonAddSize = findViewById(R.id.buttonAddSize);
+//        sizeLayout = findViewById(R.id.sizeLayout);
+//        buttonAddSize = findViewById(R.id.buttonAddSize);
         btnAdd = findViewById(R.id.btn_them_sp);
+//        edt_so_luong_sp = findViewById(R.id.edt_so_luong_sp);
 
     }
 
-    public void addSizeAndColor() {
-
-
-
-
-
-
-
-        buttonAddSize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView tvName = new TextView(ThemSanPhamActivity.this);
-                tvName.setText("Thêm sản phẩm ");
-                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
-
-                List<String> sizeMoi = new ArrayList<>();
-                sizeMoi.add("none");
-                sizeMoi.add("M");
-                sizeMoi.add("L");
-                sizeMoi.add("Xl");
-                sizeMoi.add("XXL");
-
-                ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, sizeMoi);
-                sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerSize.setAdapter(sizeAdapter);
-
-                TextView tvMau = new TextView(ThemSanPhamActivity.this);
-                tvMau.setText("Màu");
-                Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
-
-                List<String> color = new ArrayList<>();
-                color.add("none");
-                color.add("Trắng");
-                color.add("Vàng");
-                color.add("Xanh");
-                color.add("Đen");
-                color.add("Đỏ");
-
-                ArrayAdapter<String> mauAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, color);
-                mauAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerMau.setAdapter(mauAdapter);
-
-                EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
-                editTextSoLuong.setHint("Số lượng");
-                editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-                Button btnthem = new Button(ThemSanPhamActivity.this);
-                btnthem.setText("them");
-                Button btnXoa = new Button(ThemSanPhamActivity.this);
-                btnXoa.setText("Xóa");
-
-
-                LinearLayout newLinearLayout = new LinearLayout(ThemSanPhamActivity.this);
-                newLinearLayout.setOrientation(LinearLayout.VERTICAL);
-
-                newLinearLayout.addView(tvName);
-                newLinearLayout.addView(spinnerSize);
-                newLinearLayout.addView(spinnerMau);
-                newLinearLayout.addView(editTextSoLuong);
-                newLinearLayout.addView(btnthem);
-                newLinearLayout.addView(btnXoa);
-// Tạo một tag duy nhất cho newLinearLayout
-                String uniqueTag = "layout_" + System.currentTimeMillis();
-
-                // Đặt tag duy nhất cho newLinearLayout
-                newLinearLayout.setTag(uniqueTag);
-
-                // Đặt tag cho btnXoa trực tiếp
-                btnXoa.setTag(uniqueTag);
-
-                btnXoa.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Lấy tag được gán cho LinearLayout cha
-                        String tag = (String) view.getTag();
-
-                        // Tìm LinearLayout có tag cụ thể
-                        for (int i = 0; i < sizeLayout.getChildCount(); i++) {
-                            View child = sizeLayout.getChildAt(i);
-                            if (child instanceof LinearLayout && Objects.equals(child.getTag(), tag)) {
-                                // Loại bỏ LinearLayout được tìm thấy khỏi sizeLayout
-                                sizeLayout.removeView(child);
-                                break; // Dừng tìm kiếm khi tìm thấy
-                            }
-                        }
-                    }
-                });
-                btnthem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String masp2 = edt_masp.getText().toString().trim();
-                        String sizesp2 = spinnerSize.getSelectedItem().toString();
-                        String mausp2 = spinnerMau.getSelectedItem().toString();
-                        String soluongString = editTextSoLuong.getText().toString().trim();
-                        int soluong2 = -1;
-                        if (soluongString.isEmpty()) { soluong2 = -1; }
-                        else { soluong2 = Integer.parseInt(soluongString); }
-                        if (soluong2 >-1) {
-                            String id = UUID.randomUUID().toString();
-                            ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
-                            pushData(chiTietSanPham);
-
-                        }
-                    }
-                });
-
-                sizeLayout.addView(newLinearLayout);
-
-
-
-
-
-            }
-        });
-
-
-    }
+//    public void addSizeAndColor() {
+//
+//        buttonAddSize.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                TextView tvName = new TextView(ThemSanPhamActivity.this);
+//                tvName.setText("Thêm sản phẩm ");
+//                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
+//
+//                List<String> sizeMoi = new ArrayList<>();
+//                sizeMoi.add("none");
+//                sizeMoi.add("M");
+//                sizeMoi.add("L");
+//                sizeMoi.add("Xl");
+//                sizeMoi.add("XXL");
+//
+//                ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, sizeMoi);
+//                sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                spinnerSize.setAdapter(sizeAdapter);
+//
+//                TextView tvMau = new TextView(ThemSanPhamActivity.this);
+//                tvMau.setText("Màu");
+//                Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
+//
+//                List<String> color = new ArrayList<>();
+//                color.add("none");
+//                color.add("Trắng");
+//                color.add("Vàng");
+//                color.add("Xanh");
+//                color.add("Đen");
+//                color.add("Đỏ");
+//
+//                ArrayAdapter<String> mauAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, color);
+//                mauAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                spinnerMau.setAdapter(mauAdapter);
+//
+//                EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
+//                editTextSoLuong.setHint("Số lượng");
+//                editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
+//
+//                Button btnthem = new Button(ThemSanPhamActivity.this);
+//                btnthem.setText("them");
+//                Button btnXoa = new Button(ThemSanPhamActivity.this);
+//                btnXoa.setText("Xóa");
+//
+//
+//                LinearLayout newLinearLayout = new LinearLayout(ThemSanPhamActivity.this);
+//                newLinearLayout.setOrientation(LinearLayout.VERTICAL);
+//
+//                newLinearLayout.addView(tvName);
+//                newLinearLayout.addView(spinnerSize);
+//                newLinearLayout.addView(spinnerMau);
+//                newLinearLayout.addView(editTextSoLuong);
+//                newLinearLayout.addView(btnthem);
+//                newLinearLayout.addView(btnXoa);
+//                // Tạo một tag duy nhất cho newLinearLayout
+//                String uniqueTag = "layout_" + System.currentTimeMillis();
+//
+//                // Đặt tag duy nhất cho newLinearLayout
+//                newLinearLayout.setTag(uniqueTag);
+//
+//                // Đặt tag cho btnXoa trực tiếp
+//                btnXoa.setTag(uniqueTag);
+//
+//                btnXoa.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        // Lấy tag được gán cho LinearLayout cha
+//                        String tag = (String) view.getTag();
+//
+//                        // Tìm LinearLayout có tag cụ thể
+//                        for (int i = 0; i < sizeLayout.getChildCount(); i++) {
+//                            View child = sizeLayout.getChildAt(i);
+//                            if (child instanceof LinearLayout && Objects.equals(child.getTag(), tag)) {
+//                                // Loại bỏ LinearLayout được tìm thấy khỏi sizeLayout
+//                                sizeLayout.removeView(child);
+//                                break; // Dừng tìm kiếm khi tìm thấy
+//                            }
+//                        }
+//                    }
+//                });
+//                btnthem.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        String masp2 = edt_masp.getText().toString().trim();
+//                        String sizesp2 = spinnerSize.getSelectedItem().toString();
+//                        String mausp2 = spinnerMau.getSelectedItem().toString();
+//                        String soluongString = editTextSoLuong.getText().toString().trim();
+//                        int soluong2 = -1;
+//                        if (soluongString.isEmpty()) { soluong2 = -1; }
+//                        else { soluong2 = Integer.parseInt(soluongString); }
+//                        if (soluong2 >-1) {
+//                            String id = UUID.randomUUID().toString();
+//                            ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
+//                            pushData(chiTietSanPham);
+//
+//                        }
+//                    }
+//                });
+//
+//                sizeLayout.addView(newLinearLayout);
+//
+//            }
+//        });
+//
+//
+//    }
 
     public void themSanPham(){
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinerThuongHieu);
@@ -301,9 +292,10 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 String sizesp = spn_sizesp.getSelectedItem().toString();
                 String trangthaisp = spn_trang_thai.getSelectedItem().toString();
                 String ghichu = edt_ghi_chu.getText().toString().trim();
+                String soluongsizecolor = edt_so_luong_sp.getText().toString().trim();
 
                 if (masp.isEmpty() || tensp.isEmpty() || solgspString.isEmpty() || gianhap.isEmpty() || giaban.isEmpty() ||
-                        ghichu.isEmpty() || loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
+                        ghichu.isEmpty() || soluongsizecolor.isEmpty() || loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
                     Toast.makeText(context, "Chưa nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
                 }else {
                     if (mImageUri == null){
@@ -319,7 +311,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     int solgsp;
                     solgsp = Integer.parseInt(solgspString);
                     String id = UUID.randomUUID().toString();
-                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
+                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
                     pushData(chiTietSanPham);
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
 
@@ -380,6 +372,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                             SanPham sanPham = new SanPham(System.currentTimeMillis(),masp, tensp, solgsp, solgban, gianhap, giaban, thuonghieu, mau, size, trangthai, ghichu, uri.toString(), urlList);
                             sanPhamDAO.insertProducts(sanPham);
                             progressDialog.dismiss();
+                            Toast.makeText(context, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(ThemSanPhamActivity.this, QuanLySanPhamActivity.class);
+                            startActivity(intent);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
