@@ -76,6 +76,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     private SanPhamAdapter sanPhamAdapter;
     private RecyclerView recyclerView;
     private DatabaseReference mDatabaseReference;
+    private ImageView imgBack;
 
 
 
@@ -85,6 +86,9 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quan_ly_san_pham);
+
+        imgBack = findViewById(R.id.toolbar);
+        imgBack.setOnClickListener(v -> finish());
 
         floatingActionButton = findViewById(R.id.fabAdd);
         recyclerView = findViewById(R.id.rcy_qlsp);

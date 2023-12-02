@@ -59,19 +59,19 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 
         holder.img_tym.setColorFilter(Color.BLACK);
 
-//        holder.img_tym.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (clickTym){
-//                    holder.img_tym.setColorFilter(Color.BLACK);
+        holder.img_tym.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickTym){
+                    holder.img_tym.setColorFilter(Color.BLACK);
 //                    removeProductFromFavorites();
-//                }else {
-//                    holder.img_tym.setColorFilter(Color.RED);
+                }else {
+                    holder.img_tym.setColorFilter(Color.RED);
 //                    addProductToFavorites();
-//                }
-//                clickTym = !clickTym;
-//            }
-//        });
+                }
+                clickTym = !clickTym;
+            }
+        });
 
 
 

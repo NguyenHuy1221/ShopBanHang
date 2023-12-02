@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,20 +16,16 @@ import android.widget.Toast;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Random;
 import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
@@ -45,14 +40,14 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DangKy();
+                themKhuyenMai();
             }
         });
     }
 
 
 
-    private void DangKy() {
+    private void themKhuyenMai() {
 
 
         button = findViewById(R.id.btnsignup);
@@ -67,8 +62,7 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
 
 
 
-                Random random = new Random();
-                String id = String.valueOf(random.nextInt(1000000));
+                String id = UUID.randomUUID().toString();
                 String hotenkh = hoten.getEditText().getText().toString().trim();
                 String emailkh = email.getEditText().getText().toString().trim();
                 String matkhaukh = matkhau.getEditText().getText().toString().trim();
@@ -91,24 +85,10 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
                     return;
                 }
                 else {
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    mAuth.createUserWithEmailAndPassword(emailkh, nhaplaimatkhau)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Intent intent = new Intent(SignupActivity.this, TrangChuActivity.class);
-                                        TaiKhoan taiKhoan = new TaiKhoan(id,"https://firebasestorage.googleapis.com/v0/b/shopbanhang-38995.appspot.com/o/TaiKhoan%2Fno_image.png?alt=media&token=4a0b719e-6261-44b9-bf56-f509e0775ed2",hotenkh,emailkh,matkhaukh,"none","none","none","none");
-                                        pushData(taiKhoan);
-                                        startActivity(intent);
-                                        finishAffinity();
-                                    } else {
-                                        Toast.makeText(SignupActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-
+                    TaiKhoan taiKhoan = new TaiKhoan(id,"none",hotenkh,emailkh,matkhaukh,"none","none","none","none");
+                    pushData(taiKhoan);
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                    startActivity(intent);
 
                 }
 
