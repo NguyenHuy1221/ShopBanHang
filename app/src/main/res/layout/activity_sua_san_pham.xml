@@ -296,5 +296,13 @@
             android:text="Sửa"
             android:background="@color/red"
             app:backgroundTint="@null"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcy_suachitietsanpham"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
     </LinearLayout>
 </ScrollView>

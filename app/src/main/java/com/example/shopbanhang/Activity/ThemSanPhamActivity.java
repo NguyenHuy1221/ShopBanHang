@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.SanPhamDAO;
+import com.example.shopbanhang.Model.AddsizeColor;
 import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
@@ -46,6 +48,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -103,15 +106,20 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
     }
 
+    private AddsizeColor addsizeColor;
+    private HashMap<Integer, AddsizeColor> map = new HashMap<>();
     public void addSizeAndColor() {
 
         buttonAddSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int id = view.generateViewId();
                 TextView tvName= new TextView(ThemSanPhamActivity.this);
-                tvName.setText("Thêm sản phẩm ");
-                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
+                tvName.setId(id);
+                tvName.setText("Thêm sản phẩm " + id);
 
+                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
+                spinnerSize.setId(id);
                 List<String> sizeMoi = new ArrayList<>();
                 sizeMoi.add("none");
                 sizeMoi.add("M");
@@ -126,7 +134,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 TextView tvMau = new TextView(ThemSanPhamActivity.this);
                 tvMau.setText("Màu");
                 Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
-
+                spinnerMau.setId(id);
                 List<String> color = new ArrayList<>();
                 color.add("none");
                 color.add("Trắng");
@@ -142,9 +150,10 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
                 editTextSoLuong.setHint("Số lượng");
                 editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editTextSoLuong.setId(id);
 
-                Button btnthem = new Button(ThemSanPhamActivity.this);
-                btnthem.setText("them");
+//                Button btnthem = new Button(ThemSanPhamActivity.this);
+//                btnthem.setText("them");
                 Button btnXoa = new Button(ThemSanPhamActivity.this);
                 btnXoa.setText("Xóa");
 
@@ -156,7 +165,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 newLinearLayout.addView(spinnerSize);
                 newLinearLayout.addView(spinnerMau);
                 newLinearLayout.addView(editTextSoLuong);
-                newLinearLayout.addView(btnthem);
+//                newLinearLayout.addView(btnthem);
                 newLinearLayout.addView(btnXoa);
                 // Tạo một tag duy nhất cho newLinearLayout
                 String uniqueTag = "layout_" + System.currentTimeMillis();
@@ -184,24 +193,29 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         }
                     }
                 });
-                btnthem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String masp2 = edt_masp.getText().toString().trim();
-                        String sizesp2 = spinnerSize.getSelectedItem().toString();
-                        String mausp2 = spinnerMau.getSelectedItem().toString();
-                        String soluongString = editTextSoLuong.getText().toString().trim();
-                        int soluong2 = -1;
-                        if (soluongString.isEmpty()) { soluong2 = -1; }
-                        else { soluong2 = Integer.parseInt(soluongString); }
-                        if (soluong2 >-1) {
-                            String id = UUID.randomUUID().toString();
-                            ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
-                            pushData(chiTietSanPham);
+                AddsizeColor addsizeColor1 = new AddsizeColor(tvName,spinnerSize,spinnerMau,editTextSoLuong);
 
-                        }
-                    }
-                });
+
+                // Thêm cặp vào HashMap theo id
+                map.put(id, addsizeColor1);
+//                btnthem.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        String masp2 = edt_masp.getText().toString().trim();
+//                        String sizesp2 = spinnerSize.getSelectedItem().toString();
+//                        String mausp2 = spinnerMau.getSelectedItem().toString();
+//                        String soluongString = editTextSoLuong.getText().toString().trim();
+//                        int soluong2 = -1;
+//                        if (soluongString.isEmpty()) { soluong2 = -1; }
+//                        else { soluong2 = Integer.parseInt(soluongString); }
+//                        if (soluong2 >-1) {
+//                            String id = UUID.randomUUID().toString();
+//                            ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id, Integer.parseInt(masp2), sizesp2, mausp2, soluong2);
+//                            pushData(chiTietSanPham);
+//
+//                        }
+//                    }
+//                });
 
                 sizeLayout.addView(newLinearLayout);
 
@@ -318,6 +332,15 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     String id = UUID.randomUUID().toString();
                     ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
                     pushData(chiTietSanPham);
+                    for (int id2 : map.keySet()){
+                        AddsizeColor addsizeColor1 = map.get(id2);
+                        String spinnerkichco = addsizeColor1.getSpnsize().getSelectedItem().toString();
+                        String spinnermau = addsizeColor1.getSpncolor().getSelectedItem().toString();
+                        int soluong = Integer.parseInt(addsizeColor1.getEdtsoluong().getText().toString());
+                        String id3 = UUID.randomUUID().toString();
+                        ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id3,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
+                        pushData(chiTietSanPham2);
+                    }
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
 
                 }
