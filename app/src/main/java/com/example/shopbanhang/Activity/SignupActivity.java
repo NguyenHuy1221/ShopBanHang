@@ -35,7 +35,7 @@ import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
 
-TextInputLayout hoten,email,matkhau,nhaplaimk;
+    TextInputLayout hoten,email,matkhau,nhaplaimk;
     Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,50 +67,50 @@ TextInputLayout hoten,email,matkhau,nhaplaimk;
 
 
 
-                Random random = new Random();
-                String id = String.valueOf(random.nextInt(1000000));
-                String hotenkh = hoten.getEditText().getText().toString().trim();
-                String emailkh = email.getEditText().getText().toString().trim();
-                String matkhaukh = matkhau.getEditText().getText().toString().trim();
-                String nhaplaimatkhau = nhaplaimk.getEditText().getText().toString().trim();
-                if (hotenkh.equals("")){
-                    Toast.makeText(SignupActivity.this, "Chưa nhập tên khách hàng", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (emailkh.equals("")){
-                    Toast.makeText(SignupActivity.this, "Chưa nhập email", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (matkhaukh.equals("")){
-                    Toast.makeText(SignupActivity.this, "Chưa nhập mật khẩu", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (nhaplaimatkhau.equals("")){
-                    Toast.makeText(SignupActivity.this, "Chưa nhập ngày lại mật khẩu", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else if (!matkhaukh.equals(nhaplaimatkhau)){
-                    Toast.makeText(SignupActivity.this, "mật khẩu phải giống với nhập lại mật khẩu", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else {
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    mAuth.createUserWithEmailAndPassword(emailkh, nhaplaimatkhau)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Intent intent = new Intent(SignupActivity.this, TrangChuActivity.class);
-                                        TaiKhoan taiKhoan = new TaiKhoan(id,"https://firebasestorage.googleapis.com/v0/b/shopbanhang-38995.appspot.com/o/TaiKhoan%2Fno_image.png?alt=media&token=4a0b719e-6261-44b9-bf56-f509e0775ed2",hotenkh,emailkh,matkhaukh,"none","none","none","none");
-                                        pushData(taiKhoan);
-                                        startActivity(intent);
-                                        finishAffinity();
-                                    } else {
-                                        Toast.makeText(SignupActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+        Random random = new Random();
+        String id = String.valueOf(random.nextInt(1000000));
+        String hotenkh = hoten.getEditText().getText().toString().trim();
+        String emailkh = email.getEditText().getText().toString().trim();
+        String matkhaukh = matkhau.getEditText().getText().toString().trim();
+        String nhaplaimatkhau = nhaplaimk.getEditText().getText().toString().trim();
+        if (hotenkh.equals("")){
+            Toast.makeText(SignupActivity.this, "Chưa nhập tên khách hàng", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (emailkh.equals("")){
+            Toast.makeText(SignupActivity.this, "Chưa nhập email", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (matkhaukh.equals("")){
+            Toast.makeText(SignupActivity.this, "Chưa nhập mật khẩu", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (nhaplaimatkhau.equals("")){
+            Toast.makeText(SignupActivity.this, "Chưa nhập ngày lại mật khẩu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (!matkhaukh.equals(nhaplaimatkhau)){
+            Toast.makeText(SignupActivity.this, "mật khẩu phải giống với nhập lại mật khẩu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.createUserWithEmailAndPassword(emailkh, nhaplaimatkhau)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(SignupActivity.this, TrangChuActivity.class);
+                                TaiKhoan taiKhoan = new TaiKhoan(id,"https://firebasestorage.googleapis.com/v0/b/shopbanhang-38995.appspot.com/o/TaiKhoan%2Fno_image.png?alt=media&token=4a0b719e-6261-44b9-bf56-f509e0775ed2",hotenkh,emailkh,matkhaukh,"none","none","none","none");
+                                pushData(taiKhoan);
+                                startActivity(intent);
+                                finishAffinity();
+                            } else {
+                                Toast.makeText(SignupActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
 
 
-                }
+        }
 
 
 

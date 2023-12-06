@@ -46,17 +46,17 @@ import java.util.Random;
 import java.util.UUID;
 
 public class QuanLyTaiKhoanActivity extends AppCompatActivity {
-FloatingActionButton addtk;
-RecyclerView recycle_qltk;
-private static final int PICK_IMAGE_REQUEST = 1;
-ImageView imgtk;
-EditText edtidtk,edtemailtk,edtmktk,edtdctk,edtnttk,edttttk,edtsdttk,edttentk;
-TaiKhoanAdapter taiKhoanAdapter;
-private Uri uri;
-private Context context = this;
-private DatabaseReference mDatabaseReference;
-private FirebaseStorage database;
-private List<TaiKhoan> list=new ArrayList<>();
+    FloatingActionButton addtk;
+    RecyclerView recycle_qltk;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    ImageView imgtk;
+    EditText edtidtk,edtemailtk,edtmktk,edtdctk,edtnttk,edttttk,edtsdttk,edttentk;
+    TaiKhoanAdapter taiKhoanAdapter;
+    private Uri uri;
+    private Context context = this;
+    private DatabaseReference mDatabaseReference;
+    private FirebaseStorage database;
+    private List<TaiKhoan> list=new ArrayList<>();
     ImageView backBtntk;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +177,7 @@ private List<TaiKhoan> list=new ArrayList<>();
         imgtk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            oppenFile();
+                oppenFile();
             }
         });
 
@@ -343,7 +343,14 @@ private List<TaiKhoan> list=new ArrayList<>();
         addtk = findViewById(R.id.addtk);
         recycle_qltk = findViewById(R.id.recycle_qltk);
         backBtntk = findViewById(R.id.backBtntk);
-        backBtntk.setOnClickListener(v -> finish());
+//        backBtntk.setOnClickListener(v -> finish());
+        backBtntk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(QuanLyTaiKhoanActivity.this,Trang_Ca_Nhan.class);
+                startActivity(intent);
+            }
+        });
     }
     private void oppenFile() {
         Intent intent = new Intent();

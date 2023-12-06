@@ -25,6 +25,7 @@ import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -46,11 +47,16 @@ public class Gio_Hang extends AppCompatActivity {
     double tongTienSanPham = 0.0;
     private TextView txtTien,tvTienSanPham,tvGiamGia,tvTongTien;
     private Button btnMua;
+    private String user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gio_hang);
+
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user = mySharedPreferences.getValue("remember_username_ten");
 
         anhxa();
         senDataCart();
@@ -68,6 +74,8 @@ public class Gio_Hang extends AppCompatActivity {
         });
         recyclerView = findViewById(R.id.rcy_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+
     }
 
     private void anhxa() {
@@ -84,7 +92,7 @@ public class Gio_Hang extends AppCompatActivity {
         mlistGioHang = new ArrayList<>();
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");
 
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.orderByChild("user").equalTo(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mlistGioHang.clear();
@@ -110,6 +118,7 @@ public class Gio_Hang extends AppCompatActivity {
                     }
                 });
                 recyclerView.setAdapter(gioHangAdapter);
+
             }
 
             @Override

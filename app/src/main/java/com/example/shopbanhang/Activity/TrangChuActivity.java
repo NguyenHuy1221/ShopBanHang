@@ -27,6 +27,7 @@ import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.SliderItems;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,7 +48,7 @@ public class TrangChuActivity extends AppCompatActivity {
     private Context context = this;
     private LinearLayout Lme,next_gio_hang,nextTym;
 
-    private TextView search;
+    private TextView search,textView3;
 
 
     @Override
@@ -59,6 +60,13 @@ public class TrangChuActivity extends AppCompatActivity {
         banner();
         sendCategoryFirebase();
         sendProductsFirebase();
+
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        String user = mySharedPreferences.getValue("remember_username_ten");
+
+        if (mySharedPreferences.getBooleanValue("login") && user != null) {
+            textView3.setText(user);
+        }
 
         Lme.setOnClickListener(v -> {
             Intent intent = new Intent(TrangChuActivity.this, Trang_Ca_Nhan.class);
@@ -86,6 +94,7 @@ public class TrangChuActivity extends AppCompatActivity {
     }
 
     public void anhxa(){
+        textView3 = findViewById(R.id.textView3);
         Lme = findViewById(R.id.Lme);
         search = findViewById(R.id.editTextText);
         next_gio_hang = findViewById(R.id.next_gio_hang);

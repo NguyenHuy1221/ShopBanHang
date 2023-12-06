@@ -7,14 +7,32 @@
     android:orientation="vertical"
     tools:context=".Activity.QuanLyKhoActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <ImageView
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/red"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="58dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="108dp"
+        android:layout_toEndOf="@+id/toolbar"
+        android:gravity="center"
+        android:text="Quản lý sản phẩm"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcy_qlsp"

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.SanPhamDAO;
+import com.example.shopbanhang.Model.AddsizeColor;
 import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
@@ -46,6 +48,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -78,7 +81,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
 
         anhxa();
-//        addSizeAndColor();
+        addSizeAndColor();
         themSanPham();
 
     }
@@ -96,94 +99,105 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         spn_sizesp = findViewById(R.id.spn_size_sp);
         spn_trang_thai = findViewById(R.id.spn_trang_thai_sp);
         edt_ghi_chu = findViewById(R.id.edt_ghi_chu_sp);
-//        sizeLayout = findViewById(R.id.sizeLayout);
-//        buttonAddSize = findViewById(R.id.buttonAddSize);
+        sizeLayout = findViewById(R.id.sizeLayout);
+        buttonAddSize = findViewById(R.id.buttonAddSize);
         btnAdd = findViewById(R.id.btn_them_sp);
 //        edt_so_luong_sp = findViewById(R.id.edt_so_luong_sp);
 
     }
 
-//    public void addSizeAndColor() {
-//
-//        buttonAddSize.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                TextView tvName = new TextView(ThemSanPhamActivity.this);
-//                tvName.setText("Thêm sản phẩm ");
-//                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
-//
-//                List<String> sizeMoi = new ArrayList<>();
-//                sizeMoi.add("none");
-//                sizeMoi.add("M");
-//                sizeMoi.add("L");
-//                sizeMoi.add("Xl");
-//                sizeMoi.add("XXL");
-//
-//                ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, sizeMoi);
-//                sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                spinnerSize.setAdapter(sizeAdapter);
-//
-//                TextView tvMau = new TextView(ThemSanPhamActivity.this);
-//                tvMau.setText("Màu");
-//                Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
-//
-//                List<String> color = new ArrayList<>();
-//                color.add("none");
-//                color.add("Trắng");
-//                color.add("Vàng");
-//                color.add("Xanh");
-//                color.add("Đen");
-//                color.add("Đỏ");
-//
-//                ArrayAdapter<String> mauAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, color);
-//                mauAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                spinnerMau.setAdapter(mauAdapter);
-//
-//                EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
-//                editTextSoLuong.setHint("Số lượng");
-//                editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
-//
+    private AddsizeColor addsizeColor;
+    private HashMap<Integer, AddsizeColor> map = new HashMap<>();
+    public void addSizeAndColor() {
+
+        buttonAddSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int id = view.generateViewId();
+                TextView tvName= new TextView(ThemSanPhamActivity.this);
+                tvName.setId(id);
+                tvName.setText("Thêm sản phẩm " + id);
+
+                Spinner spinnerSize = new Spinner(ThemSanPhamActivity.this);
+                spinnerSize.setId(id);
+                List<String> sizeMoi = new ArrayList<>();
+                sizeMoi.add("none");
+                sizeMoi.add("M");
+                sizeMoi.add("L");
+                sizeMoi.add("Xl");
+                sizeMoi.add("XXL");
+
+                ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, sizeMoi);
+                sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSize.setAdapter(sizeAdapter);
+
+                TextView tvMau = new TextView(ThemSanPhamActivity.this);
+                tvMau.setText("Màu");
+                Spinner spinnerMau = new Spinner(ThemSanPhamActivity.this);
+                spinnerMau.setId(id);
+                List<String> color = new ArrayList<>();
+                color.add("none");
+                color.add("Trắng");
+                color.add("Vàng");
+                color.add("Xanh");
+                color.add("Đen");
+                color.add("Đỏ");
+
+                ArrayAdapter<String> mauAdapter = new ArrayAdapter<>(ThemSanPhamActivity.this, android.R.layout.simple_spinner_item, color);
+                mauAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerMau.setAdapter(mauAdapter);
+
+                EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
+                editTextSoLuong.setHint("Số lượng");
+                editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editTextSoLuong.setId(id);
+
 //                Button btnthem = new Button(ThemSanPhamActivity.this);
 //                btnthem.setText("them");
-//                Button btnXoa = new Button(ThemSanPhamActivity.this);
-//                btnXoa.setText("Xóa");
-//
-//
-//                LinearLayout newLinearLayout = new LinearLayout(ThemSanPhamActivity.this);
-//                newLinearLayout.setOrientation(LinearLayout.VERTICAL);
-//
-//                newLinearLayout.addView(tvName);
-//                newLinearLayout.addView(spinnerSize);
-//                newLinearLayout.addView(spinnerMau);
-//                newLinearLayout.addView(editTextSoLuong);
+                Button btnXoa = new Button(ThemSanPhamActivity.this);
+                btnXoa.setText("Xóa");
+
+
+                LinearLayout newLinearLayout = new LinearLayout(ThemSanPhamActivity.this);
+                newLinearLayout.setOrientation(LinearLayout.VERTICAL);
+
+                newLinearLayout.addView(tvName);
+                newLinearLayout.addView(spinnerSize);
+                newLinearLayout.addView(spinnerMau);
+                newLinearLayout.addView(editTextSoLuong);
 //                newLinearLayout.addView(btnthem);
-//                newLinearLayout.addView(btnXoa);
-//                // Tạo một tag duy nhất cho newLinearLayout
-//                String uniqueTag = "layout_" + System.currentTimeMillis();
-//
-//                // Đặt tag duy nhất cho newLinearLayout
-//                newLinearLayout.setTag(uniqueTag);
-//
-//                // Đặt tag cho btnXoa trực tiếp
-//                btnXoa.setTag(uniqueTag);
-//
-//                btnXoa.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        // Lấy tag được gán cho LinearLayout cha
-//                        String tag = (String) view.getTag();
-//
-//                        // Tìm LinearLayout có tag cụ thể
-//                        for (int i = 0; i < sizeLayout.getChildCount(); i++) {
-//                            View child = sizeLayout.getChildAt(i);
-//                            if (child instanceof LinearLayout && Objects.equals(child.getTag(), tag)) {
-//                                // Loại bỏ LinearLayout được tìm thấy khỏi sizeLayout
-//                                sizeLayout.removeView(child);
-//                                break; // Dừng tìm kiếm khi tìm thấy
-//                            }
-//                        }
-//                    }
-//                });
+                newLinearLayout.addView(btnXoa);
+                // Tạo một tag duy nhất cho newLinearLayout
+                String uniqueTag = "layout_" + System.currentTimeMillis();
+
+                // Đặt tag duy nhất cho newLinearLayout
+                newLinearLayout.setTag(uniqueTag);
+
+                // Đặt tag cho btnXoa trực tiếp
+                btnXoa.setTag(uniqueTag);
+
+                btnXoa.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Lấy tag được gán cho LinearLayout cha
+                        String tag = (String) view.getTag();
+
+                        // Tìm LinearLayout có tag cụ thể
+                        for (int i = 0; i < sizeLayout.getChildCount(); i++) {
+                            View child = sizeLayout.getChildAt(i);
+                            if (child instanceof LinearLayout && Objects.equals(child.getTag(), tag)) {
+                                // Loại bỏ LinearLayout được tìm thấy khỏi sizeLayout
+                                sizeLayout.removeView(child);
+                                break; // Dừng tìm kiếm khi tìm thấy
+                            }
+                        }
+                    }
+                });
+                AddsizeColor addsizeColor1 = new AddsizeColor(tvName,spinnerSize,spinnerMau,editTextSoLuong);
+
+
+                // Thêm cặp vào HashMap theo id
+                map.put(id, addsizeColor1);
 //                btnthem.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
@@ -202,14 +216,14 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-//
-//                sizeLayout.addView(newLinearLayout);
-//
-//            }
-//        });
-//
-//
-//    }
+
+                sizeLayout.addView(newLinearLayout);
+
+            }
+        });
+
+
+    }
 
     public void themSanPham(){
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinerThuongHieu);
@@ -282,6 +296,11 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String masp2 = edt_masp.getText().toString().trim();
+//                String sizesp2 = spinnerSize.getSelectedItem().toString();
+//                String mausp2 = spinnerMau.getSelectedItem().toString();
+//                String soluongString = editTextSoLuong.getText().toString().trim();
+
                 String masp = edt_masp.getText().toString().trim();
                 String tensp = edt_tensp.getText().toString().trim();
                 String solgspString  = edt_so_luong_sp.getText().toString().trim();
@@ -313,6 +332,15 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     String id = UUID.randomUUID().toString();
                     ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
                     pushData(chiTietSanPham);
+                    for (int id2 : map.keySet()){
+                        AddsizeColor addsizeColor1 = map.get(id2);
+                        String spinnerkichco = addsizeColor1.getSpnsize().getSelectedItem().toString();
+                        String spinnermau = addsizeColor1.getSpncolor().getSelectedItem().toString();
+                        int soluong = Integer.parseInt(addsizeColor1.getEdtsoluong().getText().toString());
+                        String id3 = UUID.randomUUID().toString();
+                        ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id3,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
+                        pushData(chiTietSanPham2);
+                    }
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
 
                 }

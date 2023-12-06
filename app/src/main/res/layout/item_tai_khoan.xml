@@ -227,23 +227,23 @@
 
 
 
-                <Button
-                    android:layout_gravity="center"
-                    android:id="@+id/btnsua"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:backgroundTint="#4CAF50"
-                    android:text="Sửa"
-                    />
+            <Button
+                android:layout_gravity="center"
+                android:id="@+id/btnsua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:backgroundTint="#4CAF50"
+                android:text="Sửa"
+                />
 
-                <TextView
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/red"
-                    android:textSize="15dp"
-                    android:text="Nếu bạn muốn xóa tài khoản ấn và giữ đối tượng!"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:textSize="15dp"
+                android:text="Nếu bạn muốn xóa tài khoản ấn và giữ đối tượng!"/>
 
         </LinearLayout>
 

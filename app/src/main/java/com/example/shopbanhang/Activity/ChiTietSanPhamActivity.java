@@ -25,12 +25,15 @@ import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.nex3z.notificationbadge.NotificationBadge;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +44,7 @@ import java.util.UUID;
 
 public class ChiTietSanPhamActivity extends AppCompatActivity {
 
-    private ImageView imgPic, imgback;
+    private ImageView imgPic, imgback,imgCart;
     private TextView txtName, txtPrice, txtTitle;
     private Button btnadd;
     private Context context = this;
@@ -51,6 +54,9 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
     private String Size = null;
     private int so = 1;
     BottomSheetDialog dialog;
+    NotificationBadge badge;
+
+    private String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +64,19 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
         mGioHangToFirebase = new ArrayList<>();
 
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user = mySharedPreferences.getValue("remember_username_ten");
+
+
+
         anhXa();
         getIntentSanPham();
-
+        hienThiSoLuong();
     }
 
     private void anhXa() {
         imgPic = findViewById(R.id.itemPic);
+        imgCart = findViewById(R.id.imageView4);
         txtName = findViewById(R.id.titleTxt);
         txtPrice = findViewById(R.id.priceTxt);
         txtTitle = findViewById(R.id.moTaTxt);
@@ -74,6 +86,14 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         imgback.setOnClickListener(v -> finish());
         btnadd = findViewById(R.id.btnAdd);
         btnadd.setOnClickListener(v -> addToCart());
+        badge = findViewById(R.id.menu_sl);
+
+
+        imgCart.setOnClickListener(v -> {
+            Intent intent = new Intent(ChiTietSanPhamActivity.this,Gio_Hang.class);
+            startActivity(intent);
+        });
+
     }
 
     public void getIntentSanPham() {
@@ -149,6 +169,12 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (user == null || user.isEmpty()) {
+                    Intent loginIntent = new Intent(ChiTietSanPhamActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                    Toast.makeText(context, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 addProductToCart();
             }
         });
@@ -156,7 +182,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
     private void addProductToCart() {
         Intent intent = getIntent();
-        int masp = intent.getIntExtra("masp",0);
+        int masp = intent.getIntExtra("masp", 0);
         String tenSP = intent.getStringExtra("tensp");
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String imageUrl = intent.getStringExtra("imageUrl");
@@ -171,21 +197,86 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("giohang");
 
-        String newKey = myRef.push().getKey();
+        // Kiểm tra sản phẩm có sẵn trong giỏ hàng chưa
+        Query query = myRef.orderByChild("masp").equalTo(masp);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean productExists = false; // san pham hien co trong gio hang
+                String existingKey = null; // khoa hien co
 
-        myRef.child(newKey).setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color,tongTien))
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                        Color = null;
-                        Size = null;
-                    } else {
-                        Toast.makeText(context, "Lỗi khi thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    GioHang existingProduct = dataSnapshot.getValue(GioHang.class);
+
+                    // Kiểm tra xem size và màu có tồn tại trong giỏ hàng không
+                    if (existingProduct != null &&
+                            existingProduct.getSize().equals(Size) &&
+                            existingProduct.getColor().equals(Color)) {
+                        productExists = true;
+                        existingKey = dataSnapshot.getKey();
+                        break;
                     }
-                });
+                }
 
+                if (productExists) {
+                    // Nếu sản phẩm đã tồn tại, cập nhật số lượng
+                    updateExistingProduct(existingKey, myRef);
+                } else {
+                    // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
+                    myRef.push().setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color, tongTien,user))
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Color = null;
+                                    Size = null;
+                                } else {
+                                    Toast.makeText(context, "Lỗi khi thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+                badge.setText(String.valueOf(mGioHangToFirebase.size()));
+                hienThiSoLuong();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
+    private void updateExistingProduct(String existingKey, DatabaseReference myRef) {
+        myRef.child(existingKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    int existingQuantity = snapshot.child("soluong").getValue(Integer.class);
+                    int newQuantity = existingQuantity + so;
+
+                    // Cập nhật số lượng
+                    snapshot.getRef().child("soluong").setValue(newQuantity);
+
+                    Toast.makeText(context, "Số lượng sản phẩm trong giỏ hàng đã được cập nhật", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    Color = null;
+                    Size = null;
+                } else {
+                    Toast.makeText(context, "Lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
 
     private void setBackGroundColor(View dialogsheetview) {
         CardView colorBlack = dialogsheetview.findViewById(R.id.color_black);
@@ -282,6 +373,32 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
                 sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
                 Size = "XL";
 
+            }
+        });
+    }
+
+    private void hienThiSoLuong() { // hiện ở thanh toolbar
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("giohang");
+        myRef.orderByChild("user").equalTo(user).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mGioHangToFirebase.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    GioHang gioHang = dataSnapshot.getValue(GioHang.class);
+                    mGioHangToFirebase.add(gioHang);
+                }
+
+                // Cập nhật badge với kích thước giỏ hàng chính xác
+                if (mGioHangToFirebase != null) {
+                    badge.setText(String.valueOf(mGioHangToFirebase.size()));
+                }
+
+                // Thêm một lệnh log để hiển thị số lượng mục trong giỏ hàng
+                Log.d("HUY", "Số lượng mục trong giỏ hàng: " + mGioHangToFirebase.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }

@@ -21,8 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotpwActivity extends AppCompatActivity {
 
-private TextInputLayout edtForgot;
-private Button btnForgot;
+    private TextInputLayout edtForgot;
+    private Button btnForgot;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

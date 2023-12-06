@@ -1,5 +1,8 @@
 package com.example.shopbanhang.Model;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 public class HoaDon {
@@ -10,17 +13,29 @@ public class HoaDon {
     private String giotaoHD;
     private List<GioHang> sanPhamList;
     private double tongtien;
+    private int tinhTrang;
 
     public HoaDon() {
     }
 
-    public HoaDon(String maHD, String name_khachhang, String ngaytaoHD, String giotaoHD, List<GioHang> sanPhamList, double tongtien) {
+//    public HoaDon(String maHD, String name_khachhang, String ngaytaoHD, String giotaoHD, List<GioHang> sanPhamList, double tongtien) {
+//        this.maHD = maHD;
+//        this.name_khachhang = name_khachhang;
+//        this.ngaytaoHD = ngaytaoHD;
+//        this.giotaoHD = giotaoHD;
+//        this.sanPhamList = sanPhamList;
+//        this.tongtien = tongtien;
+//    }
+
+
+    public HoaDon(String maHD, String name_khachhang, String ngaytaoHD, String giotaoHD, List<GioHang> sanPhamList, double tongtien, int tinhTrang) {
         this.maHD = maHD;
         this.name_khachhang = name_khachhang;
         this.ngaytaoHD = ngaytaoHD;
         this.giotaoHD = giotaoHD;
         this.sanPhamList = sanPhamList;
         this.tongtien = tongtien;
+        this.tinhTrang = tinhTrang;
     }
 
     public String getMaHD() {
@@ -70,4 +85,14 @@ public class HoaDon {
     public void setTongtien(double tongtien) {
         this.tongtien = tongtien;
     }
+
+    public int getTinhTrang() {
+        return tinhTrang;
+    }
+
+    public void setTinhTrang(int tinhTrang) {
+        this.tinhTrang = tinhTrang;
+    }
+
+
 }
