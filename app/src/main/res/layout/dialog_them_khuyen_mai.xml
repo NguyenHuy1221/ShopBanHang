@@ -79,12 +79,30 @@
             android:layout_marginTop="18dp"
             />
 
-        <EditText
-            android:id="@+id/txtNgayBatDauAddKM"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            />
+            android:orientation="horizontal"
+            android:weightSum="10"
+            >
+
+            <EditText
+                android:id="@+id/txtNgayBatDauAddKM"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                />
+
+            <ImageView
+                android:id="@+id/imgLichBD"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_calendar"
+                />
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -95,12 +113,32 @@
             android:layout_marginTop="18dp"
             />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        >
+
         <EditText
+            android:layout_weight="9"
             android:id="@+id/txtNgayKetThucAddKM"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             />
+
+        <ImageView
+            android:id="@+id/imgLichKT"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_calendar"
+            />
+
+    </LinearLayout>
+
+
 
         <Button
             android:id="@+id/btnThemKM"

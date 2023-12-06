@@ -8,14 +8,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +42,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,9 +55,11 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
     private FloatingActionButton floatAdd;
     private KhuyenMaiAdapter khuyenMaiAdapter;
     private RecyclerView recycle_qlkm;
-    private ImageView backBtnKM, imgKM;
+    private ImageView backBtnKM, imgKM,imgLichBD,imgLichKT;
+    private EditText txtNgayBatDauAddKM, txtNgayKetThucAddKM;
     private Uri uri;
     private List<KhuyenMai> list = new ArrayList<>();
+    private DatePickerDialog.OnDateSetListener onDateSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +104,33 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         dialog.show();
 
         imgKM = view.findViewById(R.id.imgAddKM);
-        TextView txtNameAddKM = view.findViewById(R.id.txtNameAddKM);
-        TextView txtPhanTramAddKM = view.findViewById(R.id.txtPhanTramAddKM);
-        TextView txtNgayBatDauAddKM = view.findViewById(R.id.txtNgayBatDauAddKM);
-        TextView txtNgayKetThucAddKM = view.findViewById(R.id.txtNgayKetThucAddKM);
+        imgLichBD = view.findViewById(R.id.imgLichBD);
+        imgLichKT = view.findViewById(R.id.imgLichKT);
+
+        imgLichBD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDayBD();
+                openCalendar();
+
+            }
+        });
+
+        imgLichKT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDayKT();
+                openCalendar();
+
+            }
+        });
+
+
+
+        EditText txtNameAddKM = view.findViewById(R.id.txtNameAddKM);
+        EditText txtPhanTramAddKM = view.findViewById(R.id.txtPhanTramAddKM);
+        txtNgayBatDauAddKM = view.findViewById(R.id.txtNgayBatDauAddKM);
+        txtNgayKetThucAddKM = view.findViewById(R.id.txtNgayKetThucAddKM);
         Button btnThemKM = view.findViewById(R.id.btnThemKM);
 
         imgKM.setOnClickListener(new View.OnClickListener() {
@@ -109,46 +143,61 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         btnThemKM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String id = UUID.randomUUID().toString();
                 String tenKM = txtNameAddKM.getText().toString().trim();
                 String phanTramKM = txtPhanTramAddKM.getText().toString().trim();
                 String ngayBatDau = txtNgayBatDauAddKM.getText().toString().trim();
                 String ngayKetThuc = txtNgayKetThucAddKM.getText().toString().trim();
-                if (tenKM.equals("")){
-                    Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (phanTramKM.equals("")){
-                    Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (ngayBatDau.equals("")){
-                    Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (ngayKetThuc.equals("")){
-                    Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (uri == null) {
-                    Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("KhuyenMai").child(uri.getLastPathSegment());
-                    storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!uriTask.isComplete());
-                            Uri uriImg = uriTask.getResult();
-                            String img = uriImg.toString();
-                            KhuyenMai khuyenMai = new KhuyenMai(id,img,tenKM,ngayBatDau,ngayKetThuc,phanTramKM);
-                            pushData(khuyenMai);
-                            dialog.dismiss();
-                        }
-                    });
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    Date ngayBatDauKM = simpleDateFormat.parse(txtNgayBatDauAddKM.getText().toString());
+                    Date ngayKetThucKM = simpleDateFormat.parse(txtNgayKetThucAddKM.getText().toString());
+                    if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
+                    } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
+                    } else if (tenKM.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (phanTramKM.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (ngayBatDau.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (ngayKetThuc.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (uri == null) {
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else  {
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("KhuyenMai").child(uri.getLastPathSegment());
+                        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!uriTask.isComplete());
+                                Uri uriImg = uriTask.getResult();
+                                String img = uriImg.toString();
+                                KhuyenMai khuyenMai = new KhuyenMai(id,img,tenKM,ngayBatDau,ngayKetThuc,phanTramKM);
+                                pushData(khuyenMai);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
                 }
 
             }
         });
 
     }
+
+
 
     private void suaKhuyenMai(KhuyenMai khuyenMai) {
         AlertDialog.Builder builder = new AlertDialog.Builder(quan_ly_khuyen_mai.this);
@@ -171,6 +220,40 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         txtEditPhanTramKM.setText(khuyenMai.getPhanTramKhuyenMai());
         txtEditNgayBatDauKM.setText(khuyenMai.getNgayBatDau());
         txtEditNgayKetThucKM.setText(khuyenMai.getNgayKetThuc());
+        imgLichBD = view.findViewById(R.id.imgLichBD);
+        imgLichKT = view.findViewById(R.id.imgLichKT);
+
+        imgLichBD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month = month + 1;
+                        String date = dayOfMonth + "/" + month + "/" + year;
+                        txtEditNgayBatDauKM.setText(date);
+                    }
+                };
+                openCalendar();
+
+            }
+        });
+
+        imgLichKT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month = month + 1;
+                        String date = dayOfMonth + "/" + month + "/" + year;
+                        txtEditNgayKetThucKM.setText(date);
+                    }
+                };
+                openCalendar();
+
+            }
+        });
 
         imgKM.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,32 +273,52 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                 String phanTramKhuyenMaiMoi = txtEditPhanTramKM.getText().toString().trim();
                 String ngayBatDauKhuyenMaiMoi = txtEditNgayBatDauKM.getText().toString().trim();
                 String ngayKetThucKhuyenMaiMoi = txtEditNgayKetThucKM.getText().toString().trim();
+                String ngayBatDau = txtNgayBatDauAddKM.getText().toString().trim();
+                String ngayKetThuc = txtNgayKetThucAddKM.getText().toString().trim();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+                try {
+                    Date ngayBatDauKM = simpleDateFormat.parse(txtNgayBatDauAddKM.getText().toString());
+                    Date ngayKetThucKM = simpleDateFormat.parse(txtNgayKetThucAddKM.getText().toString());
 
-
-                storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isComplete());
-                        Uri uriImg = uriTask.getResult();
-                        String img = uriImg.toString();
-                        khuyenMai.setImgKhuyenMai(img);
-                        khuyenMai.setTenKhuyenMai(tenKhuyenMaiMoi);
-                        khuyenMai.setPhanTramKhuyenMai(phanTramKhuyenMaiMoi);
-                        khuyenMai.setNgayBatDau(ngayBatDauKhuyenMaiMoi);
-                        khuyenMai.setNgayKetThuc(ngayKetThucKhuyenMaiMoi);
-                        databaseReference.child(khuyenMai.getIdKhuyenMai()).updateChildren(khuyenMai.toMap());
-                        dialog.dismiss();
+                    if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
+                    } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
+                    } else if (tenKhuyenMaiMoi.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (phanTramKhuyenMaiMoi.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (ngayBatDau.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (ngayKetThuc.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
+                        return;
+                    }else {
+                        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!uriTask.isComplete());
+                                Uri uriImg = uriTask.getResult();
+                                String img = uriImg.toString();
+                                khuyenMai.setImgKhuyenMai(img);
+                                khuyenMai.setTenKhuyenMai(tenKhuyenMaiMoi);
+                                khuyenMai.setPhanTramKhuyenMai(phanTramKhuyenMaiMoi);
+                                khuyenMai.setNgayBatDau(ngayBatDauKhuyenMaiMoi);
+                                khuyenMai.setNgayKetThuc(ngayKetThucKhuyenMaiMoi);
+                                databaseReference.child(khuyenMai.getIdKhuyenMai()).updateChildren(khuyenMai.toMap());
+                                dialog.dismiss();
+                            }
+                        });
                     }
-                });
 
-
-
-
-
-
-
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -247,7 +350,6 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         databaseReference.child(pathObj).setValue(khuyenMai);
 
     }
-
 
     private void getList(){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -313,6 +415,47 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent,PICK_IMAGE);
+    }
+
+    // mở lịch
+    private void openCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        int year =  calendar.get(Calendar.YEAR);
+        int month =  calendar.get(Calendar.MONTH);
+        int day =  calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(quan_ly_khuyen_mai.this,
+                android.R.style.Theme_Holo_Dialog_MinWidth,onDateSetListener,year,month,day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    private void setDayBD(){
+        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String date = dayOfMonth + "/" + month + "/" + year;
+                txtNgayBatDauAddKM.setText(date);
+            }
+        };
+    }
+
+    private void setDayKT(){
+        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String date = dayOfMonth + "/" + month + "/" + year;
+                txtNgayKetThucAddKM.setText(date);
+            }
+        };
+    }
+
+    private void kiemTraNgay(){
+
+
+
     }
 
     @Override

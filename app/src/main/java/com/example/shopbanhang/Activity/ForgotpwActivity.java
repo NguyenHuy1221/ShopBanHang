@@ -49,6 +49,8 @@ private Button btnForgot;
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(ForgotpwActivity.this, "Send Email", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ForgotpwActivity.this, LoginActivity.class);
+                                    startActivity(intent);
                                 }
                             }
                         }).addOnFailureListener(new OnFailureListener() {

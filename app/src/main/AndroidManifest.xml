@@ -38,13 +38,13 @@
             android:name=".Activity.LichSuHoaDonMainActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name=".Activity.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".DialogThemTaiKhoanActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.quan_ly_khuyen_mai"
+            android:name=".Activity.TrangChuActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.ForgotpwActivity"
@@ -56,7 +56,7 @@
             android:name=".Activity.QuanLyTaiKhoanActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.SignupActivity"
+            android:name=".Activity.quan_ly_khuyen_mai"
             android:exported="false" />
         <activity
             android:name=".Activity.Gio_Hang"
@@ -71,7 +71,7 @@
             android:name=".Activity.SuaSanPhamActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+             android:name=".Activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
