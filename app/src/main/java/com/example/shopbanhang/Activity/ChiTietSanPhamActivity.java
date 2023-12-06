@@ -25,6 +25,7 @@ import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +44,7 @@ import java.util.UUID;
 
 public class ChiTietSanPhamActivity extends AppCompatActivity {
 
-    private ImageView imgPic, imgback;
+    private ImageView imgPic, imgback,imgCart;
     private TextView txtName, txtPrice, txtTitle;
     private Button btnadd;
     private Context context = this;
@@ -54,6 +55,8 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
     private int so = 1;
     BottomSheetDialog dialog;
     NotificationBadge badge;
+
+    private String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +64,19 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
         mGioHangToFirebase = new ArrayList<>();
 
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user = mySharedPreferences.getValue("remember_username_ten");
+
+
+
         anhXa();
         getIntentSanPham();
-
+        hienThiSoLuong();
     }
 
     private void anhXa() {
         imgPic = findViewById(R.id.itemPic);
+        imgCart = findViewById(R.id.imageView4);
         txtName = findViewById(R.id.titleTxt);
         txtPrice = findViewById(R.id.priceTxt);
         txtTitle = findViewById(R.id.moTaTxt);
@@ -78,9 +87,12 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         btnadd = findViewById(R.id.btnAdd);
         btnadd.setOnClickListener(v -> addToCart());
         badge = findViewById(R.id.menu_sl);
-        if (mGioHangToFirebase != null) {
-            badge.setText(String.valueOf(mGioHangToFirebase.size()));
-        }
+
+
+        imgCart.setOnClickListener(v -> {
+            Intent intent = new Intent(ChiTietSanPhamActivity.this,Gio_Hang.class);
+            startActivity(intent);
+        });
 
     }
 
@@ -157,6 +169,12 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (user == null || user.isEmpty()) {
+                    Intent loginIntent = new Intent(ChiTietSanPhamActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                    Toast.makeText(context, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 addProductToCart();
             }
         });
@@ -205,7 +223,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
                     updateExistingProduct(existingKey, myRef);
                 } else {
                     // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
-                    myRef.push().setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color, tongTien))
+                    myRef.push().setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color, tongTien,user))
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
@@ -219,7 +237,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
                 }
 
                 badge.setText(String.valueOf(mGioHangToFirebase.size()));
-
+                hienThiSoLuong();
             }
 
             @Override
@@ -253,7 +271,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase Error", "Error updating existing product: " + error.getMessage());
+
             }
         });
     }
@@ -355,6 +373,32 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
                 sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
                 Size = "XL";
 
+            }
+        });
+    }
+
+    private void hienThiSoLuong() { // hiện ở thanh toolbar
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("giohang");
+        myRef.orderByChild("user").equalTo(user).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mGioHangToFirebase.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    GioHang gioHang = dataSnapshot.getValue(GioHang.class);
+                    mGioHangToFirebase.add(gioHang);
+                }
+
+                // Cập nhật badge với kích thước giỏ hàng chính xác
+                if (mGioHangToFirebase != null) {
+                    badge.setText(String.valueOf(mGioHangToFirebase.size()));
+                }
+
+                // Thêm một lệnh log để hiển thị số lượng mục trong giỏ hàng
+                Log.d("HUY", "Số lượng mục trong giỏ hàng: " + mGioHangToFirebase.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }

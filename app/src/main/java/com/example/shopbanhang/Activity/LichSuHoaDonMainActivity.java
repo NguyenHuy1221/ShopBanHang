@@ -5,17 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.shopbanhang.Adapter.ChiTietDonHangAdapter;
 import com.example.shopbanhang.Adapter.HoaDonAdapter;
 import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.Model.HoaDonPdf;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -25,36 +29,28 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private HoaDonAdapter hoaDonAdapter;
+    private ChiTietDonHangAdapter chiTietDonHangAdapter;
 
     private List<HoaDon> mListhoadon = new ArrayList<>();
-
-
+    private Context context = this;
+    private String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lich_su_hoa_don_main);
 
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user = mySharedPreferences.getValue("remember_username_ten");
+
         recyclerView = findViewById(R.id.rcvHoaDon);
 
-
-
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("hoadon");
-
+        DatabaseReference hoaDonMyRef = FirebaseDatabase.getInstance().getReference().child("hoadon");
+        Query myRef = hoaDonMyRef.orderByChild("name_khachhang").equalTo(user);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-//                    HoaDon hoaDon = dataSnapshot.getValue(HoaDon.class);
-//                    if (hoaDon != null) {
-//                        String noiDungHoaDon = "Nội dung hóa đơn:\n" +
-//                                "Ngày: " + hoaDon.getNgaytaoHD() + "\n" +
-//                                "Số hóa đơn: " + hoaDon.getMaHD() + "\n" +
-//                                "Sản phẩm: " + hoaDon.getSanPhamList() + "\n";
-//
-//                        Log.d("HUY", "Thông tin hóa đơn: " + noiDungHoaDon);
-//                        String hoaDonPdf = "";
-//                        HoaDonPdf.createPdf(noiDungHoaDon,hoaDonPdf);
-//                    }
+
                     if (mListhoadon != null) {
                         mListhoadon.clear();
                     }
@@ -82,7 +78,6 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         hoaDonAdapter = new HoaDonAdapter(mListhoadon);
         recyclerView.setAdapter(hoaDonAdapter);
-
     }
 
 }

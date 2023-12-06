@@ -54,4 +54,4 @@
         android:text="LOGIN"
         android:textSize="17sp"
         android:textStyle="normal" />
-    </LinearLayout>
+</LinearLayout>

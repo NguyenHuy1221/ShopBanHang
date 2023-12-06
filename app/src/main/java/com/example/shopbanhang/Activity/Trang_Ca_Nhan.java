@@ -29,6 +29,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         doanhthu = findViewById(R.id.GO_qldt);
         khuyenmai = findViewById(R.id.GO_qlkm);
         backBtn = findViewById(R.id.backBtn);
+        lichsumua = findViewById(R.id.GO_lichsumua);
         dangxuat = findViewById(R.id.GO_dangxuat);
 
         backBtn.setOnClickListener(v -> finish());
@@ -50,6 +51,14 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         });
 
         hoadon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Trang_Ca_Nhan.this, LichSuHoaDonMainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        lichsumua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LichSuHoaDonMainActivity.class);

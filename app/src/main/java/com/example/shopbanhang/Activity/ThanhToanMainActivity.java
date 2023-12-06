@@ -3,6 +3,7 @@ package com.example.shopbanhang.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +39,8 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     double tien;
     private ArrayList<GioHang> gioHangList = new ArrayList<>(Gio_Hang.mlistGioHang);
 
-
+    private Context context = this ;
+    private String user_name_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,8 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         sendDataCart();
 
 
-
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user_name_login = mySharedPreferences.getValue("remember_username_ten");
     }
 
     private void anhxa() {
@@ -59,6 +63,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         txtSdt = findViewById(R.id.tvSdt);
         edtDiaChi = findViewById(R.id.edtdiaChi);
         btn_mua_hang = findViewById(R.id.btn_mua_hang);
+        int trangthai = 0;
 
         btn_mua_hang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +74,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                 }else {
                     String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                     String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                    hoaDon = new HoaDon(TimeToday,"Nguyen Huy",DateToday,TimeToday,gioHangList,tien);
+                    hoaDon = new HoaDon(TimeToday,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
                     addHoaDon(hoaDon);
                     clearGioHangData();
                 }

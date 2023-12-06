@@ -104,43 +104,43 @@
         android:textStyle="normal"
         android:textSize="17sp"
         android:backgroundTint="#DB3022"/>
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_margin="20dp"-->
-<!--        android:text="Or sign up with social account"-->
-<!--        tools:ignore="ExtraText" />-->
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:gravity="center">-->
-<!--        <LinearLayout-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:background="@drawable/custom_logo"-->
-<!--            >-->
-<!--            <ImageButton-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:background="@drawable/logoface"/>-->
-<!--        </LinearLayout>-->
-<!--        <LinearLayout-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:gravity="center"-->
-<!--            android:background="@drawable/custom_logo"-->
-<!--            >-->
-<!--            <ImageButton-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:background="@drawable/logogg"/>-->
-<!--        </LinearLayout>-->
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:layout_margin="20dp"-->
+    <!--        android:text="Or sign up with social account"-->
+    <!--        tools:ignore="ExtraText" />-->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:gravity="center">-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="100dp"-->
+    <!--            android:layout_height="80dp"-->
+    <!--            android:gravity="center"-->
+    <!--            android:layout_margin="20dp"-->
+    <!--            android:background="@drawable/custom_logo"-->
+    <!--            >-->
+    <!--            <ImageButton-->
+    <!--                android:layout_width="30dp"-->
+    <!--                android:layout_height="30dp"-->
+    <!--                android:background="@drawable/logoface"/>-->
+    <!--        </LinearLayout>-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_margin="20dp"-->
+    <!--            android:layout_width="100dp"-->
+    <!--            android:layout_height="80dp"-->
+    <!--            android:gravity="center"-->
+    <!--            android:background="@drawable/custom_logo"-->
+    <!--            >-->
+    <!--            <ImageButton-->
+    <!--                android:layout_width="30dp"-->
+    <!--                android:layout_height="30dp"-->
+    <!--                android:background="@drawable/logogg"/>-->
+    <!--        </LinearLayout>-->
 
-<!--    </LinearLayout>-->
+    <!--    </LinearLayout>-->
 
 
 

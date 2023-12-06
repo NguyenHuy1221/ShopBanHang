@@ -3,6 +3,7 @@ package com.example.shopbanhang.Adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.DAO.HoaDonDAO;
@@ -31,10 +33,15 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private List<HoaDon> mHoadon;
+    private OnStatusClickListener mStatusClickListener;
+
 
 
     public HoaDonAdapter(List<HoaDon> mHoadon) {
         this.mHoadon = mHoadon;
+    }
+    public void setOnStatusClickListener(OnStatusClickListener listener) {
+        mStatusClickListener = listener;
     }
 
     @NonNull
@@ -50,29 +57,34 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
     public void onBindViewHolder(@NonNull @NotNull HoaDonViewHoder holder, int position) {
         HoaDon hoaDon = mHoadon.get(position);
         holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
-        holder.tvDanhsachmathang.setText(formatSanPhamList(hoaDon.getSanPhamList()));
         holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
+
         holder.tvNgaytao.setText("Ngày Tạo: " + hoaDon.getNgaytaoHD());
-        holder.tvGiotao.setText("Giờ Tạo: " + hoaDon.getGiotaoHD());
+        holder.tvGiotao.setText(hoaDon.getGiotaoHD());
 
         holder.tvTongtien.setText("Tổng Tiền: " + hoaDon.getTongtien() + "$");
 
+        holder.setSanPhamList(hoaDon.getSanPhamList());
+
+        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mStatusClickListener != null) {
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        mStatusClickListener.onStatusClick(adapterPosition, hoaDon.getTinhTrang());
+                    }
+                }
+            }
+        });
+
 
     }
 
-    private String formatSanPhamList(List<GioHang> sanPhamList) {
-        StringBuilder formattedString = new StringBuilder();
-
-        for (GioHang gioHang : sanPhamList) {
-            formattedString.append("Tên sản phẩm: ").append(gioHang.getTensp());
-            formattedString.append(", Số lượng: ").append(gioHang.getSoluong());
-            formattedString.append(", Size: ").append(gioHang.getSize());
-            formattedString.append(", Số tiền : ").append(gioHang.getGiasp());
-            formattedString.append("\n"); // Xuống dòng cho sản phẩm tiếp theo
-        }
-
-        return formattedString.toString();
+    public interface OnStatusClickListener {
+        void onStatusClick(int position, int currentStatus);
     }
+
 
 
     @Override
@@ -90,20 +102,28 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         private TextView tvNguoimua;
         private TextView tvDanhsachmathang;
         private TextView tvNgaytao;
+        private TextView tvTrangThai;
         private TextView tvGiotao;
         private Button btnThanhToan;
         private CardView view_hoadon;
+        private RecyclerView rcy_don_hang;
 
         public HoaDonViewHoder(@NonNull @NotNull View itemView) {
             super(itemView);
-            tvDanhsachmathang = itemView.findViewById(R.id.tvDanhsachmathang);
             tvTongtien = itemView.findViewById(R.id.tvTongtien);
 //            tvTinhtrang = itemView.findViewById(R.id.tvTinhtrang);
+            tvTrangThai = itemView.findViewById(R.id.tvTrangThai);
             tvNguoimua = itemView.findViewById(R.id.tvNguoimua);
             tvSohoadon = itemView.findViewById(R.id.tvSohoadon);
             tvNgaytao = itemView.findViewById(R.id.tvNgaymua);
             tvGiotao = itemView.findViewById(R.id.tvGiomua);
             view_hoadon = itemView.findViewById(R.id.view_hoadon);
+            rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
+            rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+        }
+        public void setSanPhamList(List<GioHang> sanPhamList) {
+            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(sanPhamList);
+            rcy_don_hang.setAdapter(chiTietDonHangAdapter);
         }
     }
 }

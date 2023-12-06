@@ -30,26 +30,26 @@
             app:cardCornerRadius="15dp"
             android:padding="10dp"
             >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Doanh thu ngày hôm nay :"
-                android:gravity="center"
-                android:textSize="30sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="XXX"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                />
-        </LinearLayout>
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Doanh thu ngày hôm nay :"
+                    android:gravity="center"
+                    android:textSize="30sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="XXX"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    />
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
 
