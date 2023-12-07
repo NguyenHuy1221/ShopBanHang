@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,9 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 //        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
         SanPham sanPham = mSanPham.get(position);
         holder.txt_name.setText(sanPham.getTensp());
-        holder.txt_pirce.setText(String.valueOf(sanPham.getGiaban()));
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(sanPham.getGiaban());
+        holder.txt_pirce.setText(formattedTien + " đ");
         Picasso.get().load(sanPham.getImageUrl()).into(holder.img_main);
 
         holder.img_tym.setColorFilter(Color.BLACK);
@@ -82,6 +85,7 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
                 intent.putExtra("masp",sanPham.getMasp());
                 intent.putExtra("tensp",sanPham.getTensp());
                 intent.putExtra("giaban",sanPham.getGiaban());
+                intent.putExtra("soluongnhap",sanPham.getSoluongnhap());
                 intent.putExtra("ghichu",sanPham.getGhichu());
                 intent.putExtra("imageUrl",sanPham.getImageUrl());
                 List<String> urlChiTiet = sanPham.getUrlChiTiet();

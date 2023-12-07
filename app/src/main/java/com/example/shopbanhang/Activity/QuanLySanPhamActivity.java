@@ -157,15 +157,16 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     }
 
     private void EditProducts(SanPham sanPham) {
-        Log.d("HUY", "SanPham before putExtra: " + sanPham.toString());
-
-
         Intent intent = new Intent(QuanLySanPhamActivity.this, SuaSanPhamActivity.class);
         intent.putExtra("SAN_PHAM", sanPham);
         intent.putExtra("masanpham", sanPham.getMasp());
-        startActivity(intent);
 
-        Log.d("HUY", "SanPham after putExtra: " + sanPham.toString());
+        List<String> urlChiTiet = sanPham.getUrlChiTiet();
+        if (urlChiTiet!= null){
+            intent.putStringArrayListExtra("urlChiTiet",new ArrayList<>(urlChiTiet));
+        }
+
+        startActivity(intent);
     }
 
 

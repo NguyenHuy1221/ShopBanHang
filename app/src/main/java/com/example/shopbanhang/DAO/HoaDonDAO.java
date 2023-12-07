@@ -25,7 +25,7 @@ public class HoaDonDAO {
     }
 
     public void updateStatus(String maHD, int newStatus) {
-        DatabaseReference hoaDonRef = FirebaseDatabase.getInstance().getReference("HoaDon").child(maHD);
+        DatabaseReference hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon").child(maHD);
         hoaDonRef.child("tinhTrang").setValue(newStatus);
     }
 }

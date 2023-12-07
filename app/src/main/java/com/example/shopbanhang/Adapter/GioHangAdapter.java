@@ -18,6 +18,7 @@ import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHolder>{
@@ -43,10 +44,14 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull GioHangAdapter.ViewHolder holder, int position) {
         GioHang gioHang = productList.get(position);
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
         holder.txtName.setText(gioHang.getTensp());
         holder.txtMau.setText(gioHang.getColor());
         holder.txtSize.setText(gioHang.getSize());
-        holder.txtGia.setText(gioHang.getTongtien() +" đ");
+        holder.txtGia.setText(decimalFormat.format(gioHang.getTongtien()) + " đ");
+
         holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
         Picasso.get().load(gioHang.getUrl()).into(holder.imgPic);
 

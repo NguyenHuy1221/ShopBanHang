@@ -38,6 +38,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -118,7 +119,9 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         }
 
         txtName.setText(tenSP);
-        txtPrice.setText(giaban + " đ ");
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(giaban);
+        txtPrice.setText(formattedTien + " đ ");
         txtTitle.setText(ghiChu);
         Picasso.get().load(imageUrl).into(imgPic);
     }
@@ -142,7 +145,17 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String imageUrl = intent.getStringExtra("imageUrl");
 
-        txtTien.setText(giaban + "đ");
+
+        TextView soluongkho = dialogsheetview.findViewById(R.id.soLuongKho);
+        int slkho = intent.getIntExtra("soluongnhap",0);
+        soluongkho.setText(Integer.toString(slkho));
+
+
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(giaban);
+        txtTien.setText(formattedTien + " đ ");
+
         Picasso.get().load(imageUrl).into(imgPic);
 
         setBackGroundColor(dialogsheetview);

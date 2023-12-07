@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shopbanhang.Adapter.HienThiChiTietMain;
 import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
 import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.SanPhamDAO;
@@ -69,10 +70,10 @@ public class SuaSanPhamActivity extends AppCompatActivity {
     private Button btnAdd;
     private RecyclerView rcy_ct_anh;
 
-    private LinearLayout sizeLayout;
-    private Button buttonAddSize;
     private DatabaseReference mDatabaseReference;
     private SanPham mSanPham;
+
+    private HienThiChiTietMain adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,10 +92,29 @@ public class SuaSanPhamActivity extends AppCompatActivity {
 
 
         anhxa();
-//        addSizeAndColor();
         suaSanPham(masanpham);
         getDataFirebase();
 
+    }
+
+    public void anhxa() {
+        img_chinh = findViewById(R.id.image_chinh);
+        img_ct = findViewById(R.id.image_ct);
+        edt_tensp = findViewById(R.id.edt_ten_sp);
+        edt_so_luong_sp = findViewById(R.id.edt_so_luong);
+        edt_gia_nhap = findViewById(R.id.edt_gia_sp);
+        edt_gia_ban = findViewById(R.id.edt_gia_ban_sp);
+        spn_loaisp = findViewById(R.id.spn_loai_sp);
+        spn_mausp = findViewById(R.id.spn_mau_sp);
+        spn_sizesp = findViewById(R.id.spn_size_sp);
+        spn_trang_thai = findViewById(R.id.spn_trang_thai_sp);
+        edt_ghi_chu = findViewById(R.id.edt_ghi_chu_sp);
+        btnAdd = findViewById(R.id.btn_them_sp);
+
+        rcy_ct_anh = findViewById(R.id.rcy_chi_tiet_anh);
+        rcy_ct_anh.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
+        imageChiTietAdapter = new ImageChiTietAdapter(selectedImages);
+        rcy_ct_anh.setAdapter(imageChiTietAdapter);
 
     }
 
@@ -107,9 +127,28 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             masanpham2 = intent.getIntExtra("masanpham",0);
             Log.d("HUY", "Received SanPham: " + sanPham.toString());
             Log.d("HUY", "Received SanPham: " + masanpham2);
+
         }else {
             Log.e("HUY", "Intent does not have SANPHAM_EXTRA");
         }
+
+
+
+//        if (intent.hasExtra("urlChiTiet")) {
+//            List<String> anhChiTiet = getIntent().getStringArrayListExtra("urlChiTiet");
+//            if (anhChiTiet != null && !anhChiTiet.isEmpty()) {
+//                adapter = new HienThiChiTietMain(context, anhChiTiet, new HienThiChiTietMain.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(String imageUrl) {
+//                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                        intent.setType("image/*");
+//                        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+//                    }
+//                });
+//                rcy_ct_anh.setAdapter(adapter);
+//            }
+//        }
+
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
         int finalMasanpham = masanpham2;
@@ -119,21 +158,18 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                 sanPhams.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     mSanPham = dataSnapshot.getValue(SanPham.class);
+
                     if (mSanPham.getMasp()== finalMasanpham){
                         sanPhams.add(mSanPham);
+
                         Picasso.get().load(mSanPham.getImageUrl()).into(img_chinh);
 
-//                        edt_masp.setText(String.valueOf(mSanPham.getMasp()));
                         edt_tensp.setText(mSanPham.getTensp());
                         edt_so_luong_sp.setText(String.valueOf(mSanPham.getSoluongnhap()));
                         edt_gia_nhap.setText(String.valueOf(mSanPham.getGianhap()));
                         edt_gia_ban.setText(String.valueOf(mSanPham.getGiaban()));
                         edt_ghi_chu.setText(mSanPham.getGhichu());
-//                List<String> color = new ArrayList<>();
-//                color.add(thuonghieu);
-//                ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, color);
-//                colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                spn_mausp.setAdapter(colorAdapter);
+
 
                         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinerThuongHieu);
                         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -151,15 +187,11 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                                 spinerThuongHieu.add(mSanPham.getThuonghieu());
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     ThuongHieu thuongHieu = dataSnapshot.getValue(ThuongHieu.class);
-//                                    if (thuongHieu.getTenThuongHieu().equals(mSanPham.getThuonghieu())) {
-//                                        spinerThuongHieu.add(mSanPham.getThuonghieu());
-//                                    }
-
 
                                     if (!thuongHieu.getTenThuongHieu().equals(mSanPham.getThuonghieu())) {
                                         spinerThuongHieu.add(thuongHieu.getTenThuongHieu());
                                     }
-//                                    spinerThuongHieu.add(thuongHieu.getTenThuongHieu());
+
                                 }
 
                                 arrayAdapter.notifyDataSetChanged();
@@ -215,25 +247,69 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         });
     }
 
-    public void anhxa() {
-        img_chinh = findViewById(R.id.image_chinh);
-        img_ct = findViewById(R.id.image_ct);
-//        edt_masp = findViewById(R.id.edt_ma_sp);
-        edt_tensp = findViewById(R.id.edt_ten_sp);
-        edt_so_luong_sp = findViewById(R.id.edt_so_luong);
-        edt_gia_nhap = findViewById(R.id.edt_gia_sp);
-        edt_gia_ban = findViewById(R.id.edt_gia_ban_sp);
-        spn_loaisp = findViewById(R.id.spn_loai_sp);
-        spn_mausp = findViewById(R.id.spn_mau_sp);
-        spn_sizesp = findViewById(R.id.spn_size_sp);
-        spn_trang_thai = findViewById(R.id.spn_trang_thai_sp);
-        edt_ghi_chu = findViewById(R.id.edt_ghi_chu_sp);
-//        sizeLayout = findViewById(R.id.sizeLayout);
-//        buttonAddSize = findViewById(R.id.buttonAddSize);
-        btnAdd = findViewById(R.id.btn_them_sp);
-
+    private void oppenFile() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều ảnh
+        startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE_REQUEST);
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+//            if (data.getClipData() != null) {
+//                // Chọn nhiều ảnh
+//                int count = data.getClipData().getItemCount();
+//                for (int i = 0; i < count; i++) {
+//                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+//                    selectedImages.add(imageUri);
+//                }
+//            } else if (data.getData() != null) {
+//                // Chọn một ảnhQ
+//                Uri imageUri = data.getData();
+//                selectedImages.add(imageUri);
+//            }
+//            imageChiTietAdapter.notifyDataSetChanged();
+//        }
+//
+//        if (requestCode == PICK_IMAGE_REQUESTS && resultCode == RESULT_OK && data != null) {
+//            mImageUri = data.getData();
+//            Picasso.get().load(mImageUri).into(img_chinh);
+//            selectedImages.add(mImageUri);
+//            imageChiTietAdapter.notifyDataSetChanged();
+//        }
+//
+//
+//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            if (data.getClipData() != null) {
+                // Chọn nhiều ảnh
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                    selectedImages.add(imageUri);
+                }
+            } else if (data.getData() != null) {
+                // Chọn một ảnh
+                Uri imageUri = data.getData();
+                selectedImages.add(imageUri);
+            }
+            imageChiTietAdapter.notifyDataSetChanged();
+        }
+
+        if (requestCode == PICK_IMAGE_REQUESTS && resultCode == RESULT_OK && data != null) {
+            mImageUri = data.getData();
+            Picasso.get().load(mImageUri).into(img_chinh);
+        }
+
+
+    }
 
 
     public void suaSanPham(int id){
@@ -241,10 +317,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("sanpham");
         SanPham sanPham = new SanPham();
-        rcy_ct_anh = findViewById(R.id.rcy_chi_tiet_anh);
-        rcy_ct_anh.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
-        imageChiTietAdapter = new ImageChiTietAdapter(selectedImages);
-        rcy_ct_anh.setAdapter(imageChiTietAdapter);
+
         img_ct.setOnClickListener(v -> { oppenFile();});
 
         img_chinh.setOnClickListener(v -> {
@@ -258,7 +331,6 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String masp = edt_masp.getText().toString().trim();
 
                 String tensp = edt_tensp.getText().toString().trim();
                 String solgspString  = edt_so_luong_sp.getText().toString().trim();
@@ -274,37 +346,10 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                         ghichu.isEmpty() || loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
                     Toast.makeText(context, "Chưa nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
                 }else {
-//                    if (mImageUri == null){
-//                        Toast.makeText(context, "Chưa chọn hình", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                    for (SanPham check : sanPhams) {
-//                        if (masp.equals(String.valueOf(check.getMasp()))){
-//                            Toast.makeText(context, "Mã sản phẩm trùng nhau - nhập mã mới", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                    }
 
-//                    sanPham.setMasp(Integer.parseInt(masp));
-//                    sanPham.setTensp(tensp);
-//                    sanPham.setSoluongnhap(Integer.parseInt(solgspString));
-//                    sanPham.setGianhap(Double.parseDouble(gianhap));
-//                    sanPham.setGiaban(Double.parseDouble(giaban));
-//                    sanPham.setThuonghieu(loaisp);
-//                    sanPham.setMausp(mausp);
-//                    sanPham.setSizesp(sizesp);
-//                    sanPham.setTrangthai(trangthaisp);
-//                    sanPham.setGhichu(ghichu);
-//                    databaseReference.child(String.valueOf(id)).updateChildren(sanPham.toMap());
-
-//                    String id = UUID.randomUUID().toString();
-//                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
-//                    pushData(chiTietSanPham);
                     updateSanPham(mSanPham, mImageUri, System.currentTimeMillis(), tensp, Integer.parseInt(solgspString),
                             mSanPham.getSoluongban(), Double.parseDouble(gianhap), Double.parseDouble(giaban),
                             loaisp, mausp, sizesp, trangthaisp, ghichu);
-
-
                 }
 
             }
@@ -313,40 +358,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
     }
 
 
-    private void oppenFile() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều ảnh
-        startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE_REQUEST);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            if (data.getClipData() != null) {
-                // Chọn nhiều ảnh
-                int count = data.getClipData().getItemCount();
-                for (int i = 0; i < count; i++) {
-                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    selectedImages.add(imageUri);
-                }
-            } else if (data.getData() != null) {
-                // Chọn một ảnhQ
-                Uri imageUri = data.getData();
-                selectedImages.add(imageUri);
-            }
-            imageChiTietAdapter.notifyDataSetChanged();
-        }
-
-        if (requestCode == PICK_IMAGE_REQUESTS && resultCode == RESULT_OK && data != null) {
-            mImageUri = data.getData();
-            Picasso.get().load(mImageUri).into(img_chinh);
-        }
-
-
-    }
 
     private void updateSanPham(SanPham sanPham,Uri mImageUri,long time,String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu, String mau, String size, String trangthai, String ghichu) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
@@ -361,7 +373,6 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                 imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-
                         sanPham.setTimestamp(time);
                         sanPham.setTensp(tensp);
                         sanPham.setSoluongnhap(solgsp);
@@ -392,5 +403,6 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

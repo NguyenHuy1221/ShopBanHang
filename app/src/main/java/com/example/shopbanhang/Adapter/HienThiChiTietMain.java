@@ -2,6 +2,7 @@ package com.example.shopbanhang.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,10 @@ public class HienThiChiTietMain extends RecyclerView.Adapter<HienThiChiTietMain.
     public void onBindViewHolder(@NonNull HienThiChiTietMain.ViewHodel holder, int position) {
         String imageUrl = stringList.get(position);
         Picasso.get().load(imageUrl).into(holder.imageView);
+
+        Log.d("HUY", "Loading image: " + imageUrl); // Thêm log ở đây để kiểm tra
+
+        holder.bindImage(imageUrl);
     }
 
 
@@ -66,6 +71,9 @@ public class HienThiChiTietMain extends RecyclerView.Adapter<HienThiChiTietMain.
                     }
                 }
             });
+        }
+        public void bindImage(String imageUrl) {
+            Picasso.get().load(imageUrl).into(imageView);
         }
     }
 }

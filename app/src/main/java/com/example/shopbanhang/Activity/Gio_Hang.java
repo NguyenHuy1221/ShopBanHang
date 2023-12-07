@@ -22,6 +22,7 @@ import com.example.shopbanhang.Adapter.GioHangAdapter;
 import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.ThuongHieuDAO;
 import com.example.shopbanhang.Model.GioHang;
+import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
@@ -34,6 +35,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +63,7 @@ public class Gio_Hang extends AppCompatActivity {
 
         anhxa();
         senDataCart();
+        khuyenMai();
 
         btnMua.setOnClickListener(v -> {
             Intent intent = new Intent(Gio_Hang.this, ThanhToanMainActivity.class);
@@ -101,8 +105,9 @@ public class Gio_Hang extends AppCompatActivity {
                     GioHang gioHang = postSnapshot.getValue(GioHang.class);
                     gioHang.setKey(postSnapshot.getKey());
                     tongTienSanPham += gioHang.getTongtien();
-                    txtTien.setText(tongTienSanPham+" đ");
-                    tvTienSanPham.setText(tongTienSanPham+" đ");
+                    tvTongTien.setText(formatTien(tongTienSanPham));
+                    txtTien.setText(formatTien(tongTienSanPham));
+                    tvTienSanPham.setText(formatTien(tongTienSanPham));
                     mlistGioHang.add(gioHang);
                 }
                 gioHangAdapter = new GioHangAdapter(context, mlistGioHang, new GioHangAdapter.IclickListener() {
@@ -165,10 +170,102 @@ public class Gio_Hang extends AppCompatActivity {
         img_khuyen_mai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showKhuyenMaiDialog();
             }
         });
     }
 
+    private void showKhuyenMaiDialog() {
+        DatabaseReference khuyenMaiRef = FirebaseDatabase.getInstance().getReference().child("KhuyenMai");
 
+        khuyenMaiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    List<KhuyenMai> danhSachKhuyenMai = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        KhuyenMai khuyenMai = snapshot.getValue(KhuyenMai.class);
+                        if (khuyenMai != null) {
+                            danhSachKhuyenMai.add(khuyenMai);
+                        }
+                    }
+
+                    String[] arrKhuyenMai = new String[danhSachKhuyenMai.size()];
+                    final boolean[] selectedItems = new boolean[danhSachKhuyenMai.size()];
+
+                    for (int i = 0; i < danhSachKhuyenMai.size(); i++) {
+                        arrKhuyenMai[i] = danhSachKhuyenMai.get(i).getTenKhuyenMai();
+                        selectedItems[i] = false;
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Chọn mã khuyến mãi");
+
+                    builder.setMultiChoiceItems(arrKhuyenMai, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                            selectedItems[which] = isChecked;
+                        }
+                    });
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            applySelectedKhuyenMai(danhSachKhuyenMai, selectedItems);
+                        }
+                    });
+
+                    builder.show();
+                    Log.d("KhuyenMai", "Danh sách khuyến mãi: " + danhSachKhuyenMai.size());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Lỗi khi truy xuất dữ liệu khuyến mãi", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void applySelectedKhuyenMai(List<KhuyenMai> danhSachKhuyenMai, boolean[] selectedItems) {
+        double tongGiaGoc = 0.0;
+        double tongGiamGia = 0.0;
+
+        // Tính tổng giá gốc của các sản phẩm trong giỏ hàng
+        for (GioHang gioHang : mlistGioHang) {
+            tongGiaGoc += gioHang.getGiasp() * gioHang.getSoluong();
+        }
+
+        double tongGiaSauKhuyenMai = tongGiaGoc;
+
+        // Áp dụng khuyến mãi đã chọn
+        for (int i = 0; i < selectedItems.length; i++) {
+            if (selectedItems[i]) {
+                // Chuyển đổi phần trăm khuyến mãi từ String sang số
+                KhuyenMai khuyenMai = danhSachKhuyenMai.get(i);
+                try {
+                    double phanTramKhuyenMai = Double.parseDouble(khuyenMai.getPhanTramKhuyenMai());
+
+                    // Áp dụng khuyến mãi đến tổng giá sau khuyến mãi và tính tổng giảm giá
+                    double giamGia = (tongGiaGoc * phanTramKhuyenMai) / 100;
+                    tongGiaSauKhuyenMai -= giamGia;
+                    tongGiamGia += giamGia;
+                } catch (NumberFormatException e) {
+                    Log.e("NumberFormatException", "Không thể chuyển đổi thành số: " + khuyenMai.getPhanTramKhuyenMai());
+                }
+            }
+        }
+
+        // Hiển thị tổng giảm giá trên tvGiamGia
+        tvGiamGia.setText(formatTien(tongGiamGia));
+        tvTongTien.setText(formatTien(tongGiaSauKhuyenMai));
+        txtTien.setText(formatTien(tongGiaSauKhuyenMai));
+
+    }
+    private String formatTien(double value) {
+        NumberFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(value) + " đ";
+    }
 }
