@@ -26,6 +26,7 @@ import com.example.shopbanhang.R;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -62,7 +63,9 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         holder.tvNgaytao.setText("Ngày Tạo: " + hoaDon.getNgaytaoHD());
         holder.tvGiotao.setText(hoaDon.getGiotaoHD());
 
-        holder.tvTongtien.setText("Tổng Tiền: " + hoaDon.getTongtien() + "$");
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(hoaDon.getTongtien());
+        holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
 
         holder.setSanPhamList(hoaDon.getSanPhamList());
 

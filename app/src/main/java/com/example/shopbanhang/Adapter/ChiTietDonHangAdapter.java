@@ -16,6 +16,7 @@ import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAdapter.ViewHolder> {
@@ -39,7 +40,11 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
 
         holder.item_tenspchitiet.setText(gioHang.getTensp());
         holder.item_giaspchitiet.setText("Số lượng: " + gioHang.getSoluong());
-        holder.txt_gia.setText("Giá: "+ gioHang.getTongtien());
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(gioHang.getTongtien());
+        holder.txt_gia.setText(formattedTien + " đ");
+        
         holder.txt_size.setText("Size: "+ gioHang.getSize());
         Picasso.get().load(gioHang.getUrl()).into(holder.item_img_chhitiet);
     }
