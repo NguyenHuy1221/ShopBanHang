@@ -441,6 +441,27 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         ProgressDialog progressDialog = ProgressDialog.show(context, "Chờ Chút", "Đang tải lên hình ảnh...", true);
 
 
+        if (mImageUri == null){
+            sanPham.setTimestamp(time);
+            sanPham.setTensp(tensp);
+            sanPham.setSoluongnhap(solgsp);
+            sanPham.setGianhap(gianhap);
+            sanPham.setGiaban(giaban);
+            sanPham.setThuonghieu(thuonghieu);
+//                        sanPham.setMausp(mau);
+//                        sanPham.setSizesp(size);
+            sanPham.setTrangthai(trangthai);
+            sanPham.setGhichu(ghichu);
+
+            SanPhamDAO sanPhamDAO = new SanPhamDAO();
+            sanPhamDAO.updateProducts(sanPham);
+            progressDialog.dismiss();
+
+            Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
+            startActivity(intent);
+            finish();
+        }
         imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -467,6 +488,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                         Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
                         startActivity(intent);
+                        finish();
 
                     }
                 });
