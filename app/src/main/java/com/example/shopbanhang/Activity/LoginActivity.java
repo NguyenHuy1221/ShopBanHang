@@ -32,12 +32,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoginActivity extends AppCompatActivity {
 
+    private List<TaiKhoan> list = new ArrayList<>();
     Button btnlogin;
     TextInputLayout edtemaillg, edtmklg;
     TextView txtdk, txtquenmk;
     public CheckBox checkBox;
+    TaiKhoan taiKhoan;
     final MySharedPreferences mySharedPreferences = new MySharedPreferences(LoginActivity.this);
 
     @Override
@@ -45,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         anhxa();
+        Update();
 
         txtdk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,13 +97,38 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
     private void signUp() {
         String email = edtemaillg.getEditText().getText().toString().trim();
         String pass = edtmklg.getEditText().getText().toString().trim();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("TaiKhoan");
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         Query query = myRef.orderByChild("emailtk").equalTo(email);
+
+        mAuth.signInWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                            DatabaseReference databaseReference = firebaseDatabase.getReference("TaiKhoan");
+
+                            for (int i = 0; i < list.size(); i++) {
+                                if (list.get(i).getEmailtk().equals(edtemaillg.getEditText().getText().toString())) {
+                                    databaseReference.child(list.get(i).getIdtk()).child("matkhautk").setValue(edtmklg.getEditText().getText().toString());
+                                }
+                            }
+
+                            Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -156,6 +187,30 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void Update() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("TaiKhoan");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    taiKhoan = dataSnapshot.getValue(TaiKhoan.class);
+                    list.add(taiKhoan);
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void anhxa() {
