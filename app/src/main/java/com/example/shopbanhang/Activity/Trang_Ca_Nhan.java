@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Trang_Ca_Nhan extends AppCompatActivity {
@@ -86,8 +88,14 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                SharedPreferences mySharedPreferences = (SharedPreferences) new MySharedPreferences(Trang_Ca_Nhan.this);
+                SharedPreferences.Editor editor = mySharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

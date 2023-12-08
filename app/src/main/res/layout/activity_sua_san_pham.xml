@@ -194,42 +194,42 @@
                 android:layout_weight="2"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Màu"/>
-            <Spinner
-                android:id="@+id/spn_mau_sp"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_weight="2"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Size"/>
-            <Spinner
-                android:id="@+id/spn_size_sp"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_weight="2"
-                />
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:padding="16dp"-->
+<!--            >-->
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Màu"/>-->
+<!--            <Spinner-->
+<!--                android:id="@+id/spn_mau_sp"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_weight="2"-->
+<!--                />-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:padding="16dp"-->
+<!--            >-->
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Size"/>-->
+<!--            <Spinner-->
+<!--                android:id="@+id/spn_size_sp"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_weight="2"-->
+<!--                />-->
+<!--        </LinearLayout>-->
 
 <!--        <LinearLayout-->
 <!--            android:id="@+id/sizeLayout"-->
@@ -289,13 +289,6 @@
                 android:background="@drawable/custom_khung"
                 />
         </LinearLayout>
-        <Button
-            android:id="@+id/btn_them_sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sửa"
-            android:background="@color/red"
-            app:backgroundTint="@null"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcy_suachitietsanpham"
             android:layout_width="match_parent"
@@ -304,5 +297,13 @@
             android:layout_gravity="center"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
+        <Button
+            android:id="@+id/btn_them_sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sửa"
+            android:background="@color/red"
+            app:backgroundTint="@null"/>
+
     </LinearLayout>
 </ScrollView>

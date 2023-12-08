@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class ThanhToanMainActivity extends AppCompatActivity {
 
@@ -69,12 +70,13 @@ public class ThanhToanMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String strDiaChi = edtDiaChi.getText().toString().trim();
+                String id = UUID.randomUUID().toString();
                 if (TextUtils.isEmpty(strDiaChi)){
-                    Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập địa chỉ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
                 }else {
                     String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                     String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                    hoaDon = new HoaDon(TimeToday,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
+                    hoaDon = new HoaDon(id,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
                     addHoaDon(hoaDon);
                     clearGioHangData();
                 }

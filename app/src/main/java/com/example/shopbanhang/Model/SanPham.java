@@ -15,8 +15,7 @@ public class SanPham implements Serializable {
     private double gianhap;
     private double giaban;
     private String thuonghieu;
-    private String mausp;
-    private String sizesp;
+
     private String trangthai;
     private String ghichu;
     private String imageUrl;
@@ -28,7 +27,7 @@ public class SanPham implements Serializable {
 
     }
 
-    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String mausp, String sizesp, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet) {
+    public SanPham(long timestamp, int masp, String tensp, int soluongnhap, int soluongban, double gianhap, double giaban, String thuonghieu, String trangthai, String ghichu, String imageUrl, List<String> urlChiTiet) {
         this.timestamp = timestamp;
         this.masp = masp;
         this.tensp = tensp;
@@ -37,8 +36,7 @@ public class SanPham implements Serializable {
         this.gianhap = gianhap;
         this.giaban = giaban;
         this.thuonghieu = thuonghieu;
-        this.mausp = mausp;
-        this.sizesp = sizesp;
+
         this.trangthai = trangthai;
         this.ghichu = ghichu;
         this.imageUrl = imageUrl;
@@ -102,21 +100,7 @@ public class SanPham implements Serializable {
         this.thuonghieu = thuonghieu;
     }
 
-    public String getMausp() {
-        return mausp;
-    }
 
-    public void setMausp(String mausp) {
-        this.mausp = mausp;
-    }
-
-    public String getSizesp() {
-        return sizesp;
-    }
-
-    public void setSizesp(String sizesp) {
-        this.sizesp = sizesp;
-    }
 
     public String getTrangthai() {
         return trangthai;
@@ -169,8 +153,7 @@ public class SanPham implements Serializable {
         result.put("gianhap", gianhap);
         result.put("giaban", giaban);
         result.put("thuonghieu", thuonghieu);
-        result.put("mausp", mausp);
-        result.put("sizesp", sizesp);
+
         result.put("trangthai", trangthai);
         result.put("ghichu", ghichu);
         result.put("imageUrl", imageUrl);

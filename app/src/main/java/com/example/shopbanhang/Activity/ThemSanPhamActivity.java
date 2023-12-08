@@ -95,14 +95,13 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         edt_gia_nhap = findViewById(R.id.edt_gia_sp);
         edt_gia_ban = findViewById(R.id.edt_gia_ban_sp);
         spn_loaisp = findViewById(R.id.spn_loai_sp);
-        spn_mausp = findViewById(R.id.spn_mau_sp);
-        spn_sizesp = findViewById(R.id.spn_size_sp);
+//        spn_mausp = findViewById(R.id.spn_mau_sp);
+//        spn_sizesp = findViewById(R.id.spn_size_sp);
         spn_trang_thai = findViewById(R.id.spn_trang_thai_sp);
         edt_ghi_chu = findViewById(R.id.edt_ghi_chu_sp);
         sizeLayout = findViewById(R.id.sizeLayout);
         buttonAddSize = findViewById(R.id.buttonAddSize);
         btnAdd = findViewById(R.id.btn_them_sp);
-//        edt_so_luong_sp = findViewById(R.id.edt_so_luong_sp);
 
     }
 
@@ -267,24 +266,24 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         });
 
 
-        List<String> size = new ArrayList<>();
-        size.add("M");
-        size.add("L");
-        size.add("Xl");
-        size.add("XXL");
-        ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, size);
-        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_sizesp.setAdapter(sizeAdapter);
-
-        List<String> color = new ArrayList<>();
-        color.add("Trắng");
-        color.add("Vàng");
-        color.add("Xanh");
-        color.add("Đen");
-        color.add("Đỏ");
-        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, color);
-        colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_mausp.setAdapter(colorAdapter);
+//        List<String> size = new ArrayList<>();
+//        size.add("M");
+//        size.add("L");
+//        size.add("Xl");
+//        size.add("XXL");
+//        ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, size);
+//        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spn_sizesp.setAdapter(sizeAdapter);
+//
+//        List<String> color = new ArrayList<>();
+//        color.add("Trắng");
+//        color.add("Vàng");
+//        color.add("Xanh");
+//        color.add("Đen");
+//        color.add("Đỏ");
+//        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, color);
+//        colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spn_mausp.setAdapter(colorAdapter);
 
         List<String> trangthai = new ArrayList<>();
         trangthai.add("Hoạt Động");
@@ -299,23 +298,24 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 String masp2 = edt_masp.getText().toString().trim();
 //                String sizesp2 = spinnerSize.getSelectedItem().toString();
 //                String mausp2 = spinnerMau.getSelectedItem().toString();
-//                String soluongString = editTextSoLuong.getText().toString().trim();
+//                String soluongString = Edt_so_luong_sp.getText().toString().trim();
 
                 String masp = edt_masp.getText().toString().trim();
                 String tensp = edt_tensp.getText().toString().trim();
-                String solgspString  = edt_so_luong_sp.getText().toString().trim();
+                String solgspString  = String.valueOf(edt_so_luong_sp.getText().toString().trim());
                 String gianhap = (edt_gia_nhap.getText().toString().trim());
                 String giaban = (edt_gia_ban.getText().toString().trim());
                 String loaisp = spn_loaisp.getSelectedItem().toString();
-                String mausp = spn_mausp.getSelectedItem().toString();
-                String sizesp = spn_sizesp.getSelectedItem().toString();
+//                String mausp = spn_mausp.getSelectedItem().toString();
+//                String sizesp = spn_sizesp.getSelectedItem().toString();
                 String trangthaisp = spn_trang_thai.getSelectedItem().toString();
                 String ghichu = edt_ghi_chu.getText().toString().trim();
-                String soluongsizecolor = edt_so_luong_sp.getText().toString().trim();
+//                String soluongsizecolor = edt_so_luong_sp.getText().toString().trim();
 
-                if (masp.isEmpty() || tensp.isEmpty() || solgspString.isEmpty() || gianhap.isEmpty() || giaban.isEmpty() ||
-                        ghichu.isEmpty() || soluongsizecolor.isEmpty() || loaisp == null || mausp == null || sizesp == null || trangthaisp == null) {
+                if (masp.isEmpty() || tensp.isEmpty() || gianhap.isEmpty() || giaban.isEmpty() ||
+                        ghichu.isEmpty() ||  loaisp == null  || trangthaisp == null || solgspString.isEmpty()) {
                     Toast.makeText(context, "Chưa nhập đủ dữ liệu", Toast.LENGTH_SHORT).show();
+                    return;
                 }else {
                     if (mImageUri == null){
                         Toast.makeText(context, "Chưa chọn hình", Toast.LENGTH_SHORT).show();
@@ -329,9 +329,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     }
                     int solgsp;
                     solgsp = Integer.parseInt(solgspString);
-                    String id = UUID.randomUUID().toString();
-                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
-                    pushData(chiTietSanPham);
+//                    String id = UUID.randomUUID().toString();
+//                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
+//                    pushData(chiTietSanPham);
                     for (int id2 : map.keySet()){
                         AddsizeColor addsizeColor1 = map.get(id2);
                         String spinnerkichco = addsizeColor1.getSpnsize().getSelectedItem().toString();
@@ -341,7 +341,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id3,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
                         pushData(chiTietSanPham2);
                     }
-                    uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp, mausp, sizesp, trangthaisp, ghichu,selectedImages);
+                    uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp,  trangthaisp, ghichu,selectedImages);
 
                 }
 
@@ -361,7 +361,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE_REQUEST);
     }
 
-    private void uploadSanPhamToFirebase(Uri mImageUri, int masp, String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu, String mau, String size, String trangthai, String ghichu, List<Uri> uriList) {
+    private void uploadSanPhamToFirebase(Uri mImageUri, int masp, String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu,  String trangthai, String ghichu, List<Uri> uriList) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
@@ -397,7 +397,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         try {
                             latch.await();
                             SanPhamDAO sanPhamDAO = new SanPhamDAO();
-                            SanPham sanPham = new SanPham(System.currentTimeMillis(),masp, tensp, solgsp, solgban, gianhap, giaban, thuonghieu, mau, size, trangthai, ghichu, uri.toString(), urlList);
+                            SanPham sanPham = new SanPham(System.currentTimeMillis(),masp, tensp, solgsp, solgban, gianhap, giaban, thuonghieu, trangthai, ghichu, uri.toString(), urlList);
                             sanPhamDAO.insertProducts(sanPham);
                             progressDialog.dismiss();
                             Toast.makeText(context, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();

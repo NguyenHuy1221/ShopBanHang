@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,6 +33,7 @@ import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.ChiTietSanPhamDAO;
 import com.example.shopbanhang.DAO.SanPhamDAO;
 import com.example.shopbanhang.Model.ChiTietSanPham;
+import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
@@ -135,16 +137,53 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
             }
         });
     }
-
+    private List<ChiTietSanPhamfix> chiTietSanPhams = new ArrayList<>();
     private void DeleteProducts(SanPham sanPham) {
+
         new AlertDialog.Builder(this)
                 .setTitle("Shop Quần Áo")
                 .setMessage("Xác Nhận Xóa ??")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference myRef = database.getReference("sanpham");
+
+                        DatabaseReference myRef2 = database.getReference("Chitietsanpham");
+                        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+                        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+                            @SuppressLint("ResourceType")
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if (chiTietSanPhams != null) {
+                                    chiTietSanPhams.clear();
+                                }
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    ChiTietSanPhamfix chiTietSanPham = dataSnapshot.getValue(ChiTietSanPhamfix.class);
+                                    if (chiTietSanPham != null){
+                                        if (chiTietSanPham.getMasp() == sanPham.getMasp()){
+//                                            if (chiTietSanPham.getIdchitietsanpham() != null){
+//                                                chiTietSanPhams.add(chiTietSanPham);
+                                            Toast.makeText(QuanLySanPhamActivity.this, "Xóa thành công chi tiết sản phẩm"+chiTietSanPham.getMasp() , Toast.LENGTH_SHORT).show();
+
+                                            myRef2.child(String.valueOf(chiTietSanPham.getIdchitietsanpham())).removeValue();
+
+//                                            }
+
+                                        }
+                                    }
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                         myRef.child(String.valueOf(sanPham.getMasp())).removeValue();
 

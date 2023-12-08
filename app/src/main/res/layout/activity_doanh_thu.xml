@@ -82,9 +82,10 @@
                 >
 
                 <TextView
+                    android:id="@+id/txttungay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20/11/2202"
+                    android:text=""
                     android:textSize="20sp"
                     />
                 <ImageView
@@ -135,9 +136,10 @@
                     >
 
                     <TextView
+                        android:id="@+id/txtdenngay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="20/11/2202"
+                        android:text=""
                         android:textSize="20sp"
                         />
                     <ImageView
@@ -155,10 +157,17 @@
     </LinearLayout>
 
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="525dp"
+        android:layout_height="475dp"
         android:id="@+id/rclv_doanhthu"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tính"
+        android:id="@+id/btntinhtien"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -176,16 +185,16 @@
             android:textStyle="bold"
             android:gravity="center"
             />
+
         <TextView
             android:id="@+id/txt_tongdoanhthu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="0"
-            android:textSize="20sp"
-            android:textColor="#078F0C"
-            android:gravity="center"
             android:layout_marginLeft="10dp"
-            />
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#078F0C"
+            android:textSize="20sp" />
 
 
     </LinearLayout>

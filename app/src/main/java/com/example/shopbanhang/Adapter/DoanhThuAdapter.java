@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.Model.DoanhThu;
+import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.R;
 import com.squareup.picasso.Picasso;
@@ -19,9 +20,9 @@ import java.util.List;
 public class DoanhThuAdapter extends RecyclerView.Adapter<DoanhThuAdapter.ViewHolder> {
 
     Context context;
-    List<DoanhThu> doanhThuslist;
+    List<HoaDon> doanhThuslist;
 
-    public DoanhThuAdapter(Context context, List<DoanhThu> doanhThuslist) {
+    public DoanhThuAdapter(Context context, List<HoaDon> doanhThuslist) {
         this.context = context;
         this.doanhThuslist = doanhThuslist;
     }
@@ -35,14 +36,15 @@ public class DoanhThuAdapter extends RecyclerView.Adapter<DoanhThuAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull DoanhThuAdapter.ViewHolder holder, int position) {
-        DoanhThu doanhThu = doanhThuslist.get(position);
+//        DoanhThu doanhThu = doanhThuslist.get(position);
+        HoaDon doanhThu = doanhThuslist.get(position);
 
         if(doanhThu == null){
             return;
         }
 
-        holder.txtmahd.setText(doanhThu.getMahoadon());
-        holder.txtngaydh.setText(doanhThu.getNgaydathang());
+        holder.txtmahd.setText(String.valueOf(doanhThu.getMaHD()));
+        holder.txtngaydh.setText(doanhThu.getNgaytaoHD());
         holder.txtttdh.setText(String.valueOf(doanhThu.getTongtien()));
 
 

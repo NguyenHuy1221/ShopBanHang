@@ -340,7 +340,7 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        addtk = findViewById(R.id.addtk);
+
         recycle_qltk = findViewById(R.id.recycle_qltk);
         backBtntk = findViewById(R.id.backBtntk);
 //        backBtntk.setOnClickListener(v -> finish());
