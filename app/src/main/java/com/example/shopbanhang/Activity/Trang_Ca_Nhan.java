@@ -31,6 +31,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         lichsumua = findViewById(R.id.GO_lichsumua);
         dangxuat = findViewById(R.id.GO_dangxuat);
+        thongtinchitiet = findViewById(R.id.GO_chitiettaikhoan);
 
         backBtn.setOnClickListener(v -> finish());
 //        trangchu = findViewById(R.id.GO_trangchu);
@@ -86,6 +87,14 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        thongtinchitiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Trang_Ca_Nhan.this, ChiTietTaiKhoanActivity.class);
                 startActivity(intent);
             }
         });

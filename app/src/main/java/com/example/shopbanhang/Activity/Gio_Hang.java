@@ -65,11 +65,7 @@ public class Gio_Hang extends AppCompatActivity {
         senDataCart();
         khuyenMai();
 
-        btnMua.setOnClickListener(v -> {
-            Intent intent = new Intent(Gio_Hang.this, ThanhToanMainActivity.class);
-            intent.putExtra("tongtien",tongTienSanPham);
-            startActivity(intent);
-        });
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +171,7 @@ public class Gio_Hang extends AppCompatActivity {
         });
     }
 
+
     private void showKhuyenMaiDialog() {
         DatabaseReference khuyenMaiRef = FirebaseDatabase.getInstance().getReference().child("KhuyenMai");
 
@@ -192,33 +189,36 @@ public class Gio_Hang extends AppCompatActivity {
                     }
 
                     String[] arrKhuyenMai = new String[danhSachKhuyenMai.size()];
-                    final boolean[] selectedItems = new boolean[danhSachKhuyenMai.size()];
 
                     for (int i = 0; i < danhSachKhuyenMai.size(); i++) {
                         arrKhuyenMai[i] = danhSachKhuyenMai.get(i).getTenKhuyenMai();
-                        selectedItems[i] = false;
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Chọn mã khuyến mãi");
 
-                    builder.setMultiChoiceItems(arrKhuyenMai, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    // Danh sách chọn mã giảm giá
+                    builder.setSingleChoiceItems(arrKhuyenMai, -1, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                            selectedItems[which] = isChecked;
+                        public void onClick(DialogInterface dialog, int which) {
+
                         }
                     });
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            applySelectedKhuyenMai(danhSachKhuyenMai, selectedItems);
+                            int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                            if (selectedPosition != -1) {
+                                // Áp dụng mã giảm giá đã chọn
+                                applySelectedKhuyenMai(danhSachKhuyenMai.get(selectedPosition));
+                            }
+                            dialog.dismiss();
                         }
                     });
 
                     builder.show();
                     Log.d("KhuyenMai", "Danh sách khuyến mãi: " + danhSachKhuyenMai.size());
-
                 }
             }
 
@@ -229,7 +229,7 @@ public class Gio_Hang extends AppCompatActivity {
         });
     }
 
-    private void applySelectedKhuyenMai(List<KhuyenMai> danhSachKhuyenMai, boolean[] selectedItems) {
+    private void applySelectedKhuyenMai(KhuyenMai selectedKhuyenMai) {
         double tongGiaGoc = 0.0;
         double tongGiamGia = 0.0;
 
@@ -240,32 +240,35 @@ public class Gio_Hang extends AppCompatActivity {
 
         double tongGiaSauKhuyenMai = tongGiaGoc;
 
-        // Áp dụng khuyến mãi đã chọn
-        for (int i = 0; i < selectedItems.length; i++) {
-            if (selectedItems[i]) {
-                // Chuyển đổi phần trăm khuyến mãi từ String sang số
-                KhuyenMai khuyenMai = danhSachKhuyenMai.get(i);
-                try {
-                    double phanTramKhuyenMai = Double.parseDouble(khuyenMai.getPhanTramKhuyenMai());
+        // Áp dụng mã giảm giá đã chọn
+        try {
+            double phanTramKhuyenMai = Double.parseDouble(selectedKhuyenMai.getPhanTramKhuyenMai());
 
-                    // Áp dụng khuyến mãi đến tổng giá sau khuyến mãi và tính tổng giảm giá
-                    double giamGia = (tongGiaGoc * phanTramKhuyenMai) / 100;
-                    tongGiaSauKhuyenMai -= giamGia;
-                    tongGiamGia += giamGia;
-                } catch (NumberFormatException e) {
-                    Log.e("NumberFormatException", "Không thể chuyển đổi thành số: " + khuyenMai.getPhanTramKhuyenMai());
-                }
-            }
+            // Áp dụng khuyến mãi đến tổng giá sau khuyến mãi và tính tổng giảm giá
+            double giamGia = (tongGiaGoc * phanTramKhuyenMai) / 100;
+            tongGiaSauKhuyenMai -= giamGia;
+            tongGiamGia += giamGia;
+        } catch (NumberFormatException e) {
+            Log.e("NumberFormatException", "Không thể chuyển đổi thành số: " + selectedKhuyenMai.getPhanTramKhuyenMai());
         }
 
-        // Hiển thị tổng giảm giá trên tvGiamGia
         tvGiamGia.setText(formatTien(tongGiamGia));
         tvTongTien.setText(formatTien(tongGiaSauKhuyenMai));
         txtTien.setText(formatTien(tongGiaSauKhuyenMai));
 
+        double finalTongGiaSauKhuyenMai = tongGiaSauKhuyenMai;
+        btnMua.setOnClickListener(v -> {
+            Intent intent = new Intent(Gio_Hang.this, ThanhToanMainActivity.class);
+            intent.putExtra("tongtien", finalTongGiaSauKhuyenMai);
+            startActivity(intent);
+        });
     }
+
+
     private String formatTien(double value) {
         NumberFormat formatter = new DecimalFormat("#,###");
         return formatter.format(value) + " đ";
     }
+
+
 }
