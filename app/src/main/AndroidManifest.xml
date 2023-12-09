@@ -47,7 +47,7 @@
             android:name=".DialogThemTaiKhoanActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+            android:name=".Activity.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.ForgotpwActivity"
@@ -77,7 +77,7 @@
             android:name=".Activity.Doanh_Thu"
             android:exported="false" />
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name=".Activity.TrangChuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

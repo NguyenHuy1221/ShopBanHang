@@ -25,6 +25,7 @@ import com.example.shopbanhang.Adapter.SanPhamMainAdapter;
 import com.example.shopbanhang.Adapter.SliderAdapters;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.SliderItems;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
@@ -67,6 +68,9 @@ public class TrangChuActivity extends AppCompatActivity {
         if (mySharedPreferences.getBooleanValue("login") && user != null) {
             textView3.setText(user);
         }
+
+
+
 
         Lme.setOnClickListener(v -> {
             Intent intent = new Intent(TrangChuActivity.this, Trang_Ca_Nhan.class);

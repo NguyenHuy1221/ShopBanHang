@@ -124,6 +124,8 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
                             startActivity(intent);
                             finishAffinity();
+
+
                         } else {
                             Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                         }
