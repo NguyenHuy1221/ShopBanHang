@@ -172,34 +172,6 @@
                     app:srcCompat="@drawable/arrow_detail" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Mật khẩu" />
-
-                <TextView
-                    android:id="@+id/txt_pass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:text="Mật khẩu"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/img_MKChiTiet"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    app:srcCompat="@drawable/arrow_detail" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

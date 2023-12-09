@@ -1,25 +1,46 @@
 package com.example.shopbanhang.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.shopbanhang.Model.ChiTietTaiKhoan;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class Trang_Ca_Nhan extends AppCompatActivity {
     TextView sanpham,taikhoan,hoadon,doanhthu,khuyenmai,lichsumua,thongtinchitiet,doimatkhau,dangxuat;
     LinearLayout trangchu,yeuthich,giohang;
+    private ImageView imgChinh;
+    private TextView txtName,txtDiaChi;
     ImageView backBtn;
+    private String user, email;
+    private Context context = this;
+
+
+
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +55,21 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         lichsumua = findViewById(R.id.GO_lichsumua);
         dangxuat = findViewById(R.id.GO_dangxuat);
         thongtinchitiet = findViewById(R.id.GO_chitiettaikhoan);
+        imgChinh = findViewById(R.id.img_chinh);
+        txtName = findViewById(R.id.txt_name);
+        txtDiaChi = findViewById(R.id.txt_dia_chi);
+
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user = mySharedPreferences.getValue("remember_username_ten");
+        email = mySharedPreferences.getValue("remember_username");
+
+        txtName.setText(user);
+        txtDiaChi.setText(email);
+
+
+        HienThiThongTin();
+
+
 
         backBtn.setOnClickListener(v -> finish());
 //        trangchu = findViewById(R.id.GO_trangchu);
@@ -108,29 +144,32 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         });
 
 
-
-//        trangchu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Trang_Ca_Nhan.this, TrangChuActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//        yeuthich.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Trang_Ca_Nhan.this, quan_ly_khuyen_mai.class);
-//                startActivity(intent);
-//            }
-//        });
-//        giohang.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Trang_Ca_Nhan.this, Gio_Hang.class);
-//                startActivity(intent);
-//            }
-//        });
-
-
     }
+
+    private void HienThiThongTin() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
+        DatabaseReference userRef = myRef.child(email.replace(".", "_"));
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot != null && snapshot.exists()) {
+                    ChiTietTaiKhoan chiTietTaiKhoan = snapshot.getValue(ChiTietTaiKhoan.class);
+
+                    txtName.setText(chiTietTaiKhoan.getName());
+                    txtDiaChi.setText(chiTietTaiKhoan.getEmail());
+                    Picasso.get().load(chiTietTaiKhoan.getUrlImage()).into(imgChinh);
+                } else {
+                    Log.d("Trang_Ca_Nhan", "Dữ liệu không tồn tại");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Trang_Ca_Nhan", "Lỗi đọc dữ liệu", error.toException());
+            }
+        });
+    }
+
+
 }

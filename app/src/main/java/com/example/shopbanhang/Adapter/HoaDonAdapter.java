@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,16 +35,15 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private List<HoaDon> mHoadon;
-    private OnStatusClickListener mStatusClickListener;
 
+    private TrangThaiClickListener trangThaiClickListener;
 
-
-    public HoaDonAdapter(List<HoaDon> mHoadon) {
+    public HoaDonAdapter(List<HoaDon> mHoadon, TrangThaiClickListener listener) {
         this.mHoadon = mHoadon;
+        this.trangThaiClickListener = listener;
     }
-    public void setOnStatusClickListener(OnStatusClickListener listener) {
-        mStatusClickListener = listener;
-    }
+
+
 
     @NonNull
     @NotNull
@@ -69,26 +69,43 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 
         holder.setSanPhamList(hoaDon.getSanPhamList());
 
-        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mStatusClickListener != null) {
-                    int adapterPosition = holder.getAdapterPosition();
-                    if (adapterPosition != RecyclerView.NO_POSITION) {
-                        mStatusClickListener.onStatusClick(adapterPosition, hoaDon.getTinhTrang());
-                    }
-                }
+        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
+        holder.tvTrangThai.setOnClickListener(v -> {
+            if (trangThaiClickListener != null) {
+                trangThaiClickListener.onTrangThaiClick(position);
             }
         });
 
-
-    }
-
-    public interface OnStatusClickListener {
-        void onStatusClick(int position, int currentStatus);
     }
 
 
+    private String trangThaiDonHang(int status) {
+        String result = "";
+
+        switch (status) {
+            case 0:
+                result = "Đơn hàng đang được xử lý ";
+                break;
+            case 1:
+                result = "Đơn hàng đã chấp nhận ";
+                break;
+            case 2:
+                result = "Thành công ";
+                break;
+            case 3:
+                result = "Đơn hàng đã hủy ";
+                break;
+        }
+
+        return result;
+    }
+
+
+    public interface TrangThaiClickListener {
+
+        void onTrangThaiClick(int position);
+
+    }
 
     @Override
     public int getItemCount() {

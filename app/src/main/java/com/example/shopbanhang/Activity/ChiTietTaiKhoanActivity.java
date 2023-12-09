@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.shopbanhang.Model.ChiTietTaiKhoan;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
@@ -25,15 +28,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
-    private ImageView imgName,imgEmail,imgDiaChi,imgSDT,imgPass;
-    private TextView txtName,txtEmail,txtDiaChi,txtSDT,txtPass;
+    private ImageView imgName, imgEmail, imgDiaChi, imgSDT,myImg;
+    private TextView txtName, txtEmail, txtDiaChi, txtSDT;
     private Button btnLuu;
-    private String user,email;
+    private String user, email;
     private Context context = this;
-
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private StorageReference storageReference;
+    private static final String PREFS_NAME = "MyPrefsFile";
+    private static final String IMAGE_URL_KEY = "imageUrlKey";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,14 +51,22 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
         user = mySharedPreferences.getValue("remember_username_ten");
         email = mySharedPreferences.getValue("remember_username");
-        Log.d("HUY","name :" + user);
-
-
+        Log.d("HUY", "name :" + user);
 
         anhxa();
 
         txtName.setText(user);
         txtEmail.setText(email);
+
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+        myImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+
         btnLuu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,33 +77,31 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         imgName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditNameDialog();
+                showEditDialog("Sửa tên người dùng", txtName, "name");
             }
         });
-
-//        imgEmail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showEditAddressDialog();
-//            }
-//        });
 
         imgDiaChi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditAddressDialog();
+                showEditDialog("Sửa địa chỉ", txtDiaChi, "address");
             }
         });
 
         imgSDT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditPhoneDialog();
+                showEditDialog("Sửa số điện thoại", txtSDT, "phoneNumber");
             }
         });
 
-        HienThiThongTin();
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String imageUrl = prefs.getString(IMAGE_URL_KEY, "");
+        if (!imageUrl.isEmpty()) {
+            displayImage(imageUrl);
+        }
 
+        HienThiThongTin();
     }
 
     private void anhxa() {
@@ -94,13 +109,12 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txt_email_chi_tiet);
         txtDiaChi = findViewById(R.id.txt_dia_chi);
         txtSDT = findViewById(R.id.txt_sdt);
-        txtPass = findViewById(R.id.txt_pass);
         imgName = findViewById(R.id.img_tenChiTiet);
         imgEmail = findViewById(R.id.img_emailChiTiet);
         imgDiaChi = findViewById(R.id.img_DiaChi);
         imgSDT = findViewById(R.id.img_SDTChiTiet);
-        imgPass = findViewById(R.id.img_MKChiTiet);
         btnLuu = findViewById(R.id.btnAdd);
+        myImg = findViewById(R.id.imageView3);
     }
 
     private void LuuThongTin() {
@@ -109,6 +123,8 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
         String name = txtName.getText().toString();
         String email = txtEmail.getText().toString();
+        String address = txtDiaChi.getText().toString();
+        String phoneNumber = txtSDT.getText().toString();
 
         if (name.isEmpty() || email.isEmpty()) {
             Toast.makeText(this, "Dữ liệu trống", Toast.LENGTH_SHORT).show();
@@ -118,6 +134,14 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         ChiTietTaiKhoan chiTietTaiKhoan = new ChiTietTaiKhoan();
         chiTietTaiKhoan.setName(name);
         chiTietTaiKhoan.setEmail(email);
+        chiTietTaiKhoan.setAddress(address);
+        chiTietTaiKhoan.setPhoneNumber(phoneNumber);
+
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String imageUrl = prefs.getString(IMAGE_URL_KEY, "");
+        if (!imageUrl.isEmpty()) {
+            chiTietTaiKhoan.setUrlImage(imageUrl);
+        }
 
         myRef.child(email.replace(".", "_")).setValue(chiTietTaiKhoan)
                 .addOnCompleteListener(task -> {
@@ -128,10 +152,11 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
                     }
                 });
     }
+
     private void HienThiThongTin() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
-        DatabaseReference userRef = myRef.child(email.replace(".","_"));
+        DatabaseReference userRef = myRef.child(email.replace(".", "_"));
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -140,40 +165,40 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
                     txtName.setText(chiTietTaiKhoan.getName());
                     txtEmail.setText(chiTietTaiKhoan.getEmail());
+                    txtDiaChi.setText(chiTietTaiKhoan.getAddress());
+
+                    Log.d("HUY", "Phone Number: " + chiTietTaiKhoan.getPhoneNumber());
+
+                    txtSDT.setText(chiTietTaiKhoan.getPhoneNumber());
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("ChiTietTaiKhoanActivity", "Failed to read value.", error.toException());
+
             }
         });
-
     }
 
-
-
-    private void showEditNameDialog() {
+    private void showEditDialog(String title, TextView textView, String fieldName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sửa tên người dùng");
+        builder.setTitle(title);
 
         final EditText input = new EditText(this);
-
-        input.setText(txtName.getText().toString());
+        // Hiển thị thông tin hiện tại trong EditText
+        input.setText(textView.getText().toString());
 
         builder.setView(input);
 
         builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newName = input.getText().toString();
-                
-                txtName.setText(newName);
-                updateNameInFirebase(newName);
+                String newValue = input.getText().toString();
+                textView.setText(newValue);
+                updateFieldInFirebase(fieldName, newValue);
             }
         });
 
-        // Thiết lập nút Negative (hủy)
         builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -184,105 +209,82 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateNameInFirebase(String newName) {
+    private void updateFieldInFirebase(String fieldName, String newValue) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
 
-        // Cập nhật tên mới vào Firebase
-        myRef.child(email.replace(".", "_")).child("name").setValue(newName)
+        myRef.child(email.replace(".", "_")).child(fieldName).setValue(newValue)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(context, "Lưu thành công", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "Lưu thát bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Lưu thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
 
-    private void showEditPhoneDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sửa số điện thoại");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_PHONE);
-        // Hiển thị số điện thoại hiện tại trong EditText
-        input.setText(txtSDT.getText().toString());
-
-        builder.setView(input);
-
-        builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newPhone = input.getText().toString();
-                txtSDT.setText(newPhone);
-                updatePhoneInFirebase(newPhone);
-            }
-        });
-
-        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
     }
 
-    private void updatePhoneInFirebase(String newPhone) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        myRef.child(email.replace(".", "_")).child("phone").setValue(newPhone)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            uploadImage(imageUri);
+        }
+    }
+
+    private void uploadImage(Uri imageUri) {
+        StorageReference filePath = storageReference.child("images").child(email.replace(".", "_") + ".jpg");
+
+        filePath.putFile(imageUri)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(context, "Lưu số điện thoại thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Hình đã được tải lên thành công", Toast.LENGTH_SHORT).show();
+
+                        // Lấy URL của hình ảnh từ Storage
+                        filePath.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String imageUrl = uri.toString();
+                            updateImageInFirebase(imageUrl);
+
+                            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+                            editor.putString(IMAGE_URL_KEY, imageUrl);
+                            editor.apply();
+
+                        }).addOnFailureListener(e -> {
+                            // Xử lý khi không lấy được URL
+                            Toast.makeText(this, "Không thể lấy URL của hình ảnh", Toast.LENGTH_SHORT).show();
+                        });
                     } else {
-                        Toast.makeText(context, "Lưu số điện thoại thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Tải lên hình thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void showEditAddressDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sửa địa chỉ");
-
-        final EditText input = new EditText(this);
-        // Hiển thị địa chỉ hiện tại trong EditText
-        input.setText(txtDiaChi.getText().toString());
-
-        builder.setView(input);
-
-        builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newAddress = input.getText().toString();
-                txtDiaChi.setText(newAddress);
-                updateAddressInFirebase(newAddress);
-            }
-        });
-
-        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+    private void displayImage(String imageUrl) {
+        Glide.with(this)
+                .load(imageUrl)
+                .into(myImg);
     }
 
-    private void updateAddressInFirebase(String newAddress) {
+    private void updateImageInFirebase(String imageUrl) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
 
-        myRef.child(email.replace(".", "_")).child("address").setValue(newAddress)
+        // Cập nhật imageUrl vào Firebase
+        myRef.child(email.replace(".", "_")).child("imageUrl").setValue(imageUrl)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(context, "Lưu địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Lưu URL hình thành công", Toast.LENGTH_SHORT).show();
+
+                        displayImage(imageUrl);
                     } else {
-                        Toast.makeText(context, "Lưu địa chỉ thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Lưu URL hình thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

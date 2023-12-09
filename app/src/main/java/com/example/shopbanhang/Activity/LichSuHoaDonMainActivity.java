@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.ChiTietDonHangAdapter;
 import com.example.shopbanhang.Adapter.HoaDonAdapter;
@@ -76,8 +77,15 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        hoaDonAdapter = new HoaDonAdapter(mListhoadon);
+        hoaDonAdapter = new HoaDonAdapter(mListhoadon, new HoaDonAdapter.TrangThaiClickListener() {
+            @Override
+            public void onTrangThaiClick(int position) {
+                Toast.makeText(context, "oke", Toast.LENGTH_SHORT).show();
+            }
+        });
         recyclerView.setAdapter(hoaDonAdapter);
     }
+
+
 
 }
