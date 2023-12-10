@@ -18,15 +18,6 @@ public class HoaDon {
     public HoaDon() {
     }
 
-//    public HoaDon(String maHD, String name_khachhang, String ngaytaoHD, String giotaoHD, List<GioHang> sanPhamList, double tongtien) {
-//        this.maHD = maHD;
-//        this.name_khachhang = name_khachhang;
-//        this.ngaytaoHD = ngaytaoHD;
-//        this.giotaoHD = giotaoHD;
-//        this.sanPhamList = sanPhamList;
-//        this.tongtien = tongtien;
-//    }
-
 
     public HoaDon(String maHD, String name_khachhang, String ngaytaoHD, String giotaoHD, List<GioHang> sanPhamList, double tongtien, int tinhTrang) {
         this.maHD = maHD;

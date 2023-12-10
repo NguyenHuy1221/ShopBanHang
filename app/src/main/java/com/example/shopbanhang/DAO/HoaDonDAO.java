@@ -6,6 +6,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class HoaDonDAO {
 
+    private DatabaseReference hoaDonRef;
     public void insertHoaDon(HoaDon HoaDon) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("hoadon");
@@ -24,8 +25,8 @@ public class HoaDonDAO {
         myRef.child(HoaDon.getGiotaoHD()).removeValue();
     }
 
-    public void updateStatus(String maHD, int newStatus) {
-        DatabaseReference hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon").child(maHD);
-        hoaDonRef.child("tinhTrang").setValue(newStatus);
+    public void updateStatus(HoaDon hoaDon) {
+        hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon");
+        hoaDonRef.child(hoaDon.getMaHD()).child("tinhTrang").setValue(hoaDon.getTinhTrang());
     }
 }

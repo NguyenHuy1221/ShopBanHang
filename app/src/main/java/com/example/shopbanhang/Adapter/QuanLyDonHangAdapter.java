@@ -1,17 +1,12 @@
 package com.example.shopbanhang.Adapter;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,35 +19,29 @@ import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.R;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
 
-
-public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonViewHoder> {
+public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdapter.ViewHolder> {
 
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private Context context;
     private List<HoaDon> mHoadon;
 
-    public HoaDonAdapter(Context context, List<HoaDon> mHoadon) {
+    public QuanLyDonHangAdapter(Context context, List<HoaDon> mHoadon) {
         this.context = context;
         this.mHoadon = mHoadon;
     }
 
     @NonNull
-    @NotNull
     @Override
-    public HoaDonViewHoder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public QuanLyDonHangAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_hoadon, parent, false);
-        return new HoaDonViewHoder(view);
+        return new QuanLyDonHangAdapter.ViewHolder(view);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(@NonNull @NotNull HoaDonViewHoder holder, int position) {
+    public void onBindViewHolder(@NonNull QuanLyDonHangAdapter.ViewHolder holder, int position) {
         HoaDon hoaDon = mHoadon.get(position);
         holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
         holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
@@ -70,32 +59,32 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showUpdateStatusDialog(hoaDon);
+                showUpdateStatusDialog(hoaDon);
             }
         });
     }
 
-//    private void showUpdateStatusDialog(HoaDon hoaDon) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//        builder.setTitle("Chọn trạng thái mới");
-//        final String[] options = {"Đang xử lý", "Đã chấp nhận", "Thành công", "Đã hủy"};
-//
-//        builder.setItems(options, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                int newStatus = which;
-//                updateOrderStatus(hoaDon, newStatus);
-//            }
-//        });
-//
-//        builder.show();
-//    }
+    private void showUpdateStatusDialog(HoaDon hoaDon) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Chọn trạng thái mới");
+        final String[] options = {"Đang xử lý", "Đã chấp nhận", "Thành công", "Đã hủy"};
 
-//    private void updateOrderStatus(HoaDon hoaDon, int newStatus) {
-//        hoaDon.setTinhTrang(newStatus);
-//        hoaDonDAO.updateStatus(hoaDon);
-//        notifyDataSetChanged();
-//    }
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int newStatus = which;
+                updateOrderStatus(hoaDon, newStatus);
+            }
+        });
+
+        builder.show();
+    }
+
+    private void updateOrderStatus(HoaDon hoaDon, int newStatus) {
+        hoaDon.setTinhTrang(newStatus);
+        hoaDonDAO.updateStatus(hoaDon);
+        notifyDataSetChanged();
+    }
 
 
 
@@ -121,7 +110,6 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
     }
 
 
-
     @Override
     public int getItemCount() {
         if (mHoadon != null) {
@@ -130,7 +118,8 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         return 0;
     }
 
-    public class HoaDonViewHoder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
         private TextView tvSohoadon;
         private TextView tvTongtien;
         private TextView tvTinhtrang;
@@ -143,8 +132,9 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         private CardView view_hoadon;
         private RecyclerView rcy_don_hang;
 
-        public HoaDonViewHoder(@NonNull @NotNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             tvTongtien = itemView.findViewById(R.id.tvTongtien);
 //            tvTinhtrang = itemView.findViewById(R.id.tvTinhtrang);
             tvTrangThai = itemView.findViewById(R.id.tvTrangThai);
@@ -155,12 +145,10 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
             view_hoadon = itemView.findViewById(R.id.view_hoadon);
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-
         }
         public void setSanPhamList(List<GioHang> sanPhamList) {
             ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(sanPhamList);
             rcy_don_hang.setAdapter(chiTietDonHangAdapter);
         }
-
     }
 }

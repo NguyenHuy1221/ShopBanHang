@@ -24,7 +24,9 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.ViewHodel> {
 
@@ -32,6 +34,7 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     private List<SanPham> mSanPham;
     private boolean clickTym = false;
     private DatabaseReference databaseReference;
+    private List<String> favoriteProductIds = new ArrayList<>();
 
     private List<SanPham> mFilteredSanPhamList;
 
@@ -40,6 +43,12 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         this.context = context;
         this.mSanPham = mSanPham;
         this.mFilteredSanPhamList = new ArrayList<>(mSanPham);
+    }
+
+    public void updateData(List<SanPham> newData) {
+        mSanPham.clear();
+        mSanPham.addAll(newData);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -52,6 +61,7 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     @Override
     public void onBindViewHolder(@NonNull SanPhamMainAdapter.ViewHodel holder, int position) {
 
+
 //        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
         SanPham sanPham = mSanPham.get(position);
         holder.txt_name.setText(sanPham.getTensp());
@@ -60,19 +70,30 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         holder.txt_pirce.setText(formattedTien + " đ");
         Picasso.get().load(sanPham.getImageUrl()).into(holder.img_main);
 
-        holder.img_tym.setColorFilter(Color.BLACK);
+
+        String productId = String.valueOf(sanPham.getMasp());
+
+        // Kiểm tra trạng thái yêu thích và cập nhật giao diện người dùng
+        if (isFavorite(productId)) {
+            holder.img_tym.setColorFilter(Color.RED);
+        } else {
+            holder.img_tym.setColorFilter(Color.BLACK);
+        }
 
         holder.img_tym.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickTym){
+                // Kiểm tra trạng thái yêu thích khi ấn vào nút
+                boolean isFavorite = isFavorite(productId);
+
+                // Thay đổi trạng thái yêu thích khi ấn vào nút
+                if (isFavorite) {
                     holder.img_tym.setColorFilter(Color.BLACK);
-//                    removeProductFromFavorites();
-                }else {
+                    removeFromFavorites(productId);
+                } else {
                     holder.img_tym.setColorFilter(Color.RED);
-//                    addProductToFavorites();
+                    addToFavorites(productId);
                 }
-                clickTym = !clickTym;
             }
         });
 
@@ -93,29 +114,57 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
                     intent.putStringArrayListExtra("urlChiTiet",new ArrayList<>(urlChiTiet));
                 }
                 holder.itemView.getContext().startActivity(intent);
+
             }
         });
     }
 
-//    private void addProductToFavorites() {
-//        String productId = String.valueOf(sanPham.getMasp());
-//        databaseReference.child(productId).setValue(true);
-//    }
+    // Phương thức để thêm sản phẩm vào danh sách yêu thích
+    private void addToFavorites(String productId) {
+        if (!favoriteProductIds.contains(productId)) {
+            favoriteProductIds.add(productId);
+            saveFavoriteProducts();
+        }
+    }
+
+    private void removeFromFavorites(String productId) {
+        favoriteProductIds.remove(productId);
+        saveFavoriteProducts();
+    }
+
+    // Lưu các ID sản phẩm yêu thích vào SharedPreferences
+    private void saveFavoriteProducts() {
+        SharedPreferences preferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Set<String> favoriteSet = new HashSet<>(favoriteProductIds);
+        editor.putStringSet("favoriteProducts", favoriteSet);
+        editor.apply();
+    }
+
+    // Tải các ID sản phẩm yêu thích từ SharedPreferences
+    private void loadFavoriteProducts() {
+        SharedPreferences preferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE);
+        Set<String> favoriteSet = preferences.getStringSet("favoriteProducts", new HashSet<>());
+        favoriteProductIds.addAll(favoriteSet);
+    }
+
+    private boolean isFavorite(String productId) {
+        return favoriteProductIds.contains(productId);
+    }
 
 
 
-//    private void removeProductFromFavorites() {
-//        String productId = String.valueOf(sanPham.getMasp());
-//
-//        databaseReference.child(productId).removeValue();
-//    }
 
     public void filterList(List<SanPham> filteredList) {
-        mSanPham.clear();
-        mSanPham.addAll(filteredList);
+        mFilteredSanPhamList.clear();
+        mFilteredSanPhamList.addAll(filteredList);
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        mFilteredSanPhamList.clear();
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return mSanPham.size();

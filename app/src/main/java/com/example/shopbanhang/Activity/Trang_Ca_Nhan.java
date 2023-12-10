@@ -92,7 +92,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         hoadon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Trang_Ca_Nhan.this, LichSuHoaDonMainActivity.class);
+                Intent intent = new Intent(Trang_Ca_Nhan.this, QuanLyDonHangActivity.class);
                 startActivity(intent);
             }
         });

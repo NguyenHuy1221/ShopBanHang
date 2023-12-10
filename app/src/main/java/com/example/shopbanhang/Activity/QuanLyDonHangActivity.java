@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.ChiTietDonHangAdapter;
 import com.example.shopbanhang.Adapter.HoaDonAdapter;
+import com.example.shopbanhang.Adapter.QuanLyDonHangAdapter;
 import com.example.shopbanhang.Model.HoaDon;
-import com.example.shopbanhang.Model.HoaDonPdf;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.database.DataSnapshot;
@@ -26,27 +25,25 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LichSuHoaDonMainActivity extends AppCompatActivity {
+public class QuanLyDonHangActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private HoaDonAdapter hoaDonAdapter;
-    private ChiTietDonHangAdapter chiTietDonHangAdapter;
+    private QuanLyDonHangAdapter quanLyDonHangAdapter;
+
 
     private List<HoaDon> mListhoadon = new ArrayList<>();
     private Context context = this;
     private String user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lich_su_hoa_don_main);
-
-        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user = mySharedPreferences.getValue("remember_username_ten");
+        setContentView(R.layout.activity_quan_ly_don_hang);
 
         recyclerView = findViewById(R.id.rcvHoaDon);
 
         DatabaseReference hoaDonMyRef = FirebaseDatabase.getInstance().getReference().child("hoadon");
-        Query myRef = hoaDonMyRef.orderByChild("name_khachhang").equalTo(user);
+        Query myRef = hoaDonMyRef.orderByChild("name_khachhang");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -77,8 +74,8 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        hoaDonAdapter = new HoaDonAdapter(context,mListhoadon);
-        recyclerView.setAdapter(hoaDonAdapter);
+        quanLyDonHangAdapter = new QuanLyDonHangAdapter(context,mListhoadon);
+        recyclerView.setAdapter(quanLyDonHangAdapter);
     }
 
 

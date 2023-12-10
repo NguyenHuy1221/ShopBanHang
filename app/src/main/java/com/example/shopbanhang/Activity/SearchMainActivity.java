@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,6 +33,14 @@ public class SearchMainActivity extends AppCompatActivity {
     private SanPhamMainAdapter searchAdapter;
     private List<SanPham> allSanPham;
     private ImageView imgBack;
+
+    private final Handler handler = new Handler();
+    private final Runnable searchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            filter(edtSearch.getText().toString().toLowerCase().trim());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +74,9 @@ public class SearchMainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filter(editable.toString().toLowerCase().trim());
+//                filter(editable.toString().toLowerCase().trim());
+                handler.removeCallbacks(searchRunnable);
+                handler.postDelayed(searchRunnable, 300);
             }
         });
     }
@@ -104,7 +115,8 @@ public class SearchMainActivity extends AppCompatActivity {
             }
         }
 
-        Log.d("HUY", "Filtering with query: " + query + ", Result size: " + filteredList.size());
+
+        searchAdapter.clear();
 
         if (query.isEmpty()) {
             filteredList.addAll(allSanPham);
@@ -112,6 +124,7 @@ public class SearchMainActivity extends AppCompatActivity {
 
         searchAdapter.filterList(filteredList);
     }
+
 
 
 }
