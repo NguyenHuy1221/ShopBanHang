@@ -153,7 +153,6 @@ public class SanPham implements Serializable {
         result.put("gianhap", gianhap);
         result.put("giaban", giaban);
         result.put("thuonghieu", thuonghieu);
-
         result.put("trangthai", trangthai);
         result.put("ghichu", ghichu);
         result.put("imageUrl", imageUrl);

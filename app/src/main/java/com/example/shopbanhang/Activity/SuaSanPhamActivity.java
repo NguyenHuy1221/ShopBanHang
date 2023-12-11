@@ -58,6 +58,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
@@ -84,7 +85,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
     private ImageView img_ct;
     private EditText edt_masp, edt_tensp, edt_so_luong_sp, edt_gia_nhap, edt_gia_ban, edt_ghi_chu;
     private Spinner spn_loaisp, spn_mausp, spn_sizesp, spn_trang_thai;
-    private Button btnAdd;
+    private Button btnAdd , addchitiet;
     private RecyclerView rcy_ct_anh;
 
     private LinearLayout sizeLayout;
@@ -99,6 +100,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sua_san_pham);
         rclv_suachitiet = findViewById(R.id.rcy_suachitietsanpham);
+        addchitiet = findViewById(R.id.btn_them_spct);
         int masanpham = 0;
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("SAN_PHAM")) {
@@ -119,6 +121,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             @Override
             public void onUpdateClick(ChiTietSanPhamfix chiTietSanPham) {
                 suachitietsanpham(chiTietSanPham);
+                chiTietSanPhamAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -128,6 +131,15 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         });
         rclv_suachitiet.setAdapter(chiTietSanPhamAdapter);
 
+
+
+        addchitiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                themchitietsanpham();
+                chiTietSanPhamAdapter.notifyDataSetChanged();
+            }
+        });
         anhxa();
 //        addSizeAndColor();
         suaSanPham(masanpham);
@@ -190,10 +202,6 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("SAN_PHAM")) {
             SanPham sanPham = (SanPham) intent.getSerializableExtra("SAN_PHAM");
             masanpham2 = intent.getIntExtra("masanpham",0);
-            Log.d("HUY", "Received SanPham: " + sanPham.toString());
-            Log.d("HUY", "Received SanPham: " + masanpham2);
-        }else {
-            Log.e("HUY", "Intent does not have SANPHAM_EXTRA");
         }
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
@@ -567,6 +575,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                             chiTietSanPham.setMau(mausp);
                             chiTietSanPham.setSoluong(Integer.parseInt(solgspString));
                             databaseReference.child(chiTietSanPham.getIdchitietsanpham()).updateChildren(chiTietSanPham.toMap());
+                    chiTietSanPhamAdapter.notifyDataSetChanged();
                             dialog.dismiss();
                         }
 
@@ -574,6 +583,87 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void themchitietsanpham(){
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuaSanPhamActivity.this);
+        LayoutInflater inflater = ((Activity)this).getLayoutInflater();
+        View view = inflater.inflate(R.layout.diaog_them_san_pham_chitiet,null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+        Spinner spincolor = view.findViewById(R.id.spn_mau_sp);
+        Spinner spinnersize = view.findViewById(R.id.spn_size_sp);
+        EditText editText = view.findViewById(R.id.edt_so_luong_sp);
+        Button BTNsuachitiet = view.findViewById(R.id.btnthemct);
+
+        List<String> size = new ArrayList<>();
+        size.add("M");
+        size.add("L");
+        size.add("Xl");
+        size.add("XXL");
+
+
+        ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, size);
+        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnersize.setAdapter(sizeAdapter);
+
+        List<String> color = new ArrayList<>();
+        color.add("Trắng");
+        color.add("Vàng");
+        color.add("Xanh");
+        color.add("Đen");
+        color.add("Đỏ");
+
+        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, color);
+        colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spincolor.setAdapter(colorAdapter);
+
+
+
+        BTNsuachitiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
+                String solgspString  = editText.getText().toString().trim();
+
+                String mausp = spincolor.getSelectedItem().toString();
+                String sizesp = spinnersize.getSelectedItem().toString();
+                int masanpham2 = 0;
+                Intent intent = getIntent();
+                if (intent != null && intent.hasExtra("SAN_PHAM")) {
+                    SanPham sanPham = (SanPham) intent.getSerializableExtra("SAN_PHAM");
+                    masanpham2 = intent.getIntExtra("masanpham",0);
+                }
+
+                if (solgspString.equals("")){
+                    Toast.makeText(SuaSanPhamActivity.this, "Chưa nhận số lượng sản phẩm", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    String id = UUID.randomUUID().toString();
+
+                    ChiTietSanPhamfix chiTietSanPhamfix = new ChiTietSanPhamfix(id,masanpham2,sizesp,mausp,Integer.parseInt(solgspString));
+                    pushData(chiTietSanPhamfix);
+                    chiTietSanPhamAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+
+
+            }
+        });
+
+    }
+    private void pushData(ChiTietSanPhamfix chiTietSanPhamfix) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
+
+        String pathObj = chiTietSanPhamfix.getIdchitietsanpham();
+        databaseReference.child(pathObj).setValue(chiTietSanPhamfix);
     }
     public void deletechitietsanpham(ChiTietSanPhamfix chiTietSanPham){
         new AlertDialog.Builder(this)

@@ -289,6 +289,7 @@
                 android:background="@drawable/custom_khung"
                 />
         </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcy_suachitietsanpham"
             android:layout_width="match_parent"
@@ -297,6 +298,15 @@
             android:layout_gravity="center"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
+        <Button
+            android:id="@+id/btn_them_spct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm sản phẩm ct"
+            android:background="@color/red"
+            app:backgroundTint="@null"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
         <Button
             android:id="@+id/btn_them_sp"
             android:layout_width="match_parent"

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm chi tiết sản phẩm"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Màu"/>
+        <Spinner
+            android:id="@+id/spn_mau_sp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Size"/>
+        <Spinner
+            android:id="@+id/spn_size_sp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="số lượng sản phẩm"/>
+        <EditText
+            android:id="@+id/edt_so_luong_sp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            android:inputType="number"
+            android:background="@drawable/custom_khung"
+            />
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnthemct"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Thêm Chi tiết"
+        android:textSize="18sp"
+        android:backgroundTint="@color/red"
+        android:layout_marginTop="18dp"
+        />
+
+
+</LinearLayout>
