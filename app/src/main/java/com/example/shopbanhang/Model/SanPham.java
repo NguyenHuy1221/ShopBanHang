@@ -43,6 +43,9 @@ public class SanPham implements Serializable {
         this.urlChiTiet = urlChiTiet;
     }
 
+    public SanPham(int soluongban) {
+        this.soluongban = soluongban;
+    }
 
     public int getMasp() {
         return masp;

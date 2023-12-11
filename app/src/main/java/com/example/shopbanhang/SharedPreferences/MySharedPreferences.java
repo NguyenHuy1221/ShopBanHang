@@ -35,4 +35,6 @@ public class MySharedPreferences {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(MY_PREFERENCES_BOOLEAN, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(key, false);
     }
+
+
 }

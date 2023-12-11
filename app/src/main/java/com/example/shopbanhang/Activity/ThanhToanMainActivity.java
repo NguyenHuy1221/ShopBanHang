@@ -3,6 +3,7 @@ package com.example.shopbanhang.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,19 +16,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
+import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 public class ThanhToanMainActivity extends AppCompatActivity {
@@ -39,6 +47,11 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private HoaDon hoaDon;
     double tien;
     private ArrayList<GioHang> gioHangList = new ArrayList<>(Gio_Hang.mlistGioHang);
+    private ArrayList<GioHang> list = new ArrayList<>();
+    private ArrayList<SanPham> listsanpham = new ArrayList<>();
+
+    private GioHang gioHang;
+    private SanPham sanPham;
 
     private Context context = this ;
     private String user_name_login;
@@ -65,7 +78,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         edtDiaChi = findViewById(R.id.edtdiaChi);
         btn_mua_hang = findViewById(R.id.btn_mua_hang);
         int trangthai = 0;
-
+        getDataFirebasegiohang();
         btn_mua_hang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,9 +90,105 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                     String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                     String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                     hoaDon = new HoaDon(id,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
+
+                    getDataFirebasesanpham();
                     addHoaDon(hoaDon);
                     clearGioHangData();
                 }
+            }
+        });
+    }
+    private ArrayList<Integer> listmasp = new ArrayList<>();
+    private ArrayList<Integer> listmaspnumber = new ArrayList<>();
+    private void getDataFirebasegiohang() {
+        DatabaseReference mDatabaseReference;
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (listmasp != null) {
+                    listmasp.clear();
+                }
+                if (listmaspnumber != null) {
+                    listmaspnumber.clear();
+                }
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+//                    DoanhThu doanhThu = dataSnapshot.getValue(DoanhThu.class);
+                    gioHang = dataSnapshot.getValue(GioHang.class);
+                    if (gioHang != null){
+                        listmasp.add(gioHang.getMasp());
+                        listmaspnumber.add((gioHang.getSoluong()));
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void getDataFirebasesanpham() {
+        DatabaseReference mDatabaseReference;
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (listsanpham != null) {
+                    listsanpham.clear();
+                }
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+
+//                    DoanhThu doanhThu = dataSnapshot.getValue(DoanhThu.class);
+                    sanPham = dataSnapshot.getValue(SanPham.class);
+                    if (sanPham != null){
+                        Toast.makeText(ThanhToanMainActivity.this, ""+listmasp.size(), Toast.LENGTH_SHORT).show();
+
+                        if (listmasp != null){
+
+
+                        for (int i = 0; i < listmasp.size();i++){
+
+
+                        if (sanPham.getMasp() == listmasp.get(i)){
+                            listsanpham.add(sanPham);
+                            int soluongdaban = 0;
+                            int soluongbancuagiohang;
+                            int soluongdabanbandau;
+                            soluongdabanbandau = sanPham.getSoluongban();
+                            soluongbancuagiohang = listmaspnumber.get(i);
+                            soluongdaban = soluongdabanbandau + soluongbancuagiohang;
+
+
+                            String pathObj = String.valueOf(sanPham.getMasp());
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("soluongban", soluongdaban);
+                            mDatabaseReference.child(pathObj).updateChildren(updates);
+                            soluongdaban = 0;
+
+
+
+                        }
+
+
+                        }
+
+                        }
+
+                    }
+
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

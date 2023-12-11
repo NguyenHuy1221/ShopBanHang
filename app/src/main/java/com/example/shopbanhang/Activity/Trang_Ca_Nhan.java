@@ -67,7 +67,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
         txtDiaChi.setText(email);
 
 
-        HienThiThongTin();
+//        HienThiThongTin();
 
 
 
@@ -124,14 +124,22 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                SharedPreferences mySharedPreferences = (SharedPreferences) new MySharedPreferences(Trang_Ca_Nhan.this);
+//              SharedPreferences mySharedPreferences = (SharedPreferences) new MySharedPreferences(Trang_Ca_Nhan.this);
+//
+//                SharedPreferences.Editor editor = mySharedPreferences.edit();
+//                editor.clear();
+//                editor.commit();
+
+                SharedPreferences mySharedPreferences = getSharedPreferences("MY_PREFERENCES", MODE_PRIVATE);
+
                 SharedPreferences.Editor editor = mySharedPreferences.edit();
                 editor.clear();
                 editor.commit();
 
+
+
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 

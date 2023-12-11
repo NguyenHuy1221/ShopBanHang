@@ -149,7 +149,8 @@ public class LoginActivity extends AppCompatActivity {
                             mySharedPreferences.putValue("remember_username", getuser.getEmailtk());
                             mySharedPreferences.putValue("remember_username_ten", getuser.getTentk());
                             mySharedPreferences.putValue("remember_password", getuser.getMatkhautk());
-                        } else {
+                        }
+                        else {
                             mySharedPreferences.putValue("remember_username", null);
                             mySharedPreferences.putValue("remember_username_ten", null);
                             mySharedPreferences.putValue("remember_password", null);
