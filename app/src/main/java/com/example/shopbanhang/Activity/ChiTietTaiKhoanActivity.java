@@ -124,7 +124,7 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
     private void LuuThongTin() {
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -164,7 +164,7 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
     private void HienThiThongTin() {
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
         String stringidtaikhoan = String.valueOf(idtaikhoan);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("TaiKhoan");
@@ -224,7 +224,7 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
     private void updateFieldInFirebase(String fieldName, String newValue) {
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
         String stringidtaikhoan = String.valueOf(idtaikhoan);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("TaiKhoan");
@@ -257,7 +257,7 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
     private void uploadImage(Uri imageUri) {
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
         String stringidtaikhoan = String.valueOf(idtaikhoan);
 
         StorageReference filePath = storageReference.child("images").child(stringidtaikhoan + ".jpg");
@@ -296,7 +296,7 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("TaiKhoan");
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
         String stringidtaikhoan = String.valueOf(idtaikhoan);
         // Cập nhật imageUrl vào Firebase
         myRef.child(stringidtaikhoan).child("imgtk").setValue(imageUrl)
