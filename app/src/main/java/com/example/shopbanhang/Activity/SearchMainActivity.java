@@ -83,7 +83,6 @@ public class SearchMainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewSearch.setLayoutManager(gridLayoutManager);
     }
 

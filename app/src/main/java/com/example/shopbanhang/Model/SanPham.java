@@ -15,7 +15,6 @@ public class SanPham implements Serializable {
     private double gianhap;
     private double giaban;
     private String thuonghieu;
-
     private String trangthai;
     private String ghichu;
     private String imageUrl;

@@ -110,7 +110,6 @@ public class Gio_Hang extends AppCompatActivity {
                     @Override
                     public void onItemChanged(GioHang gioHang) {
                         updateCart(gioHang);
-//                        updateTongTien();
                     }
 
                     @Override

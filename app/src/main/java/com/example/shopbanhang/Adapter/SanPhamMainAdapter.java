@@ -17,32 +17,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shopbanhang.Activity.ChiTietSanPhamActivity;
 import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.SanPham;
+import com.example.shopbanhang.Model.YeuThichSanPham;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.ViewHodel> {
 
     private Context context;
     private List<SanPham> mSanPham;
-    private boolean clickTym = false;
-    private DatabaseReference databaseReference;
-    private List<String> favoriteProductIds = new ArrayList<>();
 
     private List<SanPham> mFilteredSanPhamList;
+    private int user;
+    private List<YeuThichSanPham> mYeuThichSanPhamList;
 
 
     public SanPhamMainAdapter(Context context, List<SanPham> mSanPham) {
         this.context = context;
         this.mSanPham = mSanPham;
         this.mFilteredSanPhamList = new ArrayList<>(mSanPham);
+        this.mYeuThichSanPhamList = new ArrayList<>();
     }
 
     public void updateData(List<SanPham> newData) {
@@ -50,7 +56,15 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         mSanPham.addAll(newData);
         notifyDataSetChanged();
     }
-
+    public void updateYeuThichList(List<YeuThichSanPham> yeuThichList) {
+        mYeuThichSanPhamList.clear();
+        mYeuThichSanPhamList.addAll(yeuThichList);
+        notifyDataSetChanged();
+    }
+    public void addSanPham(SanPham sanPham) {
+        mSanPham.add(sanPham);
+        notifyItemInserted(mSanPham.size() - 1);
+    }
     @NonNull
     @Override
     public SanPhamMainAdapter.ViewHodel onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,7 +76,6 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     public void onBindViewHolder(@NonNull SanPhamMainAdapter.ViewHodel holder, int position) {
 
 
-//        databaseReference = FirebaseDatabase.getInstance().getReference().child("sanphamyeuthich");
         SanPham sanPham = mSanPham.get(position);
         holder.txt_name.setText(sanPham.getTensp());
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
@@ -71,10 +84,10 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         Picasso.get().load(sanPham.getImageUrl()).into(holder.img_main);
 
 
-        String productId = String.valueOf(sanPham.getMasp());
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
 
-        // Kiểm tra trạng thái yêu thích và cập nhật giao diện người dùng
-        if (isFavorite(productId)) {
+        if (isFavoriteProduct(sanPham.getMasp())) {
             holder.img_tym.setColorFilter(Color.RED);
         } else {
             holder.img_tym.setColorFilter(Color.BLACK);
@@ -83,20 +96,14 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         holder.img_tym.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Kiểm tra trạng thái yêu thích khi ấn vào nút
-                boolean isFavorite = isFavorite(productId);
+                Random random = new Random();
+                int id = Integer.parseInt(String.valueOf(random.nextInt(1000000)));
+                YeuThichSanPham yeuThichSanPham = new YeuThichSanPham(id, user, sanPham.getMasp());
+                ThemSanPhamYeuThich(yeuThichSanPham);
 
-                // Thay đổi trạng thái yêu thích khi ấn vào nút
-                if (isFavorite) {
-                    holder.img_tym.setColorFilter(Color.BLACK);
-                    removeFromFavorites(productId);
-                } else {
-                    holder.img_tym.setColorFilter(Color.RED);
-                    addToFavorites(productId);
-                }
+                holder.img_tym.setColorFilter(Color.RED);
             }
         });
-
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -119,45 +126,42 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         });
     }
 
-    // Phương thức để thêm sản phẩm vào danh sách yêu thích
-    private void addToFavorites(String productId) {
-        if (!favoriteProductIds.contains(productId)) {
-            favoriteProductIds.add(productId);
-            saveFavoriteProducts();
+
+    private void ThemSanPhamYeuThich(YeuThichSanPham yeuThichSanPham) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("SanPhamYeuThich");
+
+        DatabaseReference productRef = databaseReference.child(String.valueOf(yeuThichSanPham.getId_san_pham()));
+
+        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    productRef.setValue(yeuThichSanPham);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error checking if product exists: " + error.getMessage());
+            }
+        });
+    }
+
+    private boolean isFavoriteProduct(int productId) {
+        for (YeuThichSanPham yeuThich : mYeuThichSanPhamList) {
+            if (yeuThich.getId_san_pham() == productId) {
+                return true;
+            }
         }
+        return false;
     }
-
-    private void removeFromFavorites(String productId) {
-        favoriteProductIds.remove(productId);
-        saveFavoriteProducts();
-    }
-
-    // Lưu các ID sản phẩm yêu thích vào SharedPreferences
-    private void saveFavoriteProducts() {
-        SharedPreferences preferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        Set<String> favoriteSet = new HashSet<>(favoriteProductIds);
-        editor.putStringSet("favoriteProducts", favoriteSet);
-        editor.apply();
-    }
-
-    // Tải các ID sản phẩm yêu thích từ SharedPreferences
-    private void loadFavoriteProducts() {
-        SharedPreferences preferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE);
-        Set<String> favoriteSet = preferences.getStringSet("favoriteProducts", new HashSet<>());
-        favoriteProductIds.addAll(favoriteSet);
-    }
-
-    private boolean isFavorite(String productId) {
-        return favoriteProductIds.contains(productId);
-    }
-
 
 
 
     public void filterList(List<SanPham> filteredList) {
-        mFilteredSanPhamList.clear();
-        mFilteredSanPhamList.addAll(filteredList);
+        mSanPham.clear();
+        mSanPham.addAll(filteredList);
         notifyDataSetChanged();
     }
 
