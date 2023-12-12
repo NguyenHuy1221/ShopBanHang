@@ -469,44 +469,46 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
             startActivity(intent);
             finish();
-        }
-        imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
+        } else {
+            imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
 
-                        sanPham.setTimestamp(time);
-                        sanPham.setTensp(tensp);
-                        sanPham.setSoluongnhap(solgsp);
-                        sanPham.setGianhap(gianhap);
-                        sanPham.setGiaban(giaban);
-                        sanPham.setThuonghieu(thuonghieu);
+                            sanPham.setTimestamp(time);
+                            sanPham.setTensp(tensp);
+                            sanPham.setSoluongnhap(solgsp);
+                            sanPham.setGianhap(gianhap);
+                            sanPham.setGiaban(giaban);
+                            sanPham.setThuonghieu(thuonghieu);
 //                        sanPham.setMausp(mau);
 //                        sanPham.setSizesp(size);
-                        sanPham.setTrangthai(trangthai);
-                        sanPham.setGhichu(ghichu);
-                        sanPham.setImageUrl(uri.toString());
+                            sanPham.setTrangthai(trangthai);
+                            sanPham.setGhichu(ghichu);
+                            sanPham.setImageUrl(uri.toString());
 
-                        SanPhamDAO sanPhamDAO = new SanPhamDAO();
-                        sanPhamDAO.updateProducts(sanPham);
-                        progressDialog.dismiss();
+                            SanPhamDAO sanPhamDAO = new SanPhamDAO();
+                            sanPhamDAO.updateProducts(sanPham);
+                            progressDialog.dismiss();
 
-                        Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
-                        startActivity(intent);
-                        finish();
+                            Toast.makeText(context, "Sửa thành công", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
+                            startActivity(intent);
+                            finish();
 
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-            }
-        });
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                }
+            });
+        }
+
     }
 
 

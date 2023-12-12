@@ -35,7 +35,6 @@ import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -147,7 +146,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                 spinnerMau.setAdapter(mauAdapter);
 
                 EditText editTextSoLuong = new EditText(ThemSanPhamActivity.this);
-                editTextSoLuong.setHint("Số lượng");
+                editTextSoLuong.setText(String.valueOf(0));
                 editTextSoLuong.setInputType(InputType.TYPE_CLASS_NUMBER);
                 editTextSoLuong.setId(id);
 
@@ -400,7 +399,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                             SanPham sanPham = new SanPham(System.currentTimeMillis(),masp, tensp, solgsp, solgban, gianhap, giaban, thuonghieu, trangthai, ghichu, uri.toString(), urlList);
                             sanPhamDAO.insertProducts(sanPham);
                             progressDialog.dismiss();
-                            Toast.makeText(context, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(ThemSanPhamActivity.this, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(ThemSanPhamActivity.this, QuanLySanPhamActivity.class);
                             startActivity(intent);
                         } catch (InterruptedException e) {

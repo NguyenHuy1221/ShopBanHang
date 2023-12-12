@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.shopbanhang.Model.ChiTietTaiKhoan;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +32,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
@@ -118,9 +122,14 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
     }
 
     private void LuuThongTin() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
 
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("TaiKhoan");
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("TaiKhoan");
         String name = txtName.getText().toString();
         String email = txtEmail.getText().toString();
         String address = txtDiaChi.getText().toString();
@@ -130,46 +139,49 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
             Toast.makeText(this, "Dữ liệu trống", Toast.LENGTH_SHORT).show();
             return;
         }
+        String stringidtaikhoan = String.valueOf(idtaikhoan);
 
-        ChiTietTaiKhoan chiTietTaiKhoan = new ChiTietTaiKhoan();
-        chiTietTaiKhoan.setName(name);
-        chiTietTaiKhoan.setEmail(email);
-        chiTietTaiKhoan.setAddress(address);
-        chiTietTaiKhoan.setPhoneNumber(phoneNumber);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("tentk", name);
+        updates.put("emailtk", email);
+        updates.put("diachitk", address);
+        updates.put("sdttk", phoneNumber);
+
+
+
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String imageUrl = prefs.getString(IMAGE_URL_KEY, "");
         if (!imageUrl.isEmpty()) {
-            chiTietTaiKhoan.setUrlImage(imageUrl);
+            updates.put("imgtk", imageUrl);
+            mDatabaseReference.child(stringidtaikhoan).updateChildren(updates);
+        } else {
+            mDatabaseReference.child(stringidtaikhoan).updateChildren(updates);
         }
 
-        myRef.child(email.replace(".", "_")).setValue(chiTietTaiKhoan)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Lưu Thông tin thành công", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Lưu Thông tin thất bại", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
     }
 
     private void HienThiThongTin() {
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        String stringidtaikhoan = String.valueOf(idtaikhoan);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
-        DatabaseReference userRef = myRef.child(email.replace(".", "_"));
+        DatabaseReference myRef = database.getReference("TaiKhoan");
+        DatabaseReference userRef = myRef.child(stringidtaikhoan);
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    ChiTietTaiKhoan chiTietTaiKhoan = snapshot.getValue(ChiTietTaiKhoan.class);
+                    TaiKhoan taiKhoan = snapshot.getValue(TaiKhoan.class);
 
-                    txtName.setText(chiTietTaiKhoan.getName());
-                    txtEmail.setText(chiTietTaiKhoan.getEmail());
-                    txtDiaChi.setText(chiTietTaiKhoan.getAddress());
+                    txtName.setText(taiKhoan.getTentk());
+                    txtEmail.setText(taiKhoan.getEmailtk());
+                    txtDiaChi.setText(taiKhoan.getDiachitk());
 
-                    Log.d("HUY", "Phone Number: " + chiTietTaiKhoan.getPhoneNumber());
+                    Log.d("HUY", "Phone Number: " + taiKhoan.getSdttk());
 
-                    txtSDT.setText(chiTietTaiKhoan.getPhoneNumber());
+                    txtSDT.setText(taiKhoan.getSdttk());
                 }
             }
 
@@ -195,7 +207,8 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String newValue = input.getText().toString();
                 textView.setText(newValue);
-                updateFieldInFirebase(fieldName, newValue);
+//                updateFieldInFirebase(fieldName, newValue);
+                LuuThongTin();
             }
         });
 
@@ -210,10 +223,13 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
     }
 
     private void updateFieldInFirebase(String fieldName, String newValue) {
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        String stringidtaikhoan = String.valueOf(idtaikhoan);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
+        DatabaseReference myRef = database.getReference("TaiKhoan");
 
-        myRef.child(email.replace(".", "_")).child(fieldName).setValue(newValue)
+        myRef.child(stringidtaikhoan).child(fieldName).setValue(newValue)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(context, "Lưu thành công", Toast.LENGTH_SHORT).show();
@@ -240,7 +256,11 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
     }
 
     private void uploadImage(Uri imageUri) {
-        StorageReference filePath = storageReference.child("images").child(email.replace(".", "_") + ".jpg");
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        String stringidtaikhoan = String.valueOf(idtaikhoan);
+
+        StorageReference filePath = storageReference.child("images").child(stringidtaikhoan + ".jpg");
 
         filePath.putFile(imageUri)
                 .addOnCompleteListener(task -> {
@@ -274,10 +294,12 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
 
     private void updateImageInFirebase(String imageUrl) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("chiTietTaiKhoan");
-
+        DatabaseReference myRef = database.getReference("TaiKhoan");
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_idkhachhang"));
+        String stringidtaikhoan = String.valueOf(idtaikhoan);
         // Cập nhật imageUrl vào Firebase
-        myRef.child(email.replace(".", "_")).child("imageUrl").setValue(imageUrl)
+        myRef.child(stringidtaikhoan).child("imgtk").setValue(imageUrl)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(context, "Lưu URL hình thành công", Toast.LENGTH_SHORT).show();
