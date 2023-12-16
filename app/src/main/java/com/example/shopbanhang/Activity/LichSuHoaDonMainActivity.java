@@ -46,7 +46,7 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcvHoaDon);
 
         DatabaseReference hoaDonMyRef = FirebaseDatabase.getInstance().getReference().child("hoadon");
-        Query myRef = hoaDonMyRef.orderByChild("name_khachhang").equalTo(user);
+        Query myRef = hoaDonMyRef.orderByChild("remember_username_ten").equalTo(user);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
