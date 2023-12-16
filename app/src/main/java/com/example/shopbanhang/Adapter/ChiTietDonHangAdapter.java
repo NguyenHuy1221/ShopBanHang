@@ -38,15 +38,15 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
     public void onBindViewHolder(@NonNull ChiTietDonHangAdapter.ViewHolder holder, int position) {
         GioHang gioHang = sanPhamList.get(position);
 
-        holder.item_tenspchitiet.setText(gioHang.getTensp());
-        holder.item_giaspchitiet.setText("Số lượng: " + gioHang.getSoluong());
-
-        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        String formattedTien = decimalFormat.format(gioHang.getTongtien());
-        holder.txt_gia.setText(formattedTien + " đ");
-        
-        holder.txt_size.setText("Size: "+ gioHang.getSize());
-        Picasso.get().load(gioHang.getUrl()).into(holder.item_img_chhitiet);
+//        holder.item_tenspchitiet.setText(gioHang.getTensp());
+//        holder.item_giaspchitiet.setText("Số lượng: " + gioHang.getSoluong());
+//
+//        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//        String formattedTien = decimalFormat.format(gioHang.getTongtien());
+//        holder.txt_gia.setText(formattedTien + " đ");
+//
+//        holder.txt_size.setText("Size: "+ gioHang.getSize());
+//        Picasso.get().load(gioHang.getUrl()).into(holder.item_img_chhitiet);
     }
 
     @Override

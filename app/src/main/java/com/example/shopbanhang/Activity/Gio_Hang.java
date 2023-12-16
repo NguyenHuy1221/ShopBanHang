@@ -21,6 +21,8 @@ import com.example.shopbanhang.Adapter.CategoryMainAdapter;
 import com.example.shopbanhang.Adapter.GioHangAdapter;
 import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.ThuongHieuDAO;
+import com.example.shopbanhang.Model.ChiTietGioHang;
+import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
@@ -33,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
@@ -45,12 +48,14 @@ public class Gio_Hang extends AppCompatActivity {
     private GioHangAdapter gioHangAdapter;
     private RecyclerView recyclerView;
     public static List<GioHang> mlistGioHang;
+    public static List<ChiTietGioHang> mListChiTiet;
     private Context context = this;
     private ImageView btnBack,img_khuyen_mai;
     double tongTienSanPham = 0.0;
     private TextView txtTien,tvTienSanPham,tvGiamGia,tvTongTien;
     private Button btnMua;
-    private String user;
+    private int user;
+
 
 
     @Override
@@ -59,11 +64,11 @@ public class Gio_Hang extends AppCompatActivity {
         setContentView(R.layout.activity_gio_hang);
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user = mySharedPreferences.getValue("remember_username_ten");
+        user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
 
         anhxa();
         senDataCart();
-        khuyenMai();
+//        khuyenMai();
 
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -86,30 +91,36 @@ public class Gio_Hang extends AppCompatActivity {
         tvTienSanPham = findViewById(R.id.tv_tong_tien_hang);
         tvGiamGia = findViewById(R.id.tv_giam_gia);
         tvTongTien = findViewById(R.id.tv_tong_tien);
+
+        btnMua.setOnClickListener(v -> {
+            Intent intent = new Intent(Gio_Hang.this, ThanhToanMainActivity.class);
+//            intent.putExtra("tongtien", finalTongGiaSauKhuyenMai);
+            startActivity(intent);
+        });
     }
 
     public void senDataCart(){
         mlistGioHang = new ArrayList<>();
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");
 
-        mDatabaseReference.orderByChild("user").equalTo(user).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.orderByChild("id_khach_hang").equalTo(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mlistGioHang.clear();
-                tongTienSanPham = 0.0;
+
                 for (DataSnapshot postSnapshot: snapshot.getChildren() ){
                     GioHang gioHang = postSnapshot.getValue(GioHang.class);
-                    gioHang.setKey(postSnapshot.getKey());
-                    tongTienSanPham += gioHang.getTongtien();
-                    tvTongTien.setText(formatTien(tongTienSanPham));
-                    txtTien.setText(formatTien(tongTienSanPham));
-                    tvTienSanPham.setText(formatTien(tongTienSanPham));
+
+                    senDataChiTietCart(gioHang.getId_gio_hang());
                     mlistGioHang.add(gioHang);
                 }
+
                 gioHangAdapter = new GioHangAdapter(context, mlistGioHang, new GioHangAdapter.IclickListener() {
                     @Override
-                    public void onItemChanged(GioHang gioHang) {
-                        updateCart(gioHang);
+                    public void onItemChanged(ChiTietGioHang chiTietGioHang) {
+
+                        updateCart(chiTietGioHang);
+
                     }
 
                     @Override
@@ -117,6 +128,7 @@ public class Gio_Hang extends AppCompatActivity {
                         deleteCart(gioHang);
                     }
                 });
+
                 recyclerView.setAdapter(gioHangAdapter);
 
             }
@@ -129,22 +141,56 @@ public class Gio_Hang extends AppCompatActivity {
 
     }
 
+    private void senDataChiTietCart(int idGioHang) {
+        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
+
+        mListChiTiet = new ArrayList<>();
+        Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mListChiTiet.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    ChiTietGioHang chiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
+                    tongTienSanPham += chiTietGioHang.getTong_tien();
+                    mListChiTiet.add(chiTietGioHang);
+                    Log.d("HUY","tổng tiền " + formatTien(tongTienSanPham) );
+                    tvTongTien.setText(formatTien(tongTienSanPham));
+                    txtTien.setText(formatTien(tongTienSanPham));
+                    tvTienSanPham.setText(formatTien(tongTienSanPham));
+                    Log.d("HUY","tổng tiền đã tính : " + formatTien(tongTienSanPham) );
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
     private void deleteCart(GioHang gioHang) {
         new AlertDialog.Builder(context)
                 .setTitle("Xóa sản phẩm ")
-                .setMessage("Bạn có chắc muốn xóa san phẩm này")
+                .setMessage("Bạn có chắc muốn xóa sản phẩm này")
                 .setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // First, delete the details (ChiTietGioHang) associated with the cart (GioHang)
+                        deleteChiTietGioHang(gioHang.getId_gio_hang());
+
+                        // Then, delete the shopping cart
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference myRef = database.getReference("giohang");
-                        String keyToDelete = gioHang.getKey();
+                        int keyToDelete = gioHang.getId_gio_hang();
 
-                        myRef.child(keyToDelete).removeValue()
+                        myRef.child(String.valueOf(keyToDelete)).removeValue()
                                 .addOnCompleteListener(deleteTask -> {
                                     if (deleteTask.isSuccessful()) {
                                         Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
-                                        // Tuỳ chọn, bạn cũng có thể xóa mục khỏi danh sách cục bộ
+                                        // Update the local list and notify the adapter
                                         mlistGioHang.remove(gioHang);
                                         gioHangAdapter.notifyDataSetChanged();
                                     } else {
@@ -155,11 +201,33 @@ public class Gio_Hang extends AppCompatActivity {
                 }).setNegativeButton("Không", null).show();
     }
 
-    private void updateCart(GioHang gioHang) {
+    private void deleteChiTietGioHang(int idGioHang) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("giohang").child(gioHang.getKey());
-        myRef.setValue(gioHang).addOnCompleteListener(task -> {});
+        DatabaseReference chiTietGioHangRef = database.getReference("chitietgiohang");
+
+        Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    dataSnapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Lỗi khi xóa chi tiết giỏ hàng", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+
+    private void updateCart(ChiTietGioHang chiTietGioHang) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("chitietgiohang").child(String.valueOf(chiTietGioHang.getId_chi_tiet_gio_hang()));
+        myRef.setValue(chiTietGioHang).addOnCompleteListener(task -> {});
+    }
+
 
     private void khuyenMai() {
         img_khuyen_mai.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +237,6 @@ public class Gio_Hang extends AppCompatActivity {
             }
         });
     }
-
 
     private void showKhuyenMaiDialog() {
         DatabaseReference khuyenMaiRef = FirebaseDatabase.getInstance().getReference().child("KhuyenMai");
@@ -234,7 +301,7 @@ public class Gio_Hang extends AppCompatActivity {
 
         // Tính tổng giá gốc của các sản phẩm trong giỏ hàng
         for (GioHang gioHang : mlistGioHang) {
-            tongGiaGoc += gioHang.getGiasp() * gioHang.getSoluong();
+//            tongGiaGoc += gioHang.getGiasp() * gioHang.getSoluong();
         }
 
         double tongGiaSauKhuyenMai = tongGiaGoc;

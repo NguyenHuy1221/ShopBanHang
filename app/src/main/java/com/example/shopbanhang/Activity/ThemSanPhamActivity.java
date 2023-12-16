@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -337,7 +338,9 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         String spinnermau = addsizeColor1.getSpncolor().getSelectedItem().toString();
                         int soluong = Integer.parseInt(addsizeColor1.getEdtsoluong().getText().toString());
                         String id3 = UUID.randomUUID().toString();
-                        ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id3,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
+                        Random random = new Random();
+                        String id = String.valueOf(random.nextInt(1000000));
+                        ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
                         pushData(chiTietSanPham2);
                     }
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp,  trangthaisp, ghichu,selectedImages);

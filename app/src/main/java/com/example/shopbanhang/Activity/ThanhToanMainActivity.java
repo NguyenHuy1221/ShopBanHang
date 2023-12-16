@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shopbanhang.Model.ChiTietGioHang;
 import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
@@ -36,6 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class ThanhToanMainActivity extends AppCompatActivity {
@@ -47,6 +49,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private HoaDon hoaDon;
     double tien;
     private ArrayList<GioHang> gioHangList = new ArrayList<>(Gio_Hang.mlistGioHang);
+    private ArrayList<ChiTietGioHang> chiTietGioHangArrayList = new ArrayList<>(Gio_Hang.mListChiTiet);
     private ArrayList<GioHang> list = new ArrayList<>();
     private ArrayList<SanPham> listsanpham = new ArrayList<>();
 
@@ -54,7 +57,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private SanPham sanPham;
 
     private Context context = this ;
-    private String user_name_login;
+    private int idKhachHang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
 
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user_name_login = mySharedPreferences.getValue("remember_username_ten");
+        idKhachHang = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
     }
 
     private void anhxa() {
@@ -83,17 +86,20 @@ public class ThanhToanMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String strDiaChi = edtDiaChi.getText().toString().trim();
-                String id = UUID.randomUUID().toString();
+//                String id = UUID.randomUUID().toString();
+                Random random = new Random();
+                int id = random.nextInt(1000000);
                 if (TextUtils.isEmpty(strDiaChi)){
                     Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
                 }else {
                     String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                     String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                    hoaDon = new HoaDon(id,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
-
+//                    hoaDon = new HoaDon(id,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
+                    hoaDon = new HoaDon(id,idKhachHang,DateToday,TimeToday,trangthai,0,strDiaChi,tien);
                     getDataFirebasesanpham();
                     addHoaDon(hoaDon);
                     clearGioHangData();
+                    clearChiTietGioHangData();
                 }
             }
         });
@@ -118,10 +124,10 @@ public class ThanhToanMainActivity extends AppCompatActivity {
 
 //                    DoanhThu doanhThu = dataSnapshot.getValue(DoanhThu.class);
                     gioHang = dataSnapshot.getValue(GioHang.class);
-                    if (gioHang != null){
-                        listmasp.add(gioHang.getMasp());
-                        listmaspnumber.add((gioHang.getSoluong()));
-                    }
+//                    if (gioHang != null){
+//                        listmasp.add(gioHang.getMasp());
+//                        listmaspnumber.add((gioHang.getSoluong()));
+//                    }
                 }
             }
             @Override
@@ -151,38 +157,28 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                         Toast.makeText(ThanhToanMainActivity.this, ""+listmasp.size(), Toast.LENGTH_SHORT).show();
 
                         if (listmasp != null){
+                            for (int i = 0; i < listmasp.size();i++){
+
+                                if (sanPham.getMasp() == listmasp.get(i)){
+                                    listsanpham.add(sanPham);
+                                    int soluongdaban = 0;
+                                    int soluongbancuagiohang;
+                                    int soluongdabanbandau;
+                                    soluongdabanbandau = sanPham.getSoluongban();
+                                    soluongbancuagiohang = listmaspnumber.get(i);
+                                    soluongdaban = soluongdabanbandau + soluongbancuagiohang;
 
 
-                        for (int i = 0; i < listmasp.size();i++){
+                                    String pathObj = String.valueOf(sanPham.getMasp());
+                                    Map<String, Object> updates = new HashMap<>();
+                                    updates.put("soluongban", soluongdaban);
+                                    mDatabaseReference.child(pathObj).updateChildren(updates);
+                                    soluongdaban = 0;
 
-
-                        if (sanPham.getMasp() == listmasp.get(i)){
-                            listsanpham.add(sanPham);
-                            int soluongdaban = 0;
-                            int soluongbancuagiohang;
-                            int soluongdabanbandau;
-                            soluongdabanbandau = sanPham.getSoluongban();
-                            soluongbancuagiohang = listmaspnumber.get(i);
-                            soluongdaban = soluongdabanbandau + soluongbancuagiohang;
-
-
-                            String pathObj = String.valueOf(sanPham.getMasp());
-                            Map<String, Object> updates = new HashMap<>();
-                            updates.put("soluongban", soluongdaban);
-                            mDatabaseReference.child(pathObj).updateChildren(updates);
-                            soluongdaban = 0;
-
-
-
+                                }
+                            }
                         }
-
-
-                        }
-
-                        }
-
                     }
-
                 }
 
             }
@@ -219,6 +215,18 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         gioHangRef.removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 gioHangList.clear();
+                startActivity(new Intent(ThanhToanMainActivity.this, TrangChuActivity.class));
+            }
+        });
+    }
+
+    private void clearChiTietGioHangData() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference gioHangRef = database.getReference("chitietgiohang");
+
+        gioHangRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                chiTietGioHangArrayList.clear();
                 startActivity(new Intent(ThanhToanMainActivity.this, TrangChuActivity.class));
             }
         });

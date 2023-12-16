@@ -1,11 +1,7 @@
 package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,9 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.HienThiChiTietMain;
-import com.example.shopbanhang.Adapter.ImageChiTietAdapter;
+import com.example.shopbanhang.Adapter.MauSizeAdapter;
+import com.example.shopbanhang.Model.ChiTietGioHang;
+import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
-import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -36,39 +33,44 @@ import com.google.firebase.database.ValueEventListener;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.squareup.picasso.Picasso;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 
 public class ChiTietSanPhamActivity extends AppCompatActivity {
 
-    private ImageView imgPic, imgback,imgCart;
+    private ImageView imgPic, imgBack, imgCart;
     private TextView txtName, txtPrice, txtTitle;
-    private Button btnadd;
+    private Button btnAdd;
     private Context context = this;
     private RecyclerView recyclerView;
-    public static List<GioHang> mGioHangToFirebase;
-    private String Color = null;
-    private String Size = null;
+    private String color = null;
+    private String size = null;
+    private List<ChiTietSanPham> chiTietSanPhamList;
+    private List<GioHang> mListGioHang;
     private int so = 1;
     BottomSheetDialog dialog;
     NotificationBadge badge;
 
-    private String user;
+    RecyclerView rcyMau;
+    RecyclerView rcySize;
+
+    private int idChiTietSanPham = 0;
+    private int soLuongTrongKho = 0;
+
+    private int user = 0;
+    TextView soLuongKho;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
 
-        mGioHangToFirebase = new ArrayList<>();
+
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user = mySharedPreferences.getValue("remember_username_ten");
-
-
+        user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
 
         anhXa();
         getIntentSanPham();
@@ -82,19 +84,17 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         txtPrice = findViewById(R.id.priceTxt);
         txtTitle = findViewById(R.id.moTaTxt);
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        imgback = findViewById(R.id.backBtn);
-        imgback.setOnClickListener(v -> finish());
-        btnadd = findViewById(R.id.btnAdd);
-        btnadd.setOnClickListener(v -> addToCart());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        imgBack = findViewById(R.id.backBtn);
+        imgBack.setOnClickListener(v -> finish());
+        btnAdd = findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(v -> addToCart());
         badge = findViewById(R.id.menu_sl);
 
-
         imgCart.setOnClickListener(v -> {
-            Intent intent = new Intent(ChiTietSanPhamActivity.this,Gio_Hang.class);
+            Intent intent = new Intent(ChiTietSanPhamActivity.this, Gio_Hang.class);
             startActivity(intent);
         });
-
     }
 
     public void getIntentSanPham() {
@@ -103,7 +103,6 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String ghiChu = intent.getStringExtra("ghichu");
         String imageUrl = intent.getStringExtra("imageUrl");
-
 
         if (intent.hasExtra("urlChiTiet")) {
             List<String> anhChiTiet = getIntent().getStringArrayListExtra("urlChiTiet");
@@ -126,40 +125,35 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         Picasso.get().load(imageUrl).into(imgPic);
     }
 
-
-
     public void addToCart() {
-
-        View dialogsheetview = LayoutInflater.from(context).inflate(R.layout.dialog_add_to_cart, null);
+        View dialogSheetView = LayoutInflater.from(context).inflate(R.layout.dialog_add_to_cart, null);
         dialog = new BottomSheetDialog(context);
-        dialog.setContentView(dialogsheetview);
+        dialog.setContentView(dialogSheetView);
         dialog.show();
 
-        ImageView imgPic = dialogsheetview.findViewById(R.id.itemPicCt);
-        TextView txtTien = dialogsheetview.findViewById(R.id.txtMoney);
-        TextView txtCong = dialogsheetview.findViewById(R.id.tvCong);
-        TextView txtSo = dialogsheetview.findViewById(R.id.tvSo);
-        TextView txtTru = dialogsheetview.findViewById(R.id.tvtru);
-        Button btnadd = dialogsheetview.findViewById(R.id.btnAddCt);
+        ImageView imgPic = dialogSheetView.findViewById(R.id.itemPicCt);
+        TextView txtTien = dialogSheetView.findViewById(R.id.txtMoney);
+        TextView txtCong = dialogSheetView.findViewById(R.id.tvCong);
+        TextView txtSo = dialogSheetView.findViewById(R.id.tvSo);
+        TextView txtTru = dialogSheetView.findViewById(R.id.tvtru);
+        Button btnAdd = dialogSheetView.findViewById(R.id.btnAddCt);
+
+        rcyMau = dialogSheetView.findViewById(R.id.rcy_mau);
+        hienThiSizeMau();
+
         Intent intent = getIntent();
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String imageUrl = intent.getStringExtra("imageUrl");
 
-
-        TextView soluongkho = dialogsheetview.findViewById(R.id.soLuongKho);
-        int slkho = intent.getIntExtra("soluongnhap",0);
-        soluongkho.setText(Integer.toString(slkho));
-
-
+        soLuongKho = dialogSheetView.findViewById(R.id.soLuongKho);
+        int slKho = intent.getIntExtra("soluongnhap", 0);
+        soLuongKho.setText(Integer.toString(slKho));
 
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedTien = decimalFormat.format(giaban);
         txtTien.setText(formattedTien + " đ ");
 
         Picasso.get().load(imageUrl).into(imgPic);
-
-        setBackGroundColor(dialogsheetview);
-        setBackgroundSize(dialogsheetview);
 
         txtTru.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,10 +173,11 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
             }
         });
 
-        btnadd.setOnClickListener(new View.OnClickListener() {
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (user == null || user.isEmpty()) {
+                if (user == 0) {
                     Intent loginIntent = new Intent(ChiTietSanPhamActivity.this, LoginActivity.class);
                     startActivity(loginIntent);
                     Toast.makeText(context, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
@@ -195,61 +190,68 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
     private void addProductToCart() {
         Intent intent = getIntent();
-        int masp = intent.getIntExtra("masp", 0);
+        int maSP = intent.getIntExtra("masp", 0);
         String tenSP = intent.getStringExtra("tensp");
         double giaban = intent.getDoubleExtra("giaban", 0.0);
         String imageUrl = intent.getStringExtra("imageUrl");
 
         double tongTien = giaban * so;
 
-        if (Color == null || Size == null) {
+        if (color == null || size == null) {
             Toast.makeText(context, "Chưa chọn màu hoặc size", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("giohang");
+        if (so > soLuongTrongKho) {
+            Toast.makeText(context, "Số lượng sản phẩm trong kho không đủ", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // Kiểm tra sản phẩm có sẵn trong giỏ hàng chưa
-        Query query = myRef.orderByChild("masp").equalTo(masp);
+//        // Trừ đi số lượng từ kho
+//        soLuongTrongKho -= so;
+//
+//        // Cập nhật dữ liệu trên Firebase (hoặc cơ sở dữ liệu khác)
+//        updateSoLuongKhoTrongFirebase();
+
+        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
+        Query query = chiTietGioHangRef.orderByChild("id_chi_tiet_san_pham").equalTo(idChiTietSanPham);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean productExists = false; // san pham hien co trong gio hang
-                String existingKey = null; // khoa hien co
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        ChiTietGioHang existingChiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
+                        if (existingChiTietGioHang != null) {
+                            int newSoLuong = existingChiTietGioHang.getSo_luong() + so;
+                            double newTongTien = giaban * newSoLuong;
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    GioHang existingProduct = dataSnapshot.getValue(GioHang.class);
+                            if (newSoLuong > soLuongTrongKho) {
+                                Toast.makeText(context, "Số lượng sản phẩm trong kho không đủ", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                    // Kiểm tra xem size và màu có tồn tại trong giỏ hàng không
-                    if (existingProduct != null &&
-                            existingProduct.getSize().equals(Size) &&
-                            existingProduct.getColor().equals(Color)) {
-                        productExists = true;
-                        existingKey = dataSnapshot.getKey();
-                        break;
+                            chiTietGioHangRef.child(dataSnapshot.getKey()).child("so_luong").setValue(newSoLuong);
+//                            chiTietGioHangRef.child(dataSnapshot.getKey()).child("don_gia").setValue(newTongTien);
+
+                            Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            return;
+                        }
                     }
                 }
 
-                if (productExists) {
-                    // Nếu sản phẩm đã tồn tại, cập nhật số lượng
-                    updateExistingProduct(existingKey, myRef);
-                } else {
-                    // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
-                    myRef.push().setValue(new GioHang(masp, tenSP, giaban, so, imageUrl, Size, Color, tongTien,user))
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                    Color = null;
-                                    Size = null;
-                                } else {
-                                    Toast.makeText(context, "Lỗi khi thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
+                Random random = new Random();
+                int idGioHang = random.nextInt(1000000);
+                int idChiTietGioHang = random.nextInt(1000000);
 
-                badge.setText(String.valueOf(mGioHangToFirebase.size()));
+                GioHang gioHang = new GioHang(idGioHang, user);
+                addGioHang(gioHang);
+
+                ChiTietGioHang chiTietGioHang = new ChiTietGioHang(idChiTietGioHang, idGioHang, idChiTietSanPham, so, giaban,tongTien);
+                addChiTietGioHang(chiTietGioHang);
+
+                Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
                 hienThiSoLuong();
             }
 
@@ -260,159 +262,99 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         });
     }
 
-    private void updateExistingProduct(String existingKey, DatabaseReference myRef) {
-        myRef.child(existingKey).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void addGioHang(GioHang gioHang) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference gioHangRef = database.getReference("giohang");
+        gioHangRef.child(String.valueOf(gioHang.getId_gio_hang())).setValue(gioHang);
+    }
+
+    private void addChiTietGioHang(ChiTietGioHang chiTietGioHang) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference chiTietGioHangRef = database.getReference("chitietgiohang");
+        chiTietGioHangRef.child(String.valueOf(chiTietGioHang.getId_chi_tiet_gio_hang())).setValue(chiTietGioHang);
+    }
+
+    private void updateSoLuongKhoTrongFirebase() {
+        DatabaseReference chiTietSanPhamRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+        chiTietSanPhamRef.child(String.valueOf(idChiTietSanPham)).child("soluong").setValue(soLuongTrongKho);
+    }
+
+    private void hienThiSizeMau() {
+        chiTietSanPhamList = new ArrayList<>();
+        Intent intent = getIntent();
+        int maSP = intent.getIntExtra("masp", 0);
+
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+
+        myRef.orderByChild("masp").equalTo(maSP).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    int existingQuantity = snapshot.child("soluong").getValue(Integer.class);
-                    int newQuantity = existingQuantity + so;
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        ChiTietSanPham chiTietSanPham = dataSnapshot.getValue(ChiTietSanPham.class);
 
-                    // Cập nhật số lượng
-                    snapshot.getRef().child("soluong").setValue(newQuantity);
+                        if (chiTietSanPham != null) {
+                            chiTietSanPhamList.add(chiTietSanPham);
+                        }
+                    }
 
-                    Toast.makeText(context, "Số lượng sản phẩm trong giỏ hàng đã được cập nhật", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    Color = null;
-                    Size = null;
-                } else {
-                    Toast.makeText(context, "Lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                    MauSizeAdapter mauSizeAdapter = new MauSizeAdapter(context, chiTietSanPhamList);
+                    rcyMau.setLayoutManager(new LinearLayoutManager(context));
+                    rcyMau.setAdapter(mauSizeAdapter);
+
+                    mauSizeAdapter.setOnItemClickListener(new MauSizeAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(String size, String mau, int idChiTietSanPham, int soLuongTrongKho) {
+                            color = mau;
+                            ChiTietSanPhamActivity.this.size = size;
+                            ChiTietSanPhamActivity.this.idChiTietSanPham = idChiTietSanPham;
+                            ChiTietSanPhamActivity.this.soLuongTrongKho = soLuongTrongKho;
+
+                            soLuongKho.setText(String.valueOf(soLuongTrongKho));
+                            Log.d("HUY", "Size and color:" + color + size + ", idChiTietSanPham: " + idChiTietSanPham + " số lượng :" + soLuongTrongKho);
+                        }
+                    });
                 }
-
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
 
+    private void hienThiSoLuong() {
+
+        mListGioHang = new ArrayList<>();
 
 
-    private void setBackGroundColor(View dialogsheetview) {
-        CardView colorBlack = dialogsheetview.findViewById(R.id.color_black);
-        CardView colorWhite = dialogsheetview.findViewById(R.id.color_white);
-        CardView colorOrange = dialogsheetview.findViewById(R.id.color_orange);
-        CardView colorBlue = dialogsheetview.findViewById(R.id.color_blue);
-
-        colorWhite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                colorWhite.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
-                colorBlack.setBackground(null);
-                colorBlue.setBackground(null);
-                colorOrange.setBackground(null);
-                Color = "Trắng";
-            }
-        });
-        colorBlack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                colorBlack.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
-                colorWhite.setBackground(null);
-                colorBlue.setBackground(null);
-                colorOrange.setBackground(null);
-                Color = "Đen";
-
-            }
-        });
-        colorBlue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                colorBlue.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
-                colorBlack.setBackground(null);
-                colorWhite.setBackground(null);
-                colorOrange.setBackground(null);
-                Color = "Xanh";
-            }
-        });
-        colorOrange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                colorOrange.setBackground(ContextCompat.getDrawable(context, R.drawable.boder_imageview));
-                colorBlack.setBackground(null);
-                colorBlue.setBackground(null);
-                colorWhite.setBackground(null);
-                Color = "Cam";
-            }
-        });
-
-    }
-
-    private void setBackgroundSize(View dialogsheetview) {
-        TextView sizeM = dialogsheetview.findViewById(R.id.sizeM);
-        TextView sizeL = dialogsheetview.findViewById(R.id.sizeL);
-        TextView sizeXL = dialogsheetview.findViewById(R.id.sizeXl);
-        TextView sizeXXL = dialogsheetview.findViewById(R.id.sizeXXL);
-        sizeM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
-                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                Size = "M";
-            }
-        });
-        sizeL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
-                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                Size = "L";
-            }
-        });
-        sizeXL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
-                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                Size = "XL";
-
-            }
-        });
-        sizeXXL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sizeXXL.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
-                sizeM.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                sizeXL.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                Size = "XL";
-
-            }
-        });
-    }
-
-    private void hienThiSoLuong() { // hiện ở thanh toolbar
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("giohang");
-        myRef.orderByChild("user").equalTo(user).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.orderByChild("id_khach_hang").equalTo(user).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mGioHangToFirebase.clear();
+                mListGioHang.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     GioHang gioHang = dataSnapshot.getValue(GioHang.class);
-                    mGioHangToFirebase.add(gioHang);
+                    if (mListGioHang != null) {
+                        mListGioHang.add(gioHang);
+                    }
                 }
 
-                // Cập nhật badge với kích thước giỏ hàng chính xác
-                if (mGioHangToFirebase != null) {
-                    badge.setText(String.valueOf(mGioHangToFirebase.size()));
+                if (badge != null) {
+                    badge.setText(String.valueOf(mListGioHang.size()));
                 }
 
-                // Thêm một lệnh log để hiển thị số lượng mục trong giỏ hàng
-                Log.d("HUY", "Số lượng mục trong giỏ hàng: " + mGioHangToFirebase.size());
+                Log.d("HUY" ,"dữ lệu" + mListGioHang.size());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu cần
             }
         });
     }
+
+
+
 }
+

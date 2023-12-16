@@ -54,25 +54,25 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
     @Override
     public void onBindViewHolder(@NonNull @NotNull HoaDonViewHoder holder, int position) {
         HoaDon hoaDon = mHoadon.get(position);
-        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
-        holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
-
-        holder.tvNgaytao.setText("Ngày Tạo: " + hoaDon.getNgaytaoHD());
-        holder.tvGiotao.setText(hoaDon.getGiotaoHD());
-
-        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        String formattedTien = decimalFormat.format(hoaDon.getTongtien());
-        holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
-
-        holder.setSanPhamList(hoaDon.getSanPhamList());
-
-        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
-        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                showUpdateStatusDialog(hoaDon);
-            }
-        });
+//        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
+//        holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
+//
+//        holder.tvNgaytao.setText("Ngày Tạo: " + hoaDon.getNgaytaoHD());
+//        holder.tvGiotao.setText(hoaDon.getGiotaoHD());
+//
+//        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//        String formattedTien = decimalFormat.format(hoaDon.getTongtien());
+//        holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
+//
+//        holder.setSanPhamList(hoaDon.getSanPhamList());
+//
+//        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
+//        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                showUpdateStatusDialog(hoaDon);
+//            }
+//        });
     }
 
 //    private void showUpdateStatusDialog(HoaDon hoaDon) {

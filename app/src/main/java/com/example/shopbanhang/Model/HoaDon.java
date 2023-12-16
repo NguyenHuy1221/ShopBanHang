@@ -7,42 +7,43 @@ import java.util.List;
 
 public class HoaDon {
 
-    private String maHD;
-    private String name_khachhang;
+    private int maHD;
+    private int idKhachHang;
     private String ngaytaoHD;
     private String giotaoHD;
-    private List<GioHang> sanPhamList;
-    private double tongtien;
     private int tinhTrang;
+    private int idKhuyenMai;
+    private String diaChi;
+    private double tongtien;
 
     public HoaDon() {
     }
 
-
-    public HoaDon(String maHD, String name_khachhang, String ngaytaoHD, String giotaoHD, List<GioHang> sanPhamList, double tongtien, int tinhTrang) {
+    public HoaDon(int maHD, int idKhachHang, String ngaytaoHD, String giotaoHD, int tinhTrang, int idKhuyenMai, String diaChi, double tongtien) {
         this.maHD = maHD;
-        this.name_khachhang = name_khachhang;
+        this.idKhachHang = idKhachHang;
         this.ngaytaoHD = ngaytaoHD;
         this.giotaoHD = giotaoHD;
-        this.sanPhamList = sanPhamList;
-        this.tongtien = tongtien;
         this.tinhTrang = tinhTrang;
+        this.idKhuyenMai = idKhuyenMai;
+        this.diaChi = diaChi;
+        this.tongtien = tongtien;
     }
 
-    public String getMaHD() {
+    public int getMaHD() {
         return maHD;
     }
 
-    public void setMaHD(String maHD) {
+    public void setMaHD(int maHD) {
         this.maHD = maHD;
     }
 
-    public String getName_khachhang() {
-        return name_khachhang;
+    public int getIdKhachHang() {
+        return idKhachHang;
     }
 
-    public void setName_khachhang(String name_khachhang) {
-        this.name_khachhang = name_khachhang;
+    public void setIdKhachHang(int idKhachHang) {
+        this.idKhachHang = idKhachHang;
     }
 
     public String getNgaytaoHD() {
@@ -61,12 +62,28 @@ public class HoaDon {
         this.giotaoHD = giotaoHD;
     }
 
-    public List<GioHang> getSanPhamList() {
-        return sanPhamList;
+    public int getTinhTrang() {
+        return tinhTrang;
     }
 
-    public void setSanPhamList(List<GioHang> sanPhamList) {
-        this.sanPhamList = sanPhamList;
+    public void setTinhTrang(int tinhTrang) {
+        this.tinhTrang = tinhTrang;
+    }
+
+    public int getIdKhuyenMai() {
+        return idKhuyenMai;
+    }
+
+    public void setIdKhuyenMai(int idKhuyenMai) {
+        this.idKhuyenMai = idKhuyenMai;
+    }
+
+    public String getDiaChi() {
+        return diaChi;
+    }
+
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
     }
 
     public double getTongtien() {
@@ -76,14 +93,4 @@ public class HoaDon {
     public void setTongtien(double tongtien) {
         this.tongtien = tongtien;
     }
-
-    public int getTinhTrang() {
-        return tinhTrang;
-    }
-
-    public void setTinhTrang(int tinhTrang) {
-        this.tinhTrang = tinhTrang;
-    }
-
-
 }

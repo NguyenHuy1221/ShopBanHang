@@ -7,26 +7,26 @@ import com.google.firebase.database.FirebaseDatabase;
 public class HoaDonDAO {
 
     private DatabaseReference hoaDonRef;
-    public void insertHoaDon(HoaDon HoaDon) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("hoadon");
-        myRef.child(HoaDon.getGiotaoHD()).setValue(HoaDon);
-    }
+//    public void insertHoaDon(HoaDon HoaDon) {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("hoadon");
+//        myRef.child(HoaDon.getGiotaoHD()).setValue(HoaDon);
+//    }
+//
+//    public void updateHoaDon(HoaDon HoaDon) {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("hoadon");
+////        myRef.child(HoaDon.getGiotaoHD()).updateChildren(HoaDon.toMap());
+//    }
+//
+//    public void deleteHoaDon(HoaDon HoaDon) {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("hoadon");
+//        myRef.child(HoaDon.getGiotaoHD()).removeValue();
+//    }
 
-    public void updateHoaDon(HoaDon HoaDon) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("hoadon");
-//        myRef.child(HoaDon.getGiotaoHD()).updateChildren(HoaDon.toMap());
-    }
-
-    public void deleteHoaDon(HoaDon HoaDon) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("hoadon");
-        myRef.child(HoaDon.getGiotaoHD()).removeValue();
-    }
-
-    public void updateStatus(HoaDon hoaDon) {
-        hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon");
-        hoaDonRef.child(hoaDon.getMaHD()).child("tinhTrang").setValue(hoaDon.getTinhTrang());
-    }
+//    public void updateStatus(HoaDon hoaDon) {
+//        hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon");
+//        hoaDonRef.child(hoaDon.getMaHD()).child("tinhTrang").setValue(hoaDon.getTinhTrang());
+//    }
 }

@@ -13,9 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.Activity.Gio_Hang;
+import com.example.shopbanhang.Model.ChiTietGioHang;
+import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -26,6 +34,8 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
 
     private List<GioHang> productList;
     private final IclickListener iclickListener;
+    private DatabaseReference chiTietGioHangRef;
+
 
 
     public GioHangAdapter(Context context, List<GioHang> productList, IclickListener iclickListener) {
@@ -43,55 +53,142 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull GioHangAdapter.ViewHolder holder, int position) {
+
         GioHang gioHang = productList.get(position);
 
-        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        int idGioHang = gioHang.getId_gio_hang();
 
-        holder.txtName.setText(gioHang.getTensp());
-        holder.txtMau.setText(gioHang.getColor());
-        holder.txtSize.setText(gioHang.getSize());
-        holder.txtGia.setText(decimalFormat.format(gioHang.getTongtien()) + " đ");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        chiTietGioHangRef = database.getReference("chitietgiohang");
 
-        holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
-        Picasso.get().load(gioHang.getUrl()).into(holder.imgPic);
 
-        holder.txtCong.setOnClickListener(new View.OnClickListener() {
+        Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                gioHang.setSoluong(gioHang.getSoluong() + 1);
-                gioHang.setTongtien(gioHang.getGiasp() * gioHang.getSoluong());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ChiTietGioHang chiTietGioHang = snapshot.getValue(ChiTietGioHang.class);
 
-                holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
-                holder.txtGia.setText(gioHang.getTongtien()+" đ");
-                iclickListener.onItemChanged(gioHang);
-            }
-        });
+                    double tongTien = chiTietGioHang.getSo_luong() * chiTietGioHang.getDon_gia();
 
-        holder.txtTru.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (gioHang.getSoluong() > 1) {
-                    gioHang.setSoluong(gioHang.getSoluong() - 1);
-                    gioHang.setTongtien(gioHang.getGiasp() * gioHang.getSoluong());
+                    DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                    holder.txtGia.setText(decimalFormat.format(tongTien) + " đ");
+                    holder.txtSo.setText(chiTietGioHang.getSo_luong() + "");
 
-                    holder.txtSo.setText(String.valueOf(gioHang.getSoluong()));
-                    holder.txtGia.setText(gioHang.getTongtien()+" đ");
-                    iclickListener.onItemChanged(gioHang);
+                    // Gọi hàm để lấy thông tin Chi tiết sản phẩm
+                    duLieuChiTietSanPham(chiTietGioHang.getId_chi_tiet_san_pham(), holder);
+
+                    // Xử lý sự kiện cộng và trừ số lượng
+                    holder.txtCong.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
+                            chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
+
+                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                            holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+                            holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+
+                            iclickListener.onItemChanged(chiTietGioHang);
+                        }
+                    });
+
+                    holder.txtTru.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (chiTietGioHang.getSo_luong() > 1) {
+
+                                chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() - 1);
+                                chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
+
+                                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                                holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+
+                                holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+                                iclickListener.onItemChanged(chiTietGioHang);
+                            }
+                        }
+                    });
+
+                    holder.txtXoa.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            iclickListener.onclickDeleteCart(gioHang);
+                        }
+                    });
+
+
                 }
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu cần thiết
+            }
         });
 
-        holder.txtXoa.setOnClickListener(new View.OnClickListener() {
+
+    }
+
+
+
+    private void duLieuChiTietSanPham(int idChiTietSanPham, ViewHolder holder) {
+        DatabaseReference chiTietSanPhamRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+
+        chiTietSanPhamRef.child(String.valueOf(idChiTietSanPham)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                iclickListener.onclickDeleteCart(gioHang);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ChiTietSanPham chiTietSanPham = dataSnapshot.getValue(ChiTietSanPham.class);
+
+                    // Lấy thông tin số lượng từ Chi tiết sản phẩm
+                    int soLuong = chiTietSanPham.getSoluong();
+
+
+                    holder.txtMau.setText(chiTietSanPham.getMau());
+                    holder.txtSize.setText(chiTietSanPham.getKichco());
+                    int masp = chiTietSanPham.getMasp();
+                    DuLieuSanPham(masp,holder);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu cần thiết
             }
         });
     }
 
+    private void DuLieuSanPham(int masp, ViewHolder holder){
+        DatabaseReference sanphamRef = FirebaseDatabase.getInstance().getReference("sanpham");
+        sanphamRef.child(String.valueOf(masp)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    SanPham sanPham = snapshot.getValue(SanPham.class);
+
+                    // lấy giá tiền từ bảng sản phẩm
+                    double gia = sanPham.getGiaban();
+
+                    holder.txtName.setText(sanPham.getTensp());
+                    Picasso.get().load(sanPham.getImageUrl()).into(holder.imgPic);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+
     public interface IclickListener {
-        void onItemChanged(GioHang gioHang);
+        void onItemChanged(ChiTietGioHang chiTietGioHang);
         void onclickDeleteCart(GioHang gioHang);
+
     }
 
     @Override
@@ -116,4 +213,5 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
             txtXoa = itemView.findViewById(R.id.txtXoa);
         }
     }
+
 }

@@ -71,9 +71,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="Màu"
+                    android:text="Màu và size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,66 +87,70 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView12">
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/color_black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        app:cardCornerRadius="100dp">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:id="@+id/color_black"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        app:cardCornerRadius="100dp">-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:cropToPadding="true"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/dot_black" />
+<!--                        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                            android:layout_width="28dp"-->
+<!--                            android:layout_height="28dp"-->
+<!--                            android:cropToPadding="true"-->
+<!--                            android:scaleType="centerCrop"-->
+<!--                            android:src="@drawable/dot_black" />-->
 
-                    </androidx.cardview.widget.CardView>
+<!--                    </androidx.cardview.widget.CardView>-->
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/color_white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        app:cardCornerRadius="100dp">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:id="@+id/color_white"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        app:cardCornerRadius="100dp">-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/dot_white" />
+<!--                        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                            android:layout_width="28dp"-->
+<!--                            android:layout_height="28dp"-->
+<!--                            android:src="@drawable/dot_white" />-->
 
 
-                    </androidx.cardview.widget.CardView>
+<!--                    </androidx.cardview.widget.CardView>-->
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/color_orange"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        app:cardCornerRadius="100dp">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:id="@+id/color_orange"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        app:cardCornerRadius="100dp">-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+<!--                        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                            android:layout_width="28dp"-->
+<!--                            android:layout_height="28dp"-->
 
-                            android:src="@drawable/dot_orange" />
+<!--                            android:src="@drawable/dot_orange" />-->
 
-                    </androidx.cardview.widget.CardView>
+<!--                    </androidx.cardview.widget.CardView>-->
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/color_blue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        app:cardCornerRadius="100dp">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:id="@+id/color_blue"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        app:cardCornerRadius="100dp">-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+<!--                        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                            android:layout_width="28dp"-->
+<!--                            android:layout_height="28dp"-->
 
-                            android:src="@drawable/dot_blue" />
+<!--                            android:src="@drawable/dot_blue" />-->
 
-                    </androidx.cardview.widget.CardView>
+<!--                    </androidx.cardview.widget.CardView>-->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcy_mau"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -153,79 +158,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Size"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView13">
 
-                    <TextView
-                        android:id="@+id/sizeM"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="M:42-53kg-1m63" />
-                </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/cardView"
-                    app:layout_constraintStart_toEndOf="@+id/cardView"
-                    app:layout_constraintTop_toTopOf="@+id/cardView">
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:id="@+id/cardView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/textView13">-->
 
-                    <TextView
-                        android:id="@+id/sizeL"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="L:54-60kg-1m70" />
-                </androidx.cardview.widget.CardView>
+<!--                    <TextView-->
+<!--                        android:id="@+id/sizeM"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:padding="5dp"-->
+<!--                        android:text="M:42-53kg-1m63" />-->
+<!--                </androidx.cardview.widget.CardView>-->
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="@+id/cardView"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView">
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/cardView"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/cardView"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/cardView">-->
 
-                    <TextView
-                        android:id="@+id/sizeXl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="XL:61-69kg-1m73" />
-                </androidx.cardview.widget.CardView>
+<!--                    <TextView-->
+<!--                        android:id="@+id/sizeL"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:padding="5dp"-->
+<!--                        android:text="L:54-60kg-1m70" />-->
+<!--                </androidx.cardview.widget.CardView>-->
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@+id/cardView2"
-                    app:layout_constraintTop_toTopOf="@+id/cardView2">
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:id="@+id/cardView2"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/cardView"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/cardView">-->
 
-                    <TextView
-                        android:id="@+id/sizeXXL"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="XXL:70-76kg-1m78" />
-                </androidx.cardview.widget.CardView>
+<!--                    <TextView-->
+<!--                        android:id="@+id/sizeXl"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:padding="5dp"-->
+<!--                        android:text="XL:61-69kg-1m73" />-->
+<!--                </androidx.cardview.widget.CardView>-->
+
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/cardView2"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/cardView2">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/sizeXXL"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:padding="5dp"-->
+<!--                        android:text="XXL:70-76kg-1m78" />-->
+<!--                </androidx.cardview.widget.CardView>-->
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
