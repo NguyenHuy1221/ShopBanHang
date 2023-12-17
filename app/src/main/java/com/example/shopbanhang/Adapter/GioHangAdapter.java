@@ -27,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHolder>{
     private Context context;
@@ -90,6 +92,8 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
                             holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
 
                             iclickListener.onItemChanged(chiTietGioHang);
+//                            Map<String, Object> updates = new HashMap<>();
+//                            updates.put("so_luong", holder.txtSo);
                         }
                     });
 
@@ -105,6 +109,9 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
                                 holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
 
                                 holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+
+//                                Map<String, Object> updates = new HashMap<>();
+//                                updates.put("so_luong", holder.txtSo);
                                 iclickListener.onItemChanged(chiTietGioHang);
                             }
                         }

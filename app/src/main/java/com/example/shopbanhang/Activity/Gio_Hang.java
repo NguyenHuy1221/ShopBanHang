@@ -48,14 +48,14 @@ public class Gio_Hang extends AppCompatActivity {
     private GioHangAdapter gioHangAdapter;
     private RecyclerView recyclerView;
     public static List<GioHang> mlistGioHang;
-    public static List<ChiTietGioHang> mListChiTiet;
+    public static List<ChiTietGioHang> mListChiTiet = new ArrayList<>();
     private Context context = this;
     private ImageView btnBack,img_khuyen_mai;
     double tongTienSanPham = 0.0;
-    private TextView txtTien,tvTienSanPham,tvGiamGia,tvTongTien;
+    private TextView txtTien,tvTienSanPham,tvGiamGia,tvTongTien ,edtkhuyenmai;
     private Button btnMua;
     private int user;
-
+    private final int[] idgiohang = {0};
 
 
     @Override
@@ -68,7 +68,7 @@ public class Gio_Hang extends AppCompatActivity {
 
         anhxa();
         senDataCart();
-//        khuyenMai();
+        khuyenMai();
 
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +91,7 @@ public class Gio_Hang extends AppCompatActivity {
         tvTienSanPham = findViewById(R.id.tv_tong_tien_hang);
         tvGiamGia = findViewById(R.id.tv_giam_gia);
         tvTongTien = findViewById(R.id.tv_tong_tien);
+        edtkhuyenmai = findViewById(R.id.editTextText2);
 
         btnMua.setOnClickListener(v -> {
             Intent intent = new Intent(Gio_Hang.this, ThanhToanMainActivity.class);
@@ -102,17 +103,23 @@ public class Gio_Hang extends AppCompatActivity {
     public void senDataCart(){
         mlistGioHang = new ArrayList<>();
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");
+        if (mlistGioHang != null){
+            mlistGioHang.clear();
+        }
+
 
         mDatabaseReference.orderByChild("id_khach_hang").equalTo(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mlistGioHang.clear();
 
                 for (DataSnapshot postSnapshot: snapshot.getChildren() ){
                     GioHang gioHang = postSnapshot.getValue(GioHang.class);
 
                     senDataChiTietCart(gioHang.getId_gio_hang());
                     mlistGioHang.add(gioHang);
+
+
+
                 }
 
                 gioHangAdapter = new GioHangAdapter(context, mlistGioHang, new GioHangAdapter.IclickListener() {
@@ -144,22 +151,27 @@ public class Gio_Hang extends AppCompatActivity {
     private void senDataChiTietCart(int idGioHang) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
 
-        mListChiTiet = new ArrayList<>();
         Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mListChiTiet != null){
+            mListChiTiet.clear();
+        }
+        query.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mListChiTiet.clear();
+                tongTienSanPham = 0.0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ChiTietGioHang chiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
                     tongTienSanPham += chiTietGioHang.getTong_tien();
+
                     mListChiTiet.add(chiTietGioHang);
                     Log.d("HUY","tổng tiền " + formatTien(tongTienSanPham) );
                     tvTongTien.setText(formatTien(tongTienSanPham));
                     txtTien.setText(formatTien(tongTienSanPham));
                     tvTienSanPham.setText(formatTien(tongTienSanPham));
                     Log.d("HUY","tổng tiền đã tính : " + formatTien(tongTienSanPham) );
+                    gioHangAdapter.notifyDataSetChanged();
+
                 }
             }
 
@@ -278,6 +290,7 @@ public class Gio_Hang extends AppCompatActivity {
                             if (selectedPosition != -1) {
                                 // Áp dụng mã giảm giá đã chọn
                                 applySelectedKhuyenMai(danhSachKhuyenMai.get(selectedPosition));
+
                             }
                             dialog.dismiss();
                         }
@@ -300,9 +313,10 @@ public class Gio_Hang extends AppCompatActivity {
         double tongGiamGia = 0.0;
 
         // Tính tổng giá gốc của các sản phẩm trong giỏ hàng
-        for (GioHang gioHang : mlistGioHang) {
-//            tongGiaGoc += gioHang.getGiasp() * gioHang.getSoluong();
-        }
+//        for (ChiTietSanPham chiTietSanPham : mlistGioHang) {
+//            tongGiaGoc += chiTietSanPham.get() * gioHang.getSoluong();
+//        }
+        tongGiaGoc = tongTienSanPham;
 
         double tongGiaSauKhuyenMai = tongGiaGoc;
 

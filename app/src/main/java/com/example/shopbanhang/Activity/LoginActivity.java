@@ -81,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
                     startActivity(intent);
                 } else {
+//                    Toast.makeText(LoginActivity.this, "không lỗi", Toast.LENGTH_SHORT).show();
+
                     signUp();
                 }
 
@@ -169,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                         mySharedPreferences.putBooleanValue("login", true);
                         Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
                         startActivity(intent);
-                        finish();
+                        finishAffinity();
                     }
                 }
 
@@ -200,7 +202,9 @@ public class LoginActivity extends AppCompatActivity {
     private void Update() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("TaiKhoan");
-
+        if (list != null){
+            list.clear();
+        }
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
