@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -31,10 +32,13 @@ import com.example.shopbanhang.Adapter.SanPhamAdapter;
 import com.example.shopbanhang.DAO.SanPhamDAO;
 import com.example.shopbanhang.Model.AddsizeColor;
 import com.example.shopbanhang.Model.ChiTietSanPham;
+import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.SanPham;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.Model.ThuongHieu;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -192,6 +196,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         }
                     }
                 });
+//                kiemtradulieu(spinnerMau,spinnerSize);
                 AddsizeColor addsizeColor1 = new AddsizeColor(tvName,spinnerSize,spinnerMau,editTextSoLuong);
 
 
@@ -223,6 +228,37 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
 
     }
+    private List<ChiTietSanPhamfix> chiTietSanPhams = new ArrayList<>();
+
+    private void kiemtradulieu(String mau , String kickco) {
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idsanpham = Integer.parseInt(edt_masp.getText().toString());
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Chitietsanpham");
+        DatabaseReference userRef = myRef.child(String.valueOf(idsanpham));
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (chiTietSanPhams != null) {
+                    chiTietSanPhams.clear();
+
+                }
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    ChiTietSanPhamfix chiTietSanPham = dataSnapshot.getValue(ChiTietSanPhamfix.class);
+                    if (chiTietSanPham != null){
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     public void themSanPham(){
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinerThuongHieu);
