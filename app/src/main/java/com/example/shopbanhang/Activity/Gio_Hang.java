@@ -52,7 +52,11 @@ public class Gio_Hang extends AppCompatActivity {
     private Context context = this;
     private ImageView btnBack,img_khuyen_mai;
     double tongTienSanPham = 0.0;
-    private TextView txtTien,tvTienSanPham,tvGiamGia,tvTongTien ,edtkhuyenmai;
+    private TextView txtTien;
+    private TextView tvTienSanPham;
+    private TextView tvGiamGia;
+    private TextView tvTongTien;
+    private TextView edtkhuyenmai;
     private Button btnMua;
     private int user;
     private final int[] idgiohang = {0};
@@ -316,6 +320,7 @@ public class Gio_Hang extends AppCompatActivity {
 //        for (ChiTietSanPham chiTietSanPham : mlistGioHang) {
 //            tongGiaGoc += chiTietSanPham.get() * gioHang.getSoluong();
 //        }
+        edtkhuyenmai.setText(selectedKhuyenMai.getTenKhuyenMai());
         tongGiaGoc = tongTienSanPham;
 
         double tongGiaSauKhuyenMai = tongGiaGoc;
