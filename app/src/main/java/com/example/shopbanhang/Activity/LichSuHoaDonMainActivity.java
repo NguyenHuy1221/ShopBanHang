@@ -34,19 +34,20 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
 
     private List<HoaDon> mListhoadon = new ArrayList<>();
     private Context context = this;
-    private String user;
+    private int user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lich_su_hoa_don_main);
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user = mySharedPreferences.getValue("remember_username_ten");
+        user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
 
         recyclerView = findViewById(R.id.rcvHoaDon);
+        Log.d("HUY","Tài khoản : " + user);
 
         DatabaseReference hoaDonMyRef = FirebaseDatabase.getInstance().getReference().child("hoadon");
-        Query myRef = hoaDonMyRef.orderByChild("remember_username_ten").equalTo(user);
+        Query myRef = hoaDonMyRef.orderByChild("idKhachHang").equalTo(user);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

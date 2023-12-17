@@ -20,9 +20,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.DAO.HoaDonDAO;
+import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
+import com.example.shopbanhang.Model.SanPham;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,16 +63,16 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
     @Override
     public void onBindViewHolder(@NonNull @NotNull HoaDonViewHoder holder, int position) {
         HoaDon hoaDon = mHoadon.get(position);
-//        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
+        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
 //        holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
 //
-//        holder.tvNgaytao.setText("Ngày Tạo: " + hoaDon.getNgaytaoHD());
-//        holder.tvGiotao.setText(hoaDon.getGiotaoHD());
-//
-//        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-//        String formattedTien = decimalFormat.format(hoaDon.getTongtien());
-//        holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
-//
+        holder.tvNgaytao.setText("Ngày Tạo : " + hoaDon.getNgaytaoHD());
+        holder.tvGiotao.setText(hoaDon.getGiotaoHD());
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(hoaDon.getTongtien());
+        holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
+        DuLieuTaiKhoan(hoaDon.getIdKhachHang(),holder);
 //        holder.setSanPhamList(hoaDon.getSanPhamList());
 //
 //        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
@@ -96,6 +105,24 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 //        hoaDonDAO.updateStatus(hoaDon);
 //        notifyDataSetChanged();
 //    }
+
+    private void DuLieuTaiKhoan(int idtk, HoaDonAdapter.HoaDonViewHoder holder){
+        DatabaseReference taiKhoanRef = FirebaseDatabase.getInstance().getReference("TaiKhoan");
+        taiKhoanRef.child(String.valueOf(idtk)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    TaiKhoan taiKhoan = snapshot.getValue(TaiKhoan.class);
+                    holder.tvNguoimua.setText("Khách hàng : "+taiKhoan.getTentk());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 
 
@@ -157,8 +184,8 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
 
         }
-        public void setSanPhamList(List<GioHang> sanPhamList) {
-            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(sanPhamList);
+        public void setSanPhamList(List<HoaDon> mListHoaDon) {
+            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(mListHoaDon);
             rcy_don_hang.setAdapter(chiTietDonHangAdapter);
         }
 

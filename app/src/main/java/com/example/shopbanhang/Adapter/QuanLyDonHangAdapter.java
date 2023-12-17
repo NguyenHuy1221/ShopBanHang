@@ -146,9 +146,9 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
-        public void setSanPhamList(List<GioHang> sanPhamList) {
-            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(sanPhamList);
-            rcy_don_hang.setAdapter(chiTietDonHangAdapter);
-        }
+//        public void setSanPhamList(List<GioHang> sanPhamList) {
+//            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(sanPhamList);
+//            rcy_don_hang.setAdapter(chiTietDonHangAdapter);
+//        }
     }
 }

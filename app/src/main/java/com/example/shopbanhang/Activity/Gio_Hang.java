@@ -99,10 +99,53 @@ public class Gio_Hang extends AppCompatActivity {
 
         btnMua.setOnClickListener(v -> {
             Intent intent = new Intent(Gio_Hang.this, ThanhToanMainActivity.class);
-//            intent.putExtra("tongtien", finalTongGiaSauKhuyenMai);
+            intent.putExtra("tongtien",tongTienSanPham);
             startActivity(intent);
         });
     }
+
+//    public void senDataCart(){
+//        mlistGioHang = new ArrayList<>();
+//        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");
+//        if (mlistGioHang != null){
+//            mlistGioHang.clear();
+//        }
+//
+//
+//        mDatabaseReference.orderByChild("id_khach_hang").equalTo(user).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                for (DataSnapshot postSnapshot: snapshot.getChildren() ){
+//                    GioHang gioHang = postSnapshot.getValue(GioHang.class);
+//
+//                    senDataChiTietCart(gioHang.getId_gio_hang());
+//                    mlistGioHang.add(gioHang);
+//
+//                }
+//                gioHangAdapter = new GioHangAdapter(context, mListChiTiet, new GioHangAdapter.IclickListener() {
+//                    @Override
+//                    public void onItemChanged(ChiTietGioHang chiTietGioHang) {
+//                        updateCart(chiTietGioHang);
+//                    }
+//
+//                    @Override
+//                    public void onclickDeleteCart(ChiTietGioHang chiTietGioHang) {
+//                        deleteCart(chiTietGioHang);
+//                    }
+//                });
+//
+//                recyclerView.setAdapter(gioHangAdapter);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//    }
 
     public void senDataCart(){
         mlistGioHang = new ArrayList<>();
@@ -118,25 +161,18 @@ public class Gio_Hang extends AppCompatActivity {
 
                 for (DataSnapshot postSnapshot: snapshot.getChildren() ){
                     GioHang gioHang = postSnapshot.getValue(GioHang.class);
-
-                    senDataChiTietCart(gioHang.getId_gio_hang());
                     mlistGioHang.add(gioHang);
-
-
-
+                    senDataChiTietCart(gioHang.getId_gio_hang());
                 }
-
-                gioHangAdapter = new GioHangAdapter(context, mlistGioHang, new GioHangAdapter.IclickListener() {
+                gioHangAdapter = new GioHangAdapter(context, mListChiTiet, new GioHangAdapter.IclickListener() {
                     @Override
                     public void onItemChanged(ChiTietGioHang chiTietGioHang) {
-
                         updateCart(chiTietGioHang);
-
                     }
 
                     @Override
-                    public void onclickDeleteCart(GioHang gioHang) {
-                        deleteCart(gioHang);
+                    public void onclickDeleteCart(ChiTietGioHang chiTietGioHang) {
+                        deleteCart(chiTietGioHang);
                     }
                 });
 
@@ -152,17 +188,16 @@ public class Gio_Hang extends AppCompatActivity {
 
     }
 
+
     private void senDataChiTietCart(int idGioHang) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
 
         Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
-        if (mListChiTiet != null){
-            mListChiTiet.clear();
-        }
         query.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mListChiTiet.clear();
                 tongTienSanPham = 0.0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ChiTietGioHang chiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
@@ -186,28 +221,26 @@ public class Gio_Hang extends AppCompatActivity {
         });
     }
 
-
-    private void deleteCart(GioHang gioHang) {
+    private void deleteCart(ChiTietGioHang chiTietGioHang) {
         new AlertDialog.Builder(context)
                 .setTitle("Xóa sản phẩm ")
                 .setMessage("Bạn có chắc muốn xóa sản phẩm này")
                 .setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // First, delete the details (ChiTietGioHang) associated with the cart (GioHang)
-                        deleteChiTietGioHang(gioHang.getId_gio_hang());
 
-                        // Then, delete the shopping cart
+                        deleteChiTietGioHang(chiTietGioHang.getId_chi_tiet_gio_hang());
+
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference myRef = database.getReference("giohang");
-                        int keyToDelete = gioHang.getId_gio_hang();
+                        DatabaseReference myRef = database.getReference("chitietgiohang");
+                        int keyToDelete = chiTietGioHang.getId_chi_tiet_gio_hang();
 
                         myRef.child(String.valueOf(keyToDelete)).removeValue()
                                 .addOnCompleteListener(deleteTask -> {
                                     if (deleteTask.isSuccessful()) {
                                         Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
                                         // Update the local list and notify the adapter
-                                        mlistGioHang.remove(gioHang);
+                                        mlistGioHang.remove(chiTietGioHang);
                                         gioHangAdapter.notifyDataSetChanged();
                                     } else {
                                         Toast.makeText(context, "Lỗi khi xóa sản phẩm", Toast.LENGTH_SHORT).show();
@@ -216,6 +249,7 @@ public class Gio_Hang extends AppCompatActivity {
                     }
                 }).setNegativeButton("Không", null).show();
     }
+
 
     private void deleteChiTietGioHang(int idGioHang) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

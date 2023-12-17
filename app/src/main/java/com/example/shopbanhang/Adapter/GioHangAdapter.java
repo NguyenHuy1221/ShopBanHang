@@ -34,13 +34,13 @@ import java.util.Map;
 public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHolder>{
     private Context context;
 
-    private List<GioHang> productList;
+    private List<ChiTietGioHang> productList;
     private final IclickListener iclickListener;
     private DatabaseReference chiTietGioHangRef;
 
 
 
-    public GioHangAdapter(Context context, List<GioHang> productList, IclickListener iclickListener) {
+    public GioHangAdapter(Context context, List<ChiTietGioHang> productList, IclickListener iclickListener) {
         this.context = context;
         this.productList = productList;
         this.iclickListener = iclickListener;
@@ -56,87 +56,131 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull GioHangAdapter.ViewHolder holder, int position) {
 
-        GioHang gioHang = productList.get(position);
+//        ChiTietGioHang chiTietGioHang = productList.get(position);
+//
+//        int idGioHang = chiTietGioHang.getId_gio_hang();
+//
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        chiTietGioHangRef = database.getReference("chitietgiohang");
+//
+//
+//        Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    ChiTietGioHang chiTietGioHang = snapshot.getValue(ChiTietGioHang.class);
+//
+//                    double tongTien = chiTietGioHang.getSo_luong() * chiTietGioHang.getDon_gia();
+//
+//                    DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//                    holder.txtGia.setText(decimalFormat.format(tongTien) + " đ");
+//                    holder.txtSo.setText(chiTietGioHang.getSo_luong() + "");
+//
+//                    // Gọi hàm để lấy thông tin Chi tiết sản phẩm
+//                    duLieuChiTietSanPham(chiTietGioHang.getId_chi_tiet_san_pham(), holder);
+//
+//                    // Xử lý sự kiện cộng và trừ số lượng
+//                    holder.txtCong.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
+//                            chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
+//
+//                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//                            holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+//                            holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+//
+//                            iclickListener.onItemChanged(chiTietGioHang);
+//
+//                        }
+//                    });
+//
+//                    holder.txtTru.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            if (chiTietGioHang.getSo_luong() > 1) {
+//
+//                                chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() - 1);
+//                                chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
+//
+//                                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//                                holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+//
+//                                holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+//
+//                                iclickListener.onItemChanged(chiTietGioHang);
+//                            }
+//                        }
+//                    });
+//
+//                    holder.txtXoa.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            iclickListener.onclickDeleteCart(chiTietGioHang);
+//                        }
+//                    });
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Xử lý lỗi nếu cần thiết
+//            }
+//        });
 
-        int idGioHang = gioHang.getId_gio_hang();
+        ChiTietGioHang chiTietGioHang = productList.get(position);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        chiTietGioHangRef = database.getReference("chitietgiohang");
+        double tongTien = chiTietGioHang.getSo_luong() * chiTietGioHang.getDon_gia();
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        holder.txtGia.setText(decimalFormat.format(tongTien) + " đ");
+        holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
 
+        // Gọi hàm để lấy thông tin Chi tiết sản phẩm
+        duLieuChiTietSanPham(chiTietGioHang.getId_chi_tiet_san_pham(), holder);
 
-        Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Xử lý sự kiện cộng và trừ số lượng
+        holder.txtCong.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChiTietGioHang chiTietGioHang = snapshot.getValue(ChiTietGioHang.class);
+            public void onClick(View v) {
+                chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
+                chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
 
-                    double tongTien = chiTietGioHang.getSo_luong() * chiTietGioHang.getDon_gia();
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+                holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+
+                iclickListener.onItemChanged(chiTietGioHang);
+            }
+        });
+
+        holder.txtTru.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (chiTietGioHang.getSo_luong() > 1) {
+                    chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() - 1);
+                    chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
 
                     DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                    holder.txtGia.setText(decimalFormat.format(tongTien) + " đ");
-                    holder.txtSo.setText(chiTietGioHang.getSo_luong() + "");
+                    holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+                    holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
 
-                    // Gọi hàm để lấy thông tin Chi tiết sản phẩm
-                    duLieuChiTietSanPham(chiTietGioHang.getId_chi_tiet_san_pham(), holder);
-
-                    // Xử lý sự kiện cộng và trừ số lượng
-                    holder.txtCong.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
-                            chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
-
-                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                            holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
-                            holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
-
-                            iclickListener.onItemChanged(chiTietGioHang);
-//                            Map<String, Object> updates = new HashMap<>();
-//                            updates.put("so_luong", holder.txtSo);
-                        }
-                    });
-
-                    holder.txtTru.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (chiTietGioHang.getSo_luong() > 1) {
-
-                                chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() - 1);
-                                chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
-
-                                DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                                holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
-
-                                holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
-
-//                                Map<String, Object> updates = new HashMap<>();
-//                                updates.put("so_luong", holder.txtSo);
-                                iclickListener.onItemChanged(chiTietGioHang);
-                            }
-                        }
-                    });
-
-                    holder.txtXoa.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            iclickListener.onclickDeleteCart(gioHang);
-                        }
-                    });
-
-
+                    iclickListener.onItemChanged(chiTietGioHang);
                 }
             }
+        });
 
+        holder.txtXoa.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi nếu cần thiết
+            public void onClick(View v) {
+                iclickListener.onclickDeleteCart(chiTietGioHang);
             }
         });
 
 
     }
-
 
 
     private void duLieuChiTietSanPham(int idChiTietSanPham, ViewHolder holder) {
@@ -148,14 +192,10 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
                 if (dataSnapshot.exists()) {
                     ChiTietSanPham chiTietSanPham = dataSnapshot.getValue(ChiTietSanPham.class);
 
-                    // Lấy thông tin số lượng từ Chi tiết sản phẩm
-                    int soLuong = chiTietSanPham.getSoluong();
-
-
                     holder.txtMau.setText(chiTietSanPham.getMau());
                     holder.txtSize.setText(chiTietSanPham.getKichco());
                     int masp = chiTietSanPham.getMasp();
-                    DuLieuSanPham(masp,holder);
+                    duLieuSanPham(masp, holder);
                 }
             }
 
@@ -166,9 +206,9 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
         });
     }
 
-    private void DuLieuSanPham(int masp, ViewHolder holder){
+    private void duLieuSanPham(int masp, ViewHolder holder) {
         DatabaseReference sanphamRef = FirebaseDatabase.getInstance().getReference("sanpham");
-        sanphamRef.child(String.valueOf(masp)).addValueEventListener(new ValueEventListener() {
+        sanphamRef.child(String.valueOf(masp)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -179,13 +219,12 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
 
                     holder.txtName.setText(sanPham.getTensp());
                     Picasso.get().load(sanPham.getImageUrl()).into(holder.imgPic);
-
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Xử lý lỗi nếu cần thiết
             }
         });
     }
@@ -194,7 +233,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
 
     public interface IclickListener {
         void onItemChanged(ChiTietGioHang chiTietGioHang);
-        void onclickDeleteCart(GioHang gioHang);
+        void onclickDeleteCart(ChiTietGioHang chiTietGioHang);
 
     }
 

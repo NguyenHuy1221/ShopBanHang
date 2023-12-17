@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopbanhang.Model.ChiTietGioHang;
+import com.example.shopbanhang.Model.ChiTietHoaDon;
 import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
@@ -31,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -192,10 +195,10 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private void sendDataCart() {
         Intent intent = getIntent();
         tien = intent.getDoubleExtra("tongtien",0);
-        txtTongTien.setText(tien + " đ");
+        txtTongTien.setText(formatTien(tien) + " đ");
     }
 
-    public void addHoaDon(HoaDon hoaDon) {
+    private void addHoaDon(HoaDon hoaDon) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference hoaDonRef = database.getReference("hoadon");
         String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -203,10 +206,34 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful()) {
+                            addChiTietHoaDon(hoaDon.getMaHD());
+                            Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ThanhToanMainActivity.this, "Lỗi khi thêm hóa đơn", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
+
+
+    private void addChiTietHoaDon(int idHoaDon) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference chiTietHoaDonRef = database.getReference("chitiethoadon");
+        for (ChiTietGioHang chiTietGioHang : chiTietGioHangArrayList) {
+            ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon();
+            chiTietHoaDon.setId_chi_tiet_hoa_don(idHoaDon);
+            chiTietHoaDon.setHoa_don(idHoaDon);
+            chiTietHoaDon.setId_chi_tiet_san_pham(chiTietGioHang.getId_chi_tiet_san_pham());
+            chiTietHoaDon.setSo_luong(chiTietGioHang.getSo_luong());
+            chiTietHoaDon.setDon_gia(chiTietGioHang.getDon_gia());
+
+            Random random = new Random();
+            int idChiTietHoaDon = random.nextInt(1000);
+            chiTietHoaDonRef.child(String.valueOf(idChiTietHoaDon)).setValue(chiTietHoaDon);
+        }
+    }
+
 
     private void clearGioHangData() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -231,5 +258,11 @@ public class ThanhToanMainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private String formatTien(double value) {
+        NumberFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(value) + " đ";
+    }
+
 
 }

@@ -207,77 +207,93 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
             return;
         }
 
-//        // Trừ đi số lượng từ kho
-//        soLuongTrongKho -= so;
-//
-//        // Cập nhật dữ liệu trên Firebase (hoặc cơ sở dữ liệu khác)
-//        updateSoLuongKhoTrongFirebase();
+        DatabaseReference gioHangRef = FirebaseDatabase.getInstance().getReference("giohang").child(String.valueOf(user));
+        gioHangRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Người dùng đã có giỏ hàng, lấy ID giỏ hàng
+                    int idGioHang = dataSnapshot.child("id_gio_hang").getValue(Integer.class);
+                    addChiTietGioHang(idGioHang, giaban, tongTien);
+                } else {
+                    // Người dùng chưa có giỏ hàng, tạo giỏ hàng mới
+                    createNewCart(giaban, tongTien);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu cần
+            }
+        });
+
+    }
+
+    private void createNewCart(double giaban, double tongTien) {
+        DatabaseReference gioHangRef = FirebaseDatabase.getInstance().getReference("giohang");
+        Random random = new Random();
+        int idGioHang = random.nextInt(1000);
+
+        GioHang gioHang = new GioHang(idGioHang, user);
+        gioHangRef.child(String.valueOf(user)).setValue(gioHang);
+
+        addChiTietGioHang(idGioHang, giaban, tongTien);
+    }
+
+    private void addChiTietGioHang(int idGioHang, double giaban, double tongTien) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
         Query query = chiTietGioHangRef.orderByChild("id_chi_tiet_san_pham").equalTo(idChiTietSanPham);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         ChiTietGioHang existingChiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
                         if (existingChiTietGioHang != null) {
+                            // Tăng số lượng sản phẩm trong giỏ hàng
                             int newSoLuong = existingChiTietGioHang.getSo_luong() + so;
-                            double newTongTien = giaban * newSoLuong;
-
-                            if (newSoLuong > soLuongTrongKho) {
-                                Toast.makeText(context, "Số lượng sản phẩm trong kho không đủ", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            chiTietGioHangRef.child(dataSnapshot.getKey()).child("so_luong").setValue(newSoLuong);
-//                            chiTietGioHangRef.child(dataSnapshot.getKey()).child("don_gia").setValue(newTongTien);
-
-                            Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            updateChiTietGioHang(dataSnapshot.getKey(), newSoLuong);
                             return;
                         }
                     }
                 }
 
-                Random random = new Random();
-                int idGioHang = random.nextInt(1000000);
-                int idChiTietGioHang = random.nextInt(1000000);
-
-                GioHang gioHang = new GioHang(idGioHang, user);
-                addGioHang(gioHang);
-
-                ChiTietGioHang chiTietGioHang = new ChiTietGioHang(idChiTietGioHang, idGioHang, idChiTietSanPham, so, giaban,tongTien);
-                addChiTietGioHang(chiTietGioHang);
-
-                Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                hienThiSoLuong();
+                // Nếu sản phẩm chưa có trong giỏ hàng, tạo chi tiết giỏ hàng mới
+                createNewChiTietGioHang(idGioHang, giaban, tongTien);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Xử lý lỗi nếu cần
             }
         });
     }
 
-    private void addGioHang(GioHang gioHang) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference gioHangRef = database.getReference("giohang");
-        gioHangRef.child(String.valueOf(gioHang.getId_gio_hang())).setValue(gioHang);
+
+    private void createNewChiTietGioHang(int idGioHang, double giaban, double tongTien) {
+        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
+        Random random = new Random();
+        int idChiTietGioHang = random.nextInt(1000);
+
+        ChiTietGioHang chiTietGioHang = new ChiTietGioHang(idChiTietGioHang, idGioHang, idChiTietSanPham, so, giaban, tongTien);
+        chiTietGioHangRef.child(String.valueOf(idChiTietGioHang)).setValue(chiTietGioHang);
+
+        Toast.makeText(context, "Sản phẩm đã được thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        hienThiSoLuong();
     }
 
-    private void addChiTietGioHang(ChiTietGioHang chiTietGioHang) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference chiTietGioHangRef = database.getReference("chitietgiohang");
-        chiTietGioHangRef.child(String.valueOf(chiTietGioHang.getId_chi_tiet_gio_hang())).setValue(chiTietGioHang);
+
+    private void updateChiTietGioHang(String chiTietGioHangKey, int newSoLuong) {
+        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
+        chiTietGioHangRef.child(chiTietGioHangKey).child("so_luong").setValue(newSoLuong);
+
+        Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        hienThiSoLuong();
     }
 
-    private void updateSoLuongKhoTrongFirebase() {
-        DatabaseReference chiTietSanPhamRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
-        chiTietSanPhamRef.child(String.valueOf(idChiTietSanPham)).child("soluong").setValue(soLuongTrongKho);
-    }
 
     private void hienThiSizeMau() {
         chiTietSanPhamList = new ArrayList<>();
