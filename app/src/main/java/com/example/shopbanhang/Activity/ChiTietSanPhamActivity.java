@@ -242,25 +242,27 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
     private void addChiTietGioHang(int idGioHang, double giaban, double tongTien) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
-        Query query = chiTietGioHangRef.orderByChild("id_chi_tiet_san_pham").equalTo(idChiTietSanPham);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        chiTietGioHangRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-                if (snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        ChiTietGioHang existingChiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
-                        if (existingChiTietGioHang != null) {
-                            // Tăng số lượng sản phẩm trong giỏ hàng
-                            int newSoLuong = existingChiTietGioHang.getSo_luong() + so;
-                            updateChiTietGioHang(dataSnapshot.getKey(), newSoLuong);
-                            return;
-                        }
+                boolean productExistsInCart = false;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    ChiTietGioHang chiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
+                    if (chiTietGioHang != null &&
+                            chiTietGioHang.getId_gio_hang() == idGioHang &&
+                            chiTietGioHang.getId_chi_tiet_san_pham() == idChiTietSanPham) {
+                        // Người dùng mua đúng sản phẩm, tăng số lượng
+                        int newSoLuong = chiTietGioHang.getSo_luong() + so;
+                        updateChiTietGioHang(dataSnapshot.getKey(), newSoLuong);
+                        productExistsInCart = true;
+                        break;
                     }
                 }
 
                 // Nếu sản phẩm chưa có trong giỏ hàng, tạo chi tiết giỏ hàng mới
-                createNewChiTietGioHang(idGioHang, giaban, tongTien);
+                if (!productExistsInCart) {
+                    createNewChiTietGioHang(idGioHang, giaban, tongTien);
+                }
             }
 
             @Override
@@ -269,7 +271,6 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void createNewChiTietGioHang(int idGioHang, double giaban, double tongTien) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
@@ -283,6 +284,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         dialog.dismiss();
         hienThiSoLuong();
     }
+
 
 
     private void updateChiTietGioHang(String chiTietGioHangKey, int newSoLuong) {
