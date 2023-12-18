@@ -49,6 +49,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
     private String size = null;
     private List<ChiTietSanPham> chiTietSanPhamList;
     private List<GioHang> mListGioHang;
+    private List<ChiTietGioHang> mListChiTiet;
     private int so = 1;
     BottomSheetDialog dialog;
     NotificationBadge badge;
@@ -293,7 +294,6 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
         Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
-        hienThiSoLuong();
     }
 
 
@@ -345,7 +345,6 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
         mListGioHang = new ArrayList<>();
 
-
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("giohang");
         myRef.orderByChild("id_khach_hang").equalTo(user).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -355,6 +354,7 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
                     GioHang gioHang = dataSnapshot.getValue(GioHang.class);
                     if (mListGioHang != null) {
                         mListGioHang.add(gioHang);
+                        hienThiSoLuong(gioHang.getId_gio_hang());
                     }
                 }
 
@@ -372,6 +372,33 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
         });
     }
 
+    private void hienThiSoLuong(int idGioHang) {
+        mListChiTiet = new ArrayList<>();
+
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
+        myRef.orderByChild("id_gio_hang").equalTo(idGioHang).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mListChiTiet.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    ChiTietGioHang chiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
+                    if (mListChiTiet != null) {
+                        mListChiTiet.add(chiTietGioHang);
+                    }
+                }
+
+                if (badge != null) {
+                    badge.setText(String.valueOf(mListChiTiet.size()));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu cần
+            }
+        });
+    }
 
 
 }

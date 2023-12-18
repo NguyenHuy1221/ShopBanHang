@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shopbanhang.Model.ChiTietHoaDon;
 import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
@@ -23,13 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAdapter.ViewHolder> {
 
-    private List<HoaDon> mListHoaDon;
+    private List<ChiTietHoaDon> mListHoaDon;
 
-    public ChiTietDonHangAdapter(List<HoaDon> mListHoaDon) {
+    public ChiTietDonHangAdapter(List<ChiTietHoaDon> mListHoaDon) {
         this.mListHoaDon = mListHoaDon;
     }
 
@@ -42,18 +44,12 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
 
     @Override
     public void onBindViewHolder(@NonNull ChiTietDonHangAdapter.ViewHolder holder, int position) {
-       HoaDon hoaDon = mListHoaDon.get(position);
+        ChiTietHoaDon chiTietHoaDon = mListHoaDon.get(position);
+        holder.item_giaspchitiet.setText("SL : " + chiTietHoaDon.getSo_luong());
+        NumberFormat formatter = new DecimalFormat("#,###");
+        holder.txt_gia.setText("Tổng : " + formatter.format(chiTietHoaDon.getDon_gia()));
 
-//        holder.item_tenspchitiet.setText(gioHang.getTensp());
-//        holder.item_giaspchitiet.setText("Số lượng: " + gioHang.getSoluong());
-//
-//        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-//        String formattedTien = decimalFormat.format(gioHang.getTongtien());
-//        holder.txt_gia.setText(formattedTien + " đ");
-//
-//        holder.txt_size.setText("Size: "+ gioHang.getSize());
-//        Picasso.get().load(gioHang.getUrl()).into(holder.item_img_chhitiet);
-        duLieuChiTietSanPham(hoaDon.getMaHD(),holder);
+        duLieuChiTietSanPham(chiTietHoaDon.getId_chi_tiet_san_pham(),holder);
     }
 
     private void duLieuChiTietSanPham(int idChiTietSanPham, ChiTietDonHangAdapter.ViewHolder holder) {
@@ -65,8 +61,7 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
                 if (dataSnapshot.exists()) {
                     ChiTietSanPham chiTietSanPham = dataSnapshot.getValue(ChiTietSanPham.class);
 
-//                    holder..setText(chiTietSanPham.getMau());
-                    holder.txt_size.setText(chiTietSanPham.getKichco());
+                    holder.txt_size.setText("Size : "+chiTietSanPham.getKichco());
                     int masp = chiTietSanPham.getMasp();
                     DuLieuSanPham(masp,holder);
                 }
@@ -87,7 +82,7 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
                 if (snapshot.exists()) {
                     SanPham sanPham = snapshot.getValue(SanPham.class);
 
-                    holder.item_tenspchitiet.setText(sanPham.getTensp());
+                    holder.item_tenspchitiet.setText("Tên sp : " + sanPham.getTensp());
                     Picasso.get().load(sanPham.getImageUrl()).into(holder.item_img_chhitiet);
 
                 }

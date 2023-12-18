@@ -15,11 +15,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.DAO.HoaDonDAO;
+import com.example.shopbanhang.Model.ChiTietHoaDon;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdapter.ViewHolder> {
@@ -43,6 +51,15 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
     @Override
     public void onBindViewHolder(@NonNull QuanLyDonHangAdapter.ViewHolder holder, int position) {
         HoaDon hoaDon = mHoadon.get(position);
+        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
+
+        holder.tvNgaytao.setText("Ngày Tạo : " + hoaDon.getNgaytaoHD());
+        holder.tvGiotao.setText(hoaDon.getGiotaoHD());
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedTien = decimalFormat.format(hoaDon.getTongtien());
+        holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
+        DuLieuTaiKhoan(hoaDon.getIdKhachHang(),holder);
 //        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
 //        holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
 //
@@ -55,14 +72,58 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
 //
 //        holder.setSanPhamList(hoaDon.getSanPhamList());
 //
-//        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
-//        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showUpdateStatusDialog(hoaDon);
-//            }
-//        });
+
+        DatabaseReference chiTietHoaDonRef = FirebaseDatabase.getInstance().getReference("chitiethoadon");
+        chiTietHoaDonRef.orderByChild("hoa_don").equalTo(hoaDon.getMaHD()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    List<ChiTietHoaDon> chiTietHoaDonList = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ChiTietHoaDon chiTietHoaDon = snapshot.getValue(ChiTietHoaDon.class);
+                        chiTietHoaDonList.add(chiTietHoaDon);
+                    }
+
+                    // Tạo một thể hiện của ChiTietDonHangAdapter và đặt nó cho rcy_don_hang
+                    ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(chiTietHoaDonList);
+                    holder.rcy_don_hang.setAdapter(chiTietDonHangAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu cần thiết
+            }
+        });
+
+        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
+        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUpdateStatusDialog(hoaDon);
+            }
+        });
+
     }
+
+    private void DuLieuTaiKhoan(int idtk, QuanLyDonHangAdapter.ViewHolder holder){
+        DatabaseReference taiKhoanRef = FirebaseDatabase.getInstance().getReference("TaiKhoan");
+        taiKhoanRef.child(String.valueOf(idtk)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    TaiKhoan taiKhoan = snapshot.getValue(TaiKhoan.class);
+                    holder.tvNguoimua.setText("Khách hàng : "+taiKhoan.getTentk());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     private void showUpdateStatusDialog(HoaDon hoaDon) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -81,8 +142,8 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
     }
 
     private void updateOrderStatus(HoaDon hoaDon, int newStatus) {
-//        hoaDon.setTinhTrang(newStatus);
-//        hoaDonDAO.updateStatus(hoaDon);
+        hoaDon.setTinhTrang(newStatus);
+        hoaDonDAO.updateStatus(hoaDon);
         notifyDataSetChanged();
     }
 
@@ -127,6 +188,7 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
         private TextView tvDanhsachmathang;
         private TextView tvNgaytao;
         private TextView tvTrangThai;
+
         private TextView tvGiotao;
         private Button btnThanhToan;
         private CardView view_hoadon;
@@ -146,9 +208,5 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
-//        public void setSanPhamList(List<GioHang> sanPhamList) {
-//            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(sanPhamList);
-//            rcy_don_hang.setAdapter(chiTietDonHangAdapter);
-//        }
     }
 }

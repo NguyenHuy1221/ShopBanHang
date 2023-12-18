@@ -104,49 +104,6 @@ public class Gio_Hang extends AppCompatActivity {
         });
     }
 
-//    public void senDataCart(){
-//        mlistGioHang = new ArrayList<>();
-//        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");
-//        if (mlistGioHang != null){
-//            mlistGioHang.clear();
-//        }
-//
-//
-//        mDatabaseReference.orderByChild("id_khach_hang").equalTo(user).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                for (DataSnapshot postSnapshot: snapshot.getChildren() ){
-//                    GioHang gioHang = postSnapshot.getValue(GioHang.class);
-//
-//                    senDataChiTietCart(gioHang.getId_gio_hang());
-//                    mlistGioHang.add(gioHang);
-//
-//                }
-//                gioHangAdapter = new GioHangAdapter(context, mListChiTiet, new GioHangAdapter.IclickListener() {
-//                    @Override
-//                    public void onItemChanged(ChiTietGioHang chiTietGioHang) {
-//                        updateCart(chiTietGioHang);
-//                    }
-//
-//                    @Override
-//                    public void onclickDeleteCart(ChiTietGioHang chiTietGioHang) {
-//                        deleteCart(chiTietGioHang);
-//                    }
-//                });
-//
-//                recyclerView.setAdapter(gioHangAdapter);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//    }
-
     public void senDataCart(){
         mlistGioHang = new ArrayList<>();
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("giohang");

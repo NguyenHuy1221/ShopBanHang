@@ -22,6 +22,7 @@ import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.Model.SanPham;
+import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +31,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -56,6 +59,8 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private ArrayList<GioHang> list = new ArrayList<>();
     private ArrayList<SanPham> listsanpham = new ArrayList<>();
 
+    private  List<TaiKhoan> mListTaiKhoan;
+
     private GioHang gioHang;
     private SanPham sanPham;
 
@@ -67,12 +72,14 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thanh_toan_main);
 
-        anhxa();
-        sendDataCart();
-
-
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
         idKhachHang = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
+        Log.d("HUY","id kahcs hang : " + idKhachHang);
+
+        anhxa();
+        sendDataCart();
+        getDataTaiKhoan(idKhachHang);
+
     }
 
     private void anhxa() {
@@ -89,7 +96,6 @@ public class ThanhToanMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String strDiaChi = edtDiaChi.getText().toString().trim();
-//                String id = UUID.randomUUID().toString();
                 Random random = new Random();
                 int id = random.nextInt(1000000);
                 if (TextUtils.isEmpty(strDiaChi)){
@@ -97,16 +103,34 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                 }else {
                     String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                     String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-//                    hoaDon = new HoaDon(id,user_name_login,DateToday,TimeToday,gioHangList,tien,trangthai);
                     hoaDon = new HoaDon(id,idKhachHang,DateToday,TimeToday,trangthai,0,strDiaChi,tien);
                     getDataFirebasesanpham();
                     addHoaDon(hoaDon);
-                    clearGioHangData();
-                    clearChiTietGioHangData();
+
                 }
             }
         });
     }
+
+    private void getDataTaiKhoan(int idKhachHang) {
+        DatabaseReference taiKhoanRef = FirebaseDatabase.getInstance().getReference("TaiKhoan");
+        taiKhoanRef.child(String.valueOf(idKhachHang)).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    TaiKhoan taiKhoan = dataSnapshot.getValue(TaiKhoan.class);
+                    txtGmail.setText(taiKhoan.getEmailtk());
+                    txtSdt.setText(taiKhoan.getSdttk());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private ArrayList<Integer> listmasp = new ArrayList<>();
     private ArrayList<Integer> listmaspnumber = new ArrayList<>();
     private void getDataFirebasegiohang() {
@@ -202,12 +226,13 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference hoaDonRef = database.getReference("hoadon");
         String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        hoaDonRef.child(TimeToday).setValue(hoaDon)
+        hoaDonRef.child(String.valueOf(hoaDon.getMaHD())).setValue(hoaDon)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             addChiTietHoaDon(hoaDon.getMaHD());
+                            clearGioHangData(idKhachHang);
                             Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(ThanhToanMainActivity.this, "Lỗi khi thêm hóa đơn", Toast.LENGTH_SHORT).show();
@@ -234,27 +259,45 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         }
     }
 
+    private void clearGioHangData(int idKhachHang) {
+        DatabaseReference gioHangRef = FirebaseDatabase.getInstance().getReference("giohang");
 
-    private void clearGioHangData() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference gioHangRef = database.getReference("giohang");
-
-        gioHangRef.removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+        Query query = gioHangRef.orderByChild("id_khach_hang").equalTo(idKhachHang);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    GioHang gioHang = childSnapshot.getValue(GioHang.class);
+                    childSnapshot.getRef().removeValue();
+                    clearChiTietGioHangData(gioHang.getId_gio_hang());
+                }
                 gioHangList.clear();
                 startActivity(new Intent(ThanhToanMainActivity.this, TrangChuActivity.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu cần
             }
         });
     }
 
-    private void clearChiTietGioHangData() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference gioHangRef = database.getReference("chitietgiohang");
+    private void clearChiTietGioHangData(int idGioHang) {
+        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
 
-        gioHangRef.removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+        Query query = chiTietGioHangRef.orderByChild("id_gio_hang").equalTo(idGioHang);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    childSnapshot.getRef().removeValue();
+                }
                 chiTietGioHangArrayList.clear();
-                startActivity(new Intent(ThanhToanMainActivity.this, TrangChuActivity.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu cần
             }
         });
     }

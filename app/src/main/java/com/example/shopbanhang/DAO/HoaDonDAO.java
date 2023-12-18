@@ -25,8 +25,8 @@ public class HoaDonDAO {
 //        myRef.child(HoaDon.getGiotaoHD()).removeValue();
 //    }
 
-//    public void updateStatus(HoaDon hoaDon) {
-//        hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon");
-//        hoaDonRef.child(hoaDon.getMaHD()).child("tinhTrang").setValue(hoaDon.getTinhTrang());
-//    }
+    public void updateStatus(HoaDon hoaDon) {
+        hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon");
+        hoaDonRef.child(String.valueOf(hoaDon.getMaHD())).child("tinhTrang").setValue(hoaDon.getTinhTrang());
+    }
 }

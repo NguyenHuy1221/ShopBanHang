@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.DAO.HoaDonDAO;
+import com.example.shopbanhang.Model.ChiTietHoaDon;
 import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.HoaDon;
@@ -37,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,8 +66,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
     public void onBindViewHolder(@NonNull @NotNull HoaDonViewHoder holder, int position) {
         HoaDon hoaDon = mHoadon.get(position);
         holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
-//        holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
-//
+
         holder.tvNgaytao.setText("Ngày Tạo : " + hoaDon.getNgaytaoHD());
         holder.tvGiotao.setText(hoaDon.getGiotaoHD());
 
@@ -75,13 +76,36 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         DuLieuTaiKhoan(hoaDon.getIdKhachHang(),holder);
 //        holder.setSanPhamList(hoaDon.getSanPhamList());
 //
-//        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
 //        holder.tvTrangThai.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 ////                showUpdateStatusDialog(hoaDon);
 //            }
 //        });
+        holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
+
+        DatabaseReference chiTietHoaDonRef = FirebaseDatabase.getInstance().getReference("chitiethoadon");
+        chiTietHoaDonRef.orderByChild("hoa_don").equalTo(hoaDon.getMaHD()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    List<ChiTietHoaDon> chiTietHoaDonList = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ChiTietHoaDon chiTietHoaDon = snapshot.getValue(ChiTietHoaDon.class);
+                        chiTietHoaDonList.add(chiTietHoaDon);
+                    }
+
+                    // Tạo một thể hiện của ChiTietDonHangAdapter và đặt nó cho rcy_don_hang
+                    ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(chiTietHoaDonList);
+                    holder.rcy_don_hang.setAdapter(chiTietDonHangAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu cần thiết
+            }
+        });
     }
 
 //    private void showUpdateStatusDialog(HoaDon hoaDon) {
@@ -183,10 +207,6 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
 
-        }
-        public void setSanPhamList(List<HoaDon> mListHoaDon) {
-            ChiTietDonHangAdapter chiTietDonHangAdapter = new ChiTietDonHangAdapter(mListHoaDon);
-            rcy_don_hang.setAdapter(chiTietDonHangAdapter);
         }
 
     }
