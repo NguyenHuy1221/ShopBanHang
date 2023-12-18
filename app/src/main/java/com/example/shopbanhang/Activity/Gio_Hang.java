@@ -158,25 +158,13 @@ public class Gio_Hang extends AppCompatActivity {
         mDatabaseReference.orderByChild("id_khach_hang").equalTo(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                mlistGioHang.clear();
                 for (DataSnapshot postSnapshot: snapshot.getChildren() ){
                     GioHang gioHang = postSnapshot.getValue(GioHang.class);
                     mlistGioHang.add(gioHang);
                     senDataChiTietCart(gioHang.getId_gio_hang());
                 }
-                gioHangAdapter = new GioHangAdapter(context, mListChiTiet, new GioHangAdapter.IclickListener() {
-                    @Override
-                    public void onItemChanged(ChiTietGioHang chiTietGioHang) {
-                        updateCart(chiTietGioHang);
-                    }
 
-                    @Override
-                    public void onclickDeleteCart(ChiTietGioHang chiTietGioHang) {
-                        deleteCart(chiTietGioHang);
-                    }
-                });
-
-                recyclerView.setAdapter(gioHangAdapter);
 
             }
 
@@ -209,7 +197,21 @@ public class Gio_Hang extends AppCompatActivity {
                     txtTien.setText(formatTien(tongTienSanPham));
                     tvTienSanPham.setText(formatTien(tongTienSanPham));
                     Log.d("HUY","tổng tiền đã tính : " + formatTien(tongTienSanPham) );
-                    gioHangAdapter.notifyDataSetChanged();
+                    gioHangAdapter = new GioHangAdapter(context, mListChiTiet, new GioHangAdapter.IclickListener() {
+                        @Override
+                        public void onItemChanged(ChiTietGioHang chiTietGioHang) {
+                            updateCart(chiTietGioHang);
+                        }
+
+                        @Override
+                        public void onclickDeleteCart(ChiTietGioHang chiTietGioHang) {
+                            deleteCart(chiTietGioHang);
+                        }
+                    });
+
+                    recyclerView.setAdapter(gioHangAdapter);
+
+
 
                 }
             }
