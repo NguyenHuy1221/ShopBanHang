@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -52,9 +53,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -196,12 +200,14 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         }
                     }
                 });
-//                kiemtradulieu(spinnerMau,spinnerSize);
+//                kiemtradulieu(String.valueOf(spinnerMau.getSelectedItem()), String.valueOf(spinnerSize.getSelectedItem()));
                 AddsizeColor addsizeColor1 = new AddsizeColor(tvName,spinnerSize,spinnerMau,editTextSoLuong);
 
+                map.put(id, addsizeColor1);
 
                 // Thêm cặp vào HashMap theo id
-                map.put(id, addsizeColor1);
+//                map.put(id, addsizeColor1);
+
 //                btnthem.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
@@ -228,36 +234,65 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
 
     }
-    private List<ChiTietSanPhamfix> chiTietSanPhams = new ArrayList<>();
 
-    private void kiemtradulieu(String mau , String kickco) {
-        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        int idsanpham = Integer.parseInt(edt_masp.getText().toString());
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Chitietsanpham");
-        DatabaseReference userRef = myRef.child(String.valueOf(idsanpham));
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (chiTietSanPhams != null) {
-                    chiTietSanPhams.clear();
+    // Tạo một hàm để so sánh size và color trong HashMap
+//    public static boolean compareSizeAndColor (HashMap<Integer, AddsizeColor> map) {
+//        // Tạo một HashSet để lưu trữ các cặp size và color đã thấy
+//        Set<String> seen = map;
+//
+//        // Duyệt qua các phần tử trong HashMap
+//        for (Map.Entry<Integer, AddsizeColor> entry : map.entrySet ()) {
+//            // Lấy size và color từ giá trị của phần tử
+//            String size = String.valueOf(entry.getValue ().getSpnsize().getSelectedItem());
+//            String color = String.valueOf(entry.getValue ().getSpncolor().getSelectedItem());
+//
+//            // Tạo một chuỗi để biểu diễn cặp size và color
+//            String pair = size + "-" + color;
+//
+//            // Kiểm tra xem cặp này đã xuất hiện trước đó hay chưa
+//            if (seen.contains (pair)) {
+//                // Nếu có, thì trả về false và dừng hàm
+//                return false;
+//            } else {
+//                // Nếu không, thì thêm cặp này vào HashSet
+//                seen.add (pair);
+//            }
+//        }
+//
+//        // Nếu không có cặp size và color nào trùng nhau, thì trả về true
+//        return true;
+//    }
 
-                }
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    ChiTietSanPhamfix chiTietSanPham = dataSnapshot.getValue(ChiTietSanPhamfix.class);
-                    if (chiTietSanPham != null){
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    private List<ChiTietSanPhamfix> chiTietSanPhams = new ArrayList<>();
+//
+//    private void kiemtradulieu(String mau , String kickco) {
+//        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+//        int idsanpham = Integer.parseInt(edt_masp.getText().toString());
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("Chitietsanpham");
+//        DatabaseReference userRef = myRef.child(String.valueOf(idsanpham));
+//        userRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (chiTietSanPhams != null) {
+//                    chiTietSanPhams.clear();
+//
+//                }
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    ChiTietSanPhamfix chiTietSanPham = dataSnapshot.getValue(ChiTietSanPhamfix.class);
+//                    if (chiTietSanPham != null){
+//
+//                    }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
 
     public void themSanPham(){
@@ -331,6 +366,40 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (map != null){
+                    // Sử dụng vòng lặp for để duyệt qua các khóa của HashMap
+                    for (Integer i : map.keySet()) {
+
+                        // Lấy giá trị của HashMap tại khóa i
+                        AddsizeColor value1 = map.get(i);
+
+                        // Sử dụng vòng lặp for khác để duyệt qua các khóa còn lại của HashMap
+                        for (Integer j : map.keySet()) {
+
+                            // Nếu i và j bằng nhau, bỏ qua vòng lặp này
+                            if (i.equals(j)) {
+                                continue;
+                            }
+
+                            // Lấy giá trị của HashMap tại khóa j
+                            AddsizeColor value2 = map.get(j);
+
+                            // So sánh size và color của hai giá trị bằng phương thức equalsIgnoreCase ()
+                            if (value1.getSpnsize().getSelectedItem().toString().equals(value2.getSpnsize().getSelectedItem().toString()) && value1.getSpncolor().getSelectedItem().toString().equals(value2.getSpncolor().getSelectedItem().toString())) {
+
+                                // Nếu size và color trùng nhau, hiển thị thông báo và dừng hàm
+                                Toast.makeText(ThemSanPhamActivity.this, "Có Màu và kích cỡ bị trùng", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(context, "bạn chưa thêm chi tiết sản phẩm", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
                 String masp2 = edt_masp.getText().toString().trim();
 //                String sizesp2 = spinnerSize.getSelectedItem().toString();
 //                String mausp2 = spinnerMau.getSelectedItem().toString();
@@ -364,11 +433,14 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         }
                     }
                     int solgsp;
+
+//                    sortDescending(map);
                     solgsp = Integer.parseInt(solgspString);
 //                    String id = UUID.randomUUID().toString();
 //                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
 //                    pushData(chiTietSanPham);
                     for (int id2 : map.keySet()){
+
                         AddsizeColor addsizeColor1 = map.get(id2);
                         String spinnerkichco = addsizeColor1.getSpnsize().getSelectedItem().toString();
                         String spinnermau = addsizeColor1.getSpncolor().getSelectedItem().toString();
@@ -388,6 +460,37 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 
     }
 
+//    public void sortDescending() {
+//        // Sử dụng vòng lặp for để duyệt qua các khóa của HashMap
+//        for (Integer i : map.keySet()) {
+//
+//            // Lấy giá trị của HashMap tại khóa i
+//            AddsizeColor value1 = map.get(i);
+//
+//            // Sử dụng vòng lặp for khác để duyệt qua các khóa còn lại của HashMap
+//            for (Integer j : map.keySet()) {
+//
+//                // Nếu i và j bằng nhau, bỏ qua vòng lặp này
+//                if (i.equals(j)) {
+//                    continue;
+//                }
+//
+//                // Lấy giá trị của HashMap tại khóa j
+//                AddsizeColor value2 = map.get(j);
+//
+//                // So sánh size và color của hai giá trị bằng phương thức equalsIgnoreCase ()
+//                if (value1.getSpnsize().toString().equals(value2.getSpnsize().toString()) && value1.getSpncolor().toString().equals(value2.getSpncolor().toString())) {
+//
+//                    // Nếu size và color trùng nhau, hiển thị thông báo và dừng hàm
+//                    Toast.makeText(ThemSanPhamActivity.this, "trùng nhau" +value1.getSpnsize() + value2.getSpnsize(), Toast.LENGTH_SHORT).show();
+//                    return;
+//                } else {
+//                    Toast.makeText(ThemSanPhamActivity.this, "Không vấn đề gì" +value1.getSpnsize() + value2.getSpnsize(), Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        }
+//    }
 
 
 
@@ -433,6 +536,18 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                     // Đợi tất cả các tác vụ tải lên hình chi tiết hoàn thành
                     new Thread(() -> {
                         try {
+//                            if (map != null){
+//                                for (int i = 0; i < map.size();i++){
+//                                    if (map.get(i).getSpncolor().equals() && map.get(i).getSpnsize().equals()){
+//                                        Toast.makeText(context, "Màu và size này đã tồn tại", Toast.LENGTH_SHORT).show();
+//
+//                                        return;
+//                                    }
+//                                }
+//                            }
+
+
+
                             latch.await();
                             SanPhamDAO sanPhamDAO = new SanPhamDAO();
                             SanPham sanPham = new SanPham(System.currentTimeMillis(),masp, tensp, solgsp, solgban, gianhap, giaban, thuonghieu, trangthai, ghichu, uri.toString(), urlList);
