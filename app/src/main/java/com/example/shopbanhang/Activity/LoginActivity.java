@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
                     startActivity(intent);
                 } else {
-//                    Toast.makeText(LoginActivity.this, "không lỗi", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
 
                     signUp();
                 }

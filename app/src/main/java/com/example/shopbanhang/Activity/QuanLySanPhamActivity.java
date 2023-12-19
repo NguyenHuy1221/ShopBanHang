@@ -166,7 +166,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                         if (chiTietSanPham.getMasp() == sanPham.getMasp()){
 //                                            if (chiTietSanPham.getIdchitietsanpham() != null){
 //                                                chiTietSanPhams.add(chiTietSanPham);
-                                            Toast.makeText(QuanLySanPhamActivity.this, "Xóa thành công chi tiết sản phẩm"+chiTietSanPham.getMasp() , Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(QuanLySanPhamActivity.this, "Xóa thành công chi tiết sản phẩm "+chiTietSanPham.getMasp() , Toast.LENGTH_SHORT).show();
 
                                             myRef2.child(String.valueOf(chiTietSanPham.getIdchitietsanpham())).removeValue();
 

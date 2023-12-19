@@ -100,10 +100,11 @@ public class SignupActivity extends AppCompatActivity {
                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                 TaiKhoan taiKhoan = new TaiKhoan(id,"https://firebasestorage.googleapis.com/v0/b/shopbanhang-38995.appspot.com/o/TaiKhoan%2Fno_image.png?alt=media&token=4a0b719e-6261-44b9-bf56-f509e0775ed2",hotenkh,emailkh,matkhaukh,"none","none","none","none");
                                 pushData(taiKhoan);
+                                Toast.makeText(SignupActivity.this, "Đăng kí thành công", Toast.LENGTH_SHORT).show();
                                 startActivity(intent);
                                 finishAffinity();
                             } else {
-                                Toast.makeText(SignupActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignupActivity.this, "Đăng kí không thành công", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

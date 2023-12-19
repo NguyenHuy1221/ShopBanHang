@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.ChiTietDonHangAdapter;
@@ -35,6 +38,7 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
     private List<HoaDon> mListhoadon = new ArrayList<>();
     private Context context = this;
     private int user;
+    ImageView btnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,9 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
 
             }
         });
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
+
     }
 
     private void setAdapterHoaDon() {

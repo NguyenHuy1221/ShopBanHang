@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.shopbanhang.Model.ChiTietTaiKhoan;
@@ -137,7 +138,7 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
                 editor.commit();
 
 
-
+                Toast.makeText(Trang_Ca_Nhan.this, "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
                 startActivity(intent);
             }

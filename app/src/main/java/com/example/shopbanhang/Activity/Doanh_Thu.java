@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.shopbanhang.Adapter.DoanhThuAdapter;
 import com.example.shopbanhang.Adapter.KhuyenMaiAdapter;
+import com.example.shopbanhang.Model.ChiTietSanPhamfix;
 import com.example.shopbanhang.Model.DoanhThu;
 import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.Model.KhuyenMai;
@@ -56,6 +57,7 @@ public class Doanh_Thu extends AppCompatActivity {
     private List<HoaDon> list = new ArrayList<>();
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     Button tinhtien;
+    ImageView toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,11 +99,14 @@ public class Doanh_Thu extends AppCompatActivity {
                     return;
                 } else {
                     getDataFirebase();
+                    Toast.makeText(Doanh_Thu.this, "Tổng doanh thu của bạn đây", Toast.LENGTH_SHORT).show();
                 }
 
 
             }
         });
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setOnClickListener(v -> finish());
     }
 
 

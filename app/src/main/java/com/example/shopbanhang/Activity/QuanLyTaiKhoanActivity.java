@@ -85,7 +85,6 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 themtk();
-
             }
         });
 
@@ -268,7 +267,6 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
         btnttk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference=firebaseDatabase.getReference("TaiKhoan");
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("TaiKhoan").child(uri.getLastPathSegment());
@@ -341,7 +339,7 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
+        addtk=findViewById(R.id.addtk);
         recycle_qltk = findViewById(R.id.recycle_qltk);
         backBtntk = findViewById(R.id.backBtntk);
 //        backBtntk.setOnClickListener(v -> finish());

@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryMainAdapter extends RecyclerView.Adapter<CategoryMainAdapter.ViewHolder> {
+public class      CategoryMainAdapter extends RecyclerView.Adapter<CategoryMainAdapter.ViewHolder> {
 
     private Context mContext;
     private List<ThuongHieu> thuongHieus;

@@ -451,6 +451,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
                         ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
                         pushData(chiTietSanPham2);
                     }
+                    Toast.makeText(context, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
                     uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp,  trangthaisp, ghichu,selectedImages);
 
                 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.example.shopbanhang.Adapter.ChiTietDonHangAdapter;
 import com.example.shopbanhang.Adapter.HoaDonAdapter;
@@ -34,7 +35,7 @@ public class QuanLyDonHangActivity extends AppCompatActivity {
     private List<HoaDon> mListhoadon = new ArrayList<>();
     private Context context = this;
     private String user;
-
+    ImageView btnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +69,8 @@ public class QuanLyDonHangActivity extends AppCompatActivity {
 
             }
         });
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void setAdapterHoaDon() {

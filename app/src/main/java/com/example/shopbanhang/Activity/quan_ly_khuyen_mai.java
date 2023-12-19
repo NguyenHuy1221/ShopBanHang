@@ -276,7 +276,6 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                 String ngayBatDau = txtNgayBatDauAddKM.getText().toString().trim();
                 String ngayKetThuc = txtNgayKetThucAddKM.getText().toString().trim();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
                 try {
                     Date ngayBatDauKM = simpleDateFormat.parse(txtNgayBatDauAddKM.getText().toString());
                     Date ngayKetThucKM = simpleDateFormat.parse(txtNgayKetThucAddKM.getText().toString());
@@ -315,11 +314,12 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                             }
                         });
                     }
-
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
+
                 }
             }
+
         });
 
     }

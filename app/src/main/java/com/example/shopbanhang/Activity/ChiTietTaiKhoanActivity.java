@@ -47,6 +47,7 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String IMAGE_URL_KEY = "imageUrlKey";
+    ImageView btnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +107,8 @@ public class ChiTietTaiKhoanActivity extends AppCompatActivity {
         }
 
         HienThiThongTin();
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void anhxa() {
