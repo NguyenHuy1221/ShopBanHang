@@ -2,10 +2,17 @@ package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -66,6 +73,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
 
     private Context context = this ;
     private int idKhachHang;
+    private static final String CHANNEL_ID = "com.example.shopbanhang.notification.channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +114,6 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                     hoaDon = new HoaDon(id,idKhachHang,DateToday,TimeToday,trangthai,0,strDiaChi,tien);
                     getDataFirebasesanpham();
                     addHoaDon(hoaDon);
-
                 }
             }
         });
@@ -234,6 +241,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                             addChiTietHoaDon(hoaDon.getMaHD());
                             clearGioHangData(idKhachHang);
                             Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                            createNotification();
                         } else {
                             Toast.makeText(ThanhToanMainActivity.this, "Lỗi khi thêm hóa đơn", Toast.LENGTH_SHORT).show();
                         }
@@ -272,7 +280,8 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                     clearChiTietGioHangData(gioHang.getId_gio_hang());
                 }
                 gioHangList.clear();
-                startActivity(new Intent(ThanhToanMainActivity.this, TrangChuActivity.class));
+                startActivity(new Intent(ThanhToanMainActivity.this, DatHangThanhCongActivity.class));
+                finish();
             }
 
             @Override
@@ -307,5 +316,73 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         return formatter.format(value) + " đ";
     }
 
+    private void createNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "My Notification Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("Mô tả kênh");
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(this, LichSuHoaDonMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Tạo thông báo
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.h1)
+                .setContentTitle("THÔNG BÁO MUA HÀNG")
+                .setContentText("Cảm ơn bạn đã quan tâm và ủng hộ!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        // Hiển thị thông báo
+        notificationManager.notify(1, builder.build());
+
+    }
+
+
+    private void ThongBaoDenAdmin(int idKhachHang) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "My Notification Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("Mô tả kênh");
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(this, LichSuHoaDonMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Tạo thông báo
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.h1)
+                .setContentTitle("THÔNG BÁO MUA HÀNG")
+                .setContentText("Có đơn hàng cần !")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        // Hiển thị thông báo
+        notificationManager.notify(2, builder.build());
+
+    }
 
 }
