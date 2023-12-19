@@ -129,6 +129,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                     });
                     recyclerView.setAdapter(sanPhamAdapter);
                     sanPhamAdapter.updateList(sanPhams);
+                sanPhamAdapter.notifyDataSetChanged();
             }
 
             @Override
