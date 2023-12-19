@@ -80,10 +80,6 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private ImageView imgBack;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,6 +196,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         Intent intent = new Intent(QuanLySanPhamActivity.this, SuaSanPhamActivity.class);
         intent.putExtra("SAN_PHAM", sanPham);
         intent.putExtra("masanpham", sanPham.getMasp());
+        intent.putExtra("anhSanPham", sanPham.getImageUrl());
 
         List<String> urlChiTiet = sanPham.getUrlChiTiet();
         if (urlChiTiet!= null){
@@ -208,6 +205,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
 
 
     private void addProducts() {

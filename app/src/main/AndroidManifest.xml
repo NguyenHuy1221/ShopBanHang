@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopBanHang"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.ThongKeActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.DatHangThanhCongActivity"
             android:exported="false" />
@@ -32,7 +34,7 @@
             android:name=".Activity.SearchMainActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.QuanLySanPhamActivity"
+            android:name=".Activity.SuaSanPhamActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SanPhamYeuThichMainActivity"
@@ -56,7 +58,7 @@
             android:name=".DialogThemTaiKhoanActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TrangChuActivity"
+            android:name=".Activity.QuanLySanPhamActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.ForgotpwActivity"
@@ -77,16 +79,16 @@
             android:name=".Activity.QuanLyKhoActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.ThuongHieuActivity"
+            android:name=".Activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.SuaSanPhamActivity"
+            android:name=".Activity.ThuongHieuActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Doanh_Thu"
             android:exported="false" />
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name=".Activity.TrangChuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -40,6 +40,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -83,6 +85,9 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
         idKhachHang = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
         Log.d("HUY","id kahcs hang : " + idKhachHang);
+
+
+
 
         anhxa();
         sendDataCart();
@@ -350,39 +355,5 @@ public class ThanhToanMainActivity extends AppCompatActivity {
 
     }
 
-
-    private void ThongBaoDenAdmin(int idKhachHang) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "My Notification Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            channel.setDescription("Mô tả kênh");
-            channel.enableLights(true);
-            channel.setLightColor(Color.BLUE);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        Intent intent = new Intent(this, LichSuHoaDonMainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Tạo thông báo
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.h1)
-                .setContentTitle("THÔNG BÁO MUA HÀNG")
-                .setContentText("Có đơn hàng cần !")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        // Hiển thị thông báo
-        notificationManager.notify(2, builder.build());
-
-    }
 
 }

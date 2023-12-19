@@ -106,12 +106,16 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("SAN_PHAM")) {
             SanPham sanPham = (SanPham) intent.getSerializableExtra("SAN_PHAM");
             masanpham = intent.getIntExtra("masanpham",0);
+
+
+
             Log.d("HUY", "Received SanPham: " + sanPham.toString());
             Log.d("HUY", "Received SanPham: " + masanpham);
         }else {
             Log.e("HUY", "Intent does not have SANPHAM_EXTRA");
         }
 
+        Log.d("HUY","Ảnh : " + mImageUri);
 
 
 
@@ -400,7 +404,10 @@ public class SuaSanPhamActivity extends AppCompatActivity {
 //                    String id = UUID.randomUUID().toString();
 //                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,0);
 //                    pushData(chiTietSanPham);
-                    updateSanPham(mSanPham, mImageUri, Integer.parseInt(masp), System.currentTimeMillis(), tensp, Integer.parseInt(solgspString),
+//                    updateSanPham(mSanPham, mImageUri, Integer.parseInt(masp), System.currentTimeMillis(), tensp, Integer.parseInt(solgspString),
+//                            mSanPham.getSoluongban(), Double.parseDouble(gianhap), Double.parseDouble(giaban),
+//                            loaisp,image, trangthaisp, ghichu);
+                    updateSanPham(mSanPham, Integer.parseInt(masp), System.currentTimeMillis(), tensp, Integer.parseInt(solgspString),
                             mSanPham.getSoluongban(), Double.parseDouble(gianhap), Double.parseDouble(giaban),
                             loaisp,image, trangthaisp, ghichu);
 
@@ -448,7 +455,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
 
     }
 
-    private void updateSanPham(SanPham sanPham,Uri mImageUri,int masp,long time,String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu,String image,  String trangthai, String ghichu) {
+    private void updateSanPham(SanPham sanPham,int masp,long time,String tensp, int solgsp, int solgban, double gianhap, double giaban, String thuonghieu,String image,  String trangthai, String ghichu) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
@@ -463,7 +470,10 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             sanPham.setGianhap(gianhap);
             sanPham.setGiaban(giaban);
             sanPham.setThuonghieu(thuonghieu);
-            sanPham.setImageUrl(String.valueOf(img_chinh));
+            Intent intent1 = getIntent();
+            String anhSanPhamUrl = intent1.getStringExtra("anhSanPham");
+            Log.d("HUY", "Ảnh lấy dữ liệu  " + anhSanPhamUrl);
+            sanPham.setImageUrl(String.valueOf(anhSanPhamUrl));
 
 //                        sanPham.setMausp(mau);
 //                        sanPham.setSizesp(size);
@@ -474,7 +484,6 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             sanPhamDAO.updateProducts(sanPham);
             progressDialog.dismiss();
 
-            Toast.makeText(context, "Sửa thành công not anh" +sanPham.getMasp(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
             startActivity(intent);
             finish();
@@ -519,6 +528,8 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         }
 
     }
+
+
 
 
     public void suachitietsanpham(ChiTietSanPhamfix chiTietSanPham){
