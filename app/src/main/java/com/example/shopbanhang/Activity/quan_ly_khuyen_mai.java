@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import com.example.shopbanhang.Adapter.KhuyenMaiAdapter;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.R;
 import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -56,7 +58,7 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
     private KhuyenMaiAdapter khuyenMaiAdapter;
     private RecyclerView recycle_qlkm;
     private ImageView backBtnKM, imgKM,imgLichBD,imgLichKT;
-    private EditText txtNgayBatDauAddKM, txtNgayKetThucAddKM;
+    private TextView txtNgayBatDauAddKM, txtNgayKetThucAddKM;
     private Uri uri;
     private List<KhuyenMai> list = new ArrayList<>();
     private DatePickerDialog.OnDateSetListener onDateSetListener;
@@ -143,35 +145,21 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         btnThemKM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String id = UUID.randomUUID().toString();
                 String tenKM = txtNameAddKM.getText().toString().trim();
                 String phanTramKM = txtPhanTramAddKM.getText().toString().trim();
-                String ngayBatDau = txtNgayBatDauAddKM.getText().toString().trim();
+                String ngayBatDau = txtNgayBatDauAddKM.getText().toString();
                 String ngayKetThuc = txtNgayKetThucAddKM.getText().toString().trim();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
                 try {
-                    Date ngayBatDauKM = simpleDateFormat.parse(txtNgayBatDauAddKM.getText().toString());
+                    Date ngayBatDauKM =  simpleDateFormat.parse(txtNgayBatDauAddKM.getText().toString());
                     Date ngayKetThucKM = simpleDateFormat.parse(txtNgayKetThucAddKM.getText().toString());
-                    if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
+
+                      if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
                         Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
                     } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
                         Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
-                    } else if (tenKM.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (phanTramKM.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (ngayBatDau.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (ngayKetThuc.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (uri == null) {
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
-                        return;
                     }
                     else  {
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("KhuyenMai").child(uri.getLastPathSegment());
@@ -189,7 +177,19 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                         });
                     }
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                     if (uri == null) {
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
+                    } else if (ngayBatDau.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
+                    } else if (ngayKetThuc.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
+                    } else if (tenKM.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+                    } else if (phanTramKM.equals("")){
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
 
             }
@@ -222,6 +222,7 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         txtEditNgayKetThucKM.setText(khuyenMai.getNgayKetThuc());
         imgLichBD = view.findViewById(R.id.imgLichBD);
         imgLichKT = view.findViewById(R.id.imgLichKT);
+
 
         imgLichBD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,54 +266,100 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         btnThemKM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("KhuyenMai");
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("KhuyenMai").child(uri.getLastPathSegment());
+                FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
+                StorageReference storageRef = storage.getReference();
+                StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
+                ProgressDialog progressDialog = ProgressDialog.show(quan_ly_khuyen_mai.this, "Chờ Chút", "Đang tải lên hình ảnh...", true);
 
                 String tenKhuyenMaiMoi = txtEditTenKM.getText().toString().trim();
                 String phanTramKhuyenMaiMoi = txtEditPhanTramKM.getText().toString().trim();
                 String ngayBatDauKhuyenMaiMoi = txtEditNgayBatDauKM.getText().toString().trim();
                 String ngayKetThucKhuyenMaiMoi = txtEditNgayKetThucKM.getText().toString().trim();
-                String ngayBatDau = txtNgayBatDauAddKM.getText().toString().trim();
-                String ngayKetThuc = txtNgayKetThucAddKM.getText().toString().trim();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-                    Date ngayBatDauKM = simpleDateFormat.parse(txtNgayBatDauAddKM.getText().toString());
-                    Date ngayKetThucKM = simpleDateFormat.parse(txtNgayKetThucAddKM.getText().toString());
+                    Date ngayBatDauKM = simpleDateFormat.parse(ngayBatDauKhuyenMaiMoi);
+                    Date ngayKetThucKM = simpleDateFormat.parse(ngayKetThucKhuyenMaiMoi);
 
-                    if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
-                    } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
-                    } else if (tenKhuyenMaiMoi.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (phanTramKhuyenMaiMoi.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (ngayBatDau.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (ngayKetThuc.equals("")){
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
-                        return;
-                    }else {
-                        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                                while (!uriTask.isComplete());
-                                Uri uriImg = uriTask.getResult();
-                                String img = uriImg.toString();
-                                khuyenMai.setImgKhuyenMai(img);
-                                khuyenMai.setTenKhuyenMai(tenKhuyenMaiMoi);
-                                khuyenMai.setPhanTramKhuyenMai(phanTramKhuyenMaiMoi);
-                                khuyenMai.setNgayBatDau(ngayBatDauKhuyenMaiMoi);
-                                khuyenMai.setNgayKetThuc(ngayKetThucKhuyenMaiMoi);
-                                databaseReference.child(khuyenMai.getIdKhuyenMai()).updateChildren(khuyenMai.toMap());
-                                dialog.dismiss();
-                            }
-                        });
+//                    if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
+//                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
+//                    } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
+//                        Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
+//                    } else if (tenKhuyenMaiMoi.equals("")){
+//                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+//                    } else if (phanTramKhuyenMaiMoi.equals("")){
+//                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                      if (uri == null) {
+                        if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
+                            Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
+                            Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        } else if (tenKhuyenMaiMoi.equals("")){
+                            Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        } else if (phanTramKhuyenMaiMoi.equals("")){
+                            Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }else {
+                            khuyenMai.setImgKhuyenMai(khuyenMai.getImgKhuyenMai());
+                            khuyenMai.setTenKhuyenMai(tenKhuyenMaiMoi);
+                            khuyenMai.setPhanTramKhuyenMai(phanTramKhuyenMaiMoi);
+                            khuyenMai.setNgayBatDau(ngayBatDauKhuyenMaiMoi);
+                            khuyenMai.setNgayKetThuc(ngayKetThucKhuyenMaiMoi);
+                            databaseReference.child(khuyenMai.getIdKhuyenMai()).updateChildren(khuyenMai.toMap());
+                            progressDialog.dismiss();
+                            dialog.dismiss();
+                            Toast.makeText(quan_ly_khuyen_mai.this, "Sửa thành công", Toast.LENGTH_SHORT).show();
+
+                        }
+
+
+                    } else {
+                          if (ngayKetThucKM.compareTo(ngayBatDauKM) == 0){
+                              Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
+                              progressDialog.dismiss();
+                          } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
+                              Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
+                              progressDialog.dismiss();
+                          } else if (tenKhuyenMaiMoi.equals("")){
+                              Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập tên khuyến mãi", Toast.LENGTH_SHORT).show();
+                              progressDialog.dismiss();
+                          } else if (phanTramKhuyenMaiMoi.equals("")){
+                              Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập phần trăm khuyến mãi", Toast.LENGTH_SHORT).show();
+                              progressDialog.dismiss();
+                          }else {
+                              imageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                  @Override
+                                  public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                      Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                      while (!uriTask.isComplete());
+                                      Uri uriImg = uriTask.getResult();
+                                      String img = uriImg.toString();
+                                      khuyenMai.setImgKhuyenMai(img);
+                                      khuyenMai.setTenKhuyenMai(tenKhuyenMaiMoi);
+                                      khuyenMai.setPhanTramKhuyenMai(phanTramKhuyenMaiMoi);
+                                      khuyenMai.setNgayBatDau(ngayBatDauKhuyenMaiMoi);
+                                      khuyenMai.setNgayKetThuc(ngayKetThucKhuyenMaiMoi);
+                                      databaseReference.child(khuyenMai.getIdKhuyenMai()).updateChildren(khuyenMai.toMap());
+                                      progressDialog.dismiss();
+                                      dialog.dismiss();
+                                      Toast.makeText(quan_ly_khuyen_mai.this, "Sửa thành công", Toast.LENGTH_SHORT).show();
+
+
+                                  }
+                              }).addOnFailureListener(new OnFailureListener() {
+                                  @Override
+                                  public void onFailure(@NonNull Exception e) {
+                                      progressDialog.dismiss();
+                                      Toast.makeText(quan_ly_khuyen_mai.this, "ERROR", Toast.LENGTH_SHORT).show();
+                                  }
+                              });
+                          }
+
                     }
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
@@ -452,11 +499,7 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         };
     }
 
-    private void kiemTraNgay(){
 
-
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -472,7 +515,6 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
         recycle_qlkm = findViewById(R.id.recycle_qlkm);
         backBtnKM = findViewById(R.id.backBtnKM);
         backBtnKM.setOnClickListener(v -> finish());
-
     }
 
 

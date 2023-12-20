@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import com.example.shopbanhang.Adapter.TaiKhoanAdapter;
 import com.example.shopbanhang.Model.KhuyenMai;
 import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -81,12 +83,12 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
 
 
 
-        addtk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                themtk();
-            }
-        });
+//        addtk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                themtk();
+//            }
+//        });
 
         getlist();
     }
@@ -157,76 +159,76 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
 //        return list;
 //    }
 
-    private void themtk() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyTaiKhoanActivity.this);
-        LayoutInflater inflater = ((Activity)this).getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_them_tai_khoan,null);
-        builder.setView(view);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        Button btnttk=view.findViewById(R.id.btnttk);
-        imgtk=view.findViewById(R.id.imgtk);
-//        edtidtk=view.findViewById(R.id.edtidtk);
-        edtemailtk=view.findViewById(R.id.edtemailtk);
-        edtmktk=view.findViewById(R.id.edtmktk);
-        edtdctk=view.findViewById(R.id.edtdctk);
-        edttentk=view.findViewById(R.id.edttentk);
-        edtsdttk=view.findViewById(R.id.edtsdttk);
-        edttttk=view.findViewById(R.id.edttttk);
-        edtnttk=view.findViewById(R.id.edtnttk);
-        imgtk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                oppenFile();
-            }
-        });
-
-
-        btnttk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (edtemailtk.getText().toString().trim().equals("") ||
-                        edtmktk.getText().toString().trim().equals("") ||
-                        edttentk.getText().toString().trim().equals("")||
-                        edtdctk.getText().toString().trim().equals("")||
-                        edtsdttk.getText().toString().trim().equals("")||
-                        edttttk.getText().toString().trim().equals("")||
-                        edtnttk.getText().toString().trim().equals("")){
-                    Toast.makeText(QuanLyTaiKhoanActivity.this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-//                } else if (uri==null) {
-//                    Toast.makeText(context, "Chưa cho hình ảnh", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    Toast.makeText(QuanLyTaiKhoanActivity.this, "Thêm tài khoản thành công", Toast.LENGTH_SHORT).show();
-                    StorageReference storage = FirebaseStorage.getInstance().getReference().child("taikhoan").child(uri.getLastPathSegment());
-
-                    storage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!uriTask.isComplete());
-                            Uri urlimg = uriTask.getResult();
-                            String img = urlimg.toString();
-                            Random random = new Random();
-                            String id = String.valueOf(random.nextInt(1000000));
-                            String email = edtemailtk.getText().toString().trim();
-                            String mk = edtmktk.getText().toString().trim();
-                            String ten = edttentk.getText().toString().trim();
-                            String dc = edtdctk.getText().toString().trim();
-                            String tt = edttttk.getText().toString().trim();
-                            String nt = edtnttk.getText().toString().trim();
-                            String sdt = edtsdttk.getText().toString().trim();
-                            TaiKhoan taiKhoan = new TaiKhoan(id,img,ten,email,mk,sdt,dc,nt,tt);
-                            pushData(taiKhoan);
-                            dialog.dismiss();
-                        }
-                    });
-
-                }
-            }
-        });
-    }
+//    private void themtk() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyTaiKhoanActivity.this);
+//        LayoutInflater inflater = ((Activity)this).getLayoutInflater();
+//        View view = inflater.inflate(R.layout.dialog_them_tai_khoan,null);
+//        builder.setView(view);
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//        Button btnttk=view.findViewById(R.id.btnttk);
+//        imgtk=view.findViewById(R.id.imgtk);
+////        edtidtk=view.findViewById(R.id.edtidtk);
+//        edtemailtk=view.findViewById(R.id.edtemailtk);
+//        edtmktk=view.findViewById(R.id.edtmktk);
+//        edtdctk=view.findViewById(R.id.edtdctk);
+//        edttentk=view.findViewById(R.id.edttentk);
+//        edtsdttk=view.findViewById(R.id.edtsdttk);
+//        edttttk=view.findViewById(R.id.edttttk);
+//        edtnttk=view.findViewById(R.id.edtnttk);
+//        imgtk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                oppenFile();
+//            }
+//        });
+//
+//
+//        btnttk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (edtemailtk.getText().toString().trim().equals("") ||
+//                        edtmktk.getText().toString().trim().equals("") ||
+//                        edttentk.getText().toString().trim().equals("")||
+//                        edtdctk.getText().toString().trim().equals("")||
+//                        edtsdttk.getText().toString().trim().equals("")||
+//                        edttttk.getText().toString().trim().equals("")||
+//                        edtnttk.getText().toString().trim().equals("")){
+//                    Toast.makeText(QuanLyTaiKhoanActivity.this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+////                } else if (uri==null) {
+////                    Toast.makeText(context, "Chưa cho hình ảnh", Toast.LENGTH_SHORT).show();
+//                } else {
+//
+//                    Toast.makeText(QuanLyTaiKhoanActivity.this, "Thêm tài khoản thành công", Toast.LENGTH_SHORT).show();
+//                    StorageReference storage = FirebaseStorage.getInstance().getReference().child("taikhoan").child(uri.getLastPathSegment());
+//
+//                    storage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+//                            while (!uriTask.isComplete());
+//                            Uri urlimg = uriTask.getResult();
+//                            String img = urlimg.toString();
+//                            Random random = new Random();
+//                            String id = String.valueOf(random.nextInt(1000000));
+//                            String email = edtemailtk.getText().toString().trim();
+//                            String mk = edtmktk.getText().toString().trim();
+//                            String ten = edttentk.getText().toString().trim();
+//                            String dc = edtdctk.getText().toString().trim();
+//                            String tt = edttttk.getText().toString().trim();
+//                            String nt = edtnttk.getText().toString().trim();
+//                            String sdt = edtsdttk.getText().toString().trim();
+//                            TaiKhoan taiKhoan = new TaiKhoan(id,img,ten,email,mk,sdt,dc,nt,tt);
+//                            pushData(taiKhoan);
+//                            dialog.dismiss();
+//                        }
+//                    });
+//
+//                }
+//            }
+//        });
+//    }
 
     private void suataikhoan(TaiKhoan taiKhoan) {
         AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyTaiKhoanActivity.this);
@@ -269,7 +271,11 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference=firebaseDatabase.getReference("TaiKhoan");
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("TaiKhoan").child(uri.getLastPathSegment());
+                FirebaseStorage storage = FirebaseStorage.getInstance("gs://realtimedata-1e0aa.appspot.com");
+                StorageReference storageRef = storage.getReference();
+                StorageReference imageRef = storageRef.child(System.currentTimeMillis() + ".PNG");
+                ProgressDialog progressDialog = ProgressDialog.show(QuanLyTaiKhoanActivity.this, "Chờ Chút", "Đang tải lên hình ảnh...", true);
+
 
                 String emailtkMoi = edtemailtk.getText().toString().trim();
                 String tentkMoi = edttentk.getText().toString().trim();
@@ -280,15 +286,14 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
                 String tttkmoi = edttttk.getText().toString().trim();
 
 
-
-                storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isComplete());
-                        Uri uriImg = uriTask.getResult();
-                        String img = uriImg.toString();
-                        taiKhoan.setImgtk(img);
+                if(uri == null){
+                    if(emailtkMoi.equals("") || tentkMoi.equals("") || mktkmoi.equals("") || sdttkmoi.equals("") || dctkmoi.equals("")
+                    || nttkmoi.equals("") || tttkmoi.equals("")
+                    ){
+                        Toast.makeText(context, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }else{
+                        taiKhoan.setImgtk(taiKhoan.getImgtk());
                         taiKhoan.setEmailtk(emailtkMoi);
                         taiKhoan.setTentk(tentkMoi);
                         taiKhoan.setMatkhautk(mktkmoi);
@@ -298,15 +303,47 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
                         taiKhoan.setTinhtragtk(tttkmoi);
                         databaseReference.child(taiKhoan.getIdtk()).updateChildren(taiKhoan.toMap());
                         dialog.dismiss();
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Sửa Thành Công", Toast.LENGTH_SHORT).show();
                     }
-                });
 
+                }else {
+                    if(emailtkMoi.equals("") || tentkMoi.equals("") || mktkmoi.equals("") || sdttkmoi.equals("") || dctkmoi.equals("")
+                            || nttkmoi.equals("") || tttkmoi.equals("")
+                    ){
+                        Toast.makeText(context, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }else {
+                        imageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!uriTask.isComplete());
+                                Uri uriImg = uriTask.getResult();
+                                String img = uriImg.toString();
+                                taiKhoan.setImgtk(img);
+                                taiKhoan.setEmailtk(emailtkMoi);
+                                taiKhoan.setTentk(tentkMoi);
+                                taiKhoan.setMatkhautk(mktkmoi);
+                                taiKhoan.setDiachitk(dctkmoi);
+                                taiKhoan.setSdttk(sdttkmoi);
+                                taiKhoan.setNgaytaotk(nttkmoi);
+                                taiKhoan.setTinhtragtk(tttkmoi);
+                                databaseReference.child(taiKhoan.getIdtk()).updateChildren(taiKhoan.toMap());
+                                dialog.dismiss();
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "Sửa Thành Công", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
 
-
-
-
-
-
+                }
             }
         });
 
@@ -331,12 +368,12 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void pushData(TaiKhoan taiKhoan) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("TaiKhoan");
-        String pathObj = String.valueOf(taiKhoan.getIdtk());
-        databaseReference.child(pathObj).setValue(taiKhoan);
-    }
+//    private void pushData(TaiKhoan taiKhoan) {
+//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+//        DatabaseReference databaseReference = firebaseDatabase.getReference("TaiKhoan");
+//        String pathObj = String.valueOf(taiKhoan.getIdtk());
+//        databaseReference.child(pathObj).setValue(taiKhoan);
+//    }
 
     private void initView() {
         addtk=findViewById(R.id.addtk);
