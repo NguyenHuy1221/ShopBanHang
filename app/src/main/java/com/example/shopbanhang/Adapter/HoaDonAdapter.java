@@ -69,6 +69,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 
         holder.tvNgaytao.setText("Ngày Tạo : " + hoaDon.getNgaytaoHD());
         holder.tvGiotao.setText(hoaDon.getGiotaoHD());
+        holder.tvDiaChi.setText("Địa chỉ : " + hoaDon.getDiaChi());
 
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedTien = decimalFormat.format(hoaDon.getTongtien());
@@ -185,6 +186,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         private TextView tvSohoadon;
         private TextView tvTongtien;
         private TextView tvTinhtrang;
+        private TextView tvDiaChi;
         private TextView tvNguoimua;
         private TextView tvDanhsachmathang;
         private TextView tvNgaytao;
@@ -203,6 +205,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
             tvSohoadon = itemView.findViewById(R.id.tvSohoadon);
             tvNgaytao = itemView.findViewById(R.id.tvNgaymua);
             tvGiotao = itemView.findViewById(R.id.tvGiomua);
+            tvDiaChi = itemView.findViewById(R.id.tvDiaChi);
             view_hoadon = itemView.findViewById(R.id.view_hoadon);
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));

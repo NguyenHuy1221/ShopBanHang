@@ -32,7 +32,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Hoa Don So"
-                    android:textColor="#DD2C00"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -57,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Nguoi mua"
-                android:textColor="#DD2C00"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -84,7 +82,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="ngay mua"
-                    android:textColor="#DD2C00"
                     android:textSize="16dp"
                     android:textStyle="bold" />
                 <TextView
@@ -92,12 +89,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="Giờ Mua"
-                    android:textColor="#DD2C00"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvDiaChi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Địa chỉ"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvTongtien"
@@ -108,6 +112,7 @@
                 android:textColor="#DD2C00"
                 android:textSize="16dp"
                 android:textStyle="bold" />
+
 
             <TextView
                 android:layout_width="wrap_content"

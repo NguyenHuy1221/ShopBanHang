@@ -12,7 +12,7 @@ public class TaiKhoan {
     private String diachitk;
     private String ngaytaotk;
     private String tinhtragtk;
-
+    private boolean isAdmin;
     public TaiKhoan() {
     }
 
@@ -99,6 +99,15 @@ public class TaiKhoan {
     public void setTinhtragtk(String tinhtragtk) {
         this.tinhtragtk = tinhtragtk;
     }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
     public HashMap<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
         result.put("imgtk",imgtk);

@@ -124,8 +124,9 @@
                 android:background="@drawable/custom_khung"
                 android:padding="16dp">
 
+
                 <ImageView
-                    android:id="@+id/imageView10"
+                    android:id="@+id/img_dia_chi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -145,8 +146,8 @@
                     android:inputType="text"
                     android:padding="10dp"
                     android:textColor="@color/black"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView10"
-                    app:layout_constraintStart_toEndOf="@+id/imageView10"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_dia_chi"
+                    app:layout_constraintStart_toEndOf="@+id/img_dia_chi"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -172,6 +173,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

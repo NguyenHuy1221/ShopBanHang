@@ -2,16 +2,24 @@ package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -32,6 +40,7 @@ import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
+import com.example.shopbanhang.service.myAplication;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -63,6 +72,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private Button btn_mua_hang;
     private HoaDon hoaDon;
     double tien;
+    private ImageView img_dia_chi;
     private ArrayList<GioHang> gioHangList = new ArrayList<>(Gio_Hang.mlistGioHang);
     private ArrayList<ChiTietGioHang> chiTietGioHangArrayList = new ArrayList<>(Gio_Hang.mListChiTiet);
     private ArrayList<GioHang> list = new ArrayList<>();
@@ -76,6 +86,9 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private Context context = this ;
     private int idKhachHang;
     private static final String CHANNEL_ID = "com.example.shopbanhang.notification.channel";
+
+    private double latitude = 10.7769;
+    private double longitude = 106.7009;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +121,15 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         txtTongTien = findViewById(R.id.txtTongTien);
         txtGmail = findViewById(R.id.tvEmail);
         txtSdt = findViewById(R.id.tvSdt);
+        img_dia_chi = findViewById(R.id.img_dia_chi);
+
+        img_dia_chi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMap();
+            }
+        });
+
         edtDiaChi = findViewById(R.id.edtdiaChi);
         btn_mua_hang = findViewById(R.id.btn_mua_hang);
         int trangthai = 0;
@@ -273,7 +295,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                             addChiTietHoaDon(hoaDon.getMaHD());
                             clearGioHangData(idKhachHang);
                             Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
-                            createNotification();
+                            sendNotification();
                         } else {
                             Toast.makeText(ThanhToanMainActivity.this, "Lỗi khi thêm hóa đơn", Toast.LENGTH_SHORT).show();
                         }
@@ -396,39 +418,66 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         return formatter.format(value) + " đ";
     }
 
-    private void createNotification() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    private void sendNotification() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.h1);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "My Notification Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
+        if (bitmap != null) {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, myAplication.CHANNEL_ID)
+                    .setSmallIcon(R.drawable.h1)
+                    .setContentTitle("CẢM ƠN BẠN ĐÃ QUAN TÂM VÀ ỦNG HỘ")
+                    .setContentText("THANK KIU FOR LISTENING")
+                    .setStyle(new NotificationCompat.BigPictureStyle()
+                            .bigPicture(bitmap)
+                            .bigLargeIcon(null)
+                    )
+                    .setLargeIcon(bitmap)
+                    .setColor(Color.RED)
+                    .setAutoCancel(true);
+
+            Intent resultIntent = new Intent(context, LichSuHoaDonMainActivity.class);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    resultIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
             );
-            channel.setDescription("Mô tả kênh");
-            channel.enableLights(true);
-            channel.setLightColor(Color.BLUE);
-            notificationManager.createNotificationChannel(channel);
+
+            builder.setContentIntent(resultPendingIntent);
+
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+
+            // Kiểm tra quyền gửi thông báo
+            if (notificationManagerCompat.areNotificationsEnabled()) {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    // Yêu cầu quyền gửi thông báo từ người dùng
+                    ActivityCompat.requestPermissions((Activity) context,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS}, 7979);
+                } else {
+                    notificationManagerCompat.notify(getNotificationID(), builder.build());
+                }
+            } else {
+                // Yêu cầu quyền thông báo
+                // Hãy thực hiện yêu cầu quyền thông qua hộp thoại hoặc cài đặt ứng dụng
+            }
+        } else {
+            // Xử lý khi bitmap là null
         }
+    }
 
-        Intent intent = new Intent(this, LichSuHoaDonMainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Tạo thông báo
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.h1)
-                .setContentTitle("THÔNG BÁO MUA HÀNG")
-                .setContentText("Cảm ơn bạn đã quan tâm và ủng hộ!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        // Hiển thị thông báo
-        notificationManager.notify(1, builder.build());
-
+    private int getNotificationID() {
+        return (int) new Date().getTime();
     }
 
 
+    private void openMap() {
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + Uri.encode("geo:" + latitude + "," + longitude));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Toast.makeText(this, "Ứng dụng Bản đồ không khả dụng.", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
