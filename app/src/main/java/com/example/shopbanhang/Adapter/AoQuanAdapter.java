@@ -34,7 +34,6 @@ public class AoQuanAdapter extends RecyclerView.Adapter<AoQuanAdapter.ViewHolder
 
     private Context context;
     private List<SanPham> mSanPham;
-
     private List<SanPham> mFilteredSanPhamList;
     private int user;
     private List<YeuThichSanPham> mYeuThichSanPhamList;

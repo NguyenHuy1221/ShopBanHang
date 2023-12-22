@@ -288,14 +288,6 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
 
 
-//    private void updateChiTietGioHang(String chiTietGioHangKey, int newSoLuong) {
-//        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
-//        chiTietGioHangRef.child(chiTietGioHangKey).child("so_luong").setValue(newSoLuong);
-//
-//        Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
-//        dialog.dismiss();
-//    }
-
     private void updateChiTietGioHang(String chiTietGioHangKey, int newSoLuong) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
 
