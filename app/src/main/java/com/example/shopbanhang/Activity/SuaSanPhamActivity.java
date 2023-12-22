@@ -232,7 +232,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                         edt_gia_nhap.setText(String.valueOf(mSanPham.getGianhap()));
                         edt_gia_ban.setText(String.valueOf(mSanPham.getGiaban()));
                         edt_ghi_chu.setText(mSanPham.getGhichu());
-                        soluongsanphamdaban.setText(mSanPham.getSoluongban());
+                        soluongsanphamdaban.setText(String.valueOf(mSanPham.getSoluongban()));
 //                List<String> color = new ArrayList<>();
 //                color.add(thuonghieu);
 //                ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, color);

@@ -153,7 +153,7 @@ public class Doanh_Thu extends AppCompatActivity {
 
                         }
 
-                        if (result > 0 && result2 < 0) {
+                        if (result >= 0 && result2 <= 0) {
                             list.add(doanhThu);
                             rclv.setAdapter(doanhThuAdapter);
 

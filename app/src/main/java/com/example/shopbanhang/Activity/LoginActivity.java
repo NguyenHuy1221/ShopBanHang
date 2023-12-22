@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         if (checklogin == true){
             Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
             startActivity(intent);
-            finishAffinity();
+
         }
 
 
@@ -165,7 +165,8 @@ public class LoginActivity extends AppCompatActivity {
                             mySharedPreferences.putValue("remember_username_ten", getuser.getTentk());
                             mySharedPreferences.putValue("remember_password", getuser.getMatkhautk());
                             mySharedPreferences.putBooleanValue("remember_checkbox", checkBox.isChecked());
-                        } else {
+                        }
+                        else {
                             mySharedPreferences.putValue("remember_id_tk", getuser.getIdtk());
                             mySharedPreferences.putValue("remember_username", getuser.getEmailtk());
                             mySharedPreferences.putValue("remember_username_ten", getuser.getTentk());

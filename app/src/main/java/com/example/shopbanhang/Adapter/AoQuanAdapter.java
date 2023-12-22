@@ -34,6 +34,7 @@ public class AoQuanAdapter extends RecyclerView.Adapter<AoQuanAdapter.ViewHolder
 
     private Context context;
     private List<SanPham> mSanPham;
+
     private List<SanPham> mFilteredSanPhamList;
     private int user;
     private List<YeuThichSanPham> mYeuThichSanPhamList;
@@ -63,9 +64,10 @@ public class AoQuanAdapter extends RecyclerView.Adapter<AoQuanAdapter.ViewHolder
 
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        if (user != 0){
+        if (!mySharedPreferences.getValue("remember_id_tk").isEmpty()){
             user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
         }
+
 
         if (isFavoriteProduct(sanPham.getMasp())) {
             holder.img_tym.setColorFilter(Color.RED);

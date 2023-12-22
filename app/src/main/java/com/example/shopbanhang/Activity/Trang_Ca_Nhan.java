@@ -143,15 +143,21 @@ public class Trang_Ca_Nhan extends AppCompatActivity {
 //                editor.commit();
 
                 SharedPreferences mySharedPreferences = getSharedPreferences("MY_PREFERENCES", MODE_PRIVATE);
-
+                MySharedPreferences xoabonhotrong = new MySharedPreferences(Trang_Ca_Nhan.this);
                 SharedPreferences.Editor editor = mySharedPreferences.edit();
                 editor.clear();
                 editor.commit();
+
+                SharedPreferences mySharedPreferences2 = getSharedPreferences("MY_PREFERENCES_BOOLEAN", MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = mySharedPreferences2.edit();
+                editor2.clear();
+                editor2.commit();
 
 
                 Toast.makeText(Trang_Ca_Nhan.this, "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Trang_Ca_Nhan.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.shopbanhang.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,8 +42,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Gio_Hang extends AppCompatActivity {
 
@@ -249,17 +257,35 @@ public class Gio_Hang extends AppCompatActivity {
 
     private void showKhuyenMaiDialog() {
         DatabaseReference khuyenMaiRef = FirebaseDatabase.getInstance().getReference().child("KhuyenMai");
-
+        String format = "dd/MM/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
         khuyenMaiRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     List<KhuyenMai> danhSachKhuyenMai = new ArrayList<>();
 
+
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         KhuyenMai khuyenMai = snapshot.getValue(KhuyenMai.class);
+                        Date ngayketthuckm ;
+                        Date ngayhomnay;
+                        int result = 0;
+                        String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                        try {
+                            ngayketthuckm = sdf.parse(khuyenMai.getNgayKetThuc());
+                            ngayhomnay = sdf.parse(DateToday);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        result = ngayhomnay.compareTo(ngayketthuckm);
                         if (khuyenMai != null) {
-                            danhSachKhuyenMai.add(khuyenMai);
+                                if (result < 0){
+                                    danhSachKhuyenMai.add(khuyenMai);
+                                }
+
+
+
                         }
                     }
 
