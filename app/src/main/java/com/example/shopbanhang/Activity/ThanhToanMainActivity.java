@@ -434,15 +434,15 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                     .setColor(Color.RED)
                     .setAutoCancel(true);
 
-            Intent resultIntent = new Intent(context, LichSuHoaDonMainActivity.class);
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                    context,
-                    0,
-                    resultIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-            );
+//            Intent resultIntent = new Intent(context, LichSuHoaDonMainActivity.class);
+//            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+//                    context,
+//                    0,
+//                    resultIntent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT
+//            );
 
-            builder.setContentIntent(resultPendingIntent);
+//            builder.setContentIntent(resultPendingIntent);
 
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 

@@ -132,22 +132,22 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     private void ThemSanPhamYeuThich(YeuThichSanPham yeuThichSanPham) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("SanPhamYeuThich");
+        databaseReference.child(String.valueOf(yeuThichSanPham.getId_yeu_thich())).setValue(yeuThichSanPham);
+//        DatabaseReference productRef = databaseReference.child(String.valueOf(yeuThichSanPham.getId_san_pham()));
 
-        DatabaseReference productRef = databaseReference.child(String.valueOf(yeuThichSanPham.getId_san_pham()));
-
-        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()) {
-                    productRef.setValue(yeuThichSanPham);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Error checking if product exists: " + error.getMessage());
-            }
-        });
+//        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (!snapshot.exists()) {
+//                    productRef.
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e("Firebase", "Error checking if product exists: " + error.getMessage());
+//            }
+//        });
     }
 
     private boolean isFavoriteProduct(int productId) {
