@@ -63,6 +63,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,11 +81,18 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DatabaseReference mDatabaseReference;
     private ImageView imgBack;
+    private Spinner spnloaisp, spnchiso;
+    private List<String> loaisp = new ArrayList<>();
+    private List<String> chisosanpham = new ArrayList<>();
+    private Button btn_loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quan_ly_san_pham);
+        spnloaisp = findViewById(R.id.spn_loaisanpham);
+        spnchiso = findViewById(R.id.spn_chiso);
+        btn_loc = findViewById(R.id.btn_loc);
 
         imgBack = findViewById(R.id.toolbar);
         imgBack.setOnClickListener(v -> finish());
@@ -92,7 +101,257 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcy_qlsp);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
+
+        loaisp.add("Tất cả");
+        loaisp.add("GIÀY");
+        loaisp.add("ÁO");
+        loaisp.add("QUẦN");
+        loaisp.add("ÁO KHOÁC");
+
+        ArrayAdapter<String> loaisanphamAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, loaisp);
+        loaisanphamAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnloaisp.setAdapter(loaisanphamAdapter);
+
+
+        chisosanpham.add("Tùy chọn");
+        chisosanpham.add("Bán được nhiều sản phẩm nhất");
+        chisosanpham.add("Còn nhiều sản phẩm");
+//        chisosanpham.add("Xanh");
+//        chisosanpham.add("Đen");
+//        chisosanpham.add("Đỏ");
+
+        ArrayAdapter<String> chisosanphamAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, chisosanpham);
+        chisosanphamAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnchiso.setAdapter(chisosanphamAdapter);
+
         getDataFirebase();
+
+
+        sanPhamAdapter = new SanPhamAdapter(context, sanPhams, new SanPhamAdapter.OnClickItem() {
+            @Override
+            public void onclikUpdate(SanPham sanPham) {
+                EditProducts(sanPham);
+            }
+
+            @Override
+            public void onclickDelete(SanPham sanPham) {
+                DeleteProducts(sanPham);
+            }
+        });
+        recyclerView.setAdapter(sanPhamAdapter);
+        sanPhamAdapter.updateList(sanPhams);
+        sanPhamAdapter.notifyDataSetChanged();
+        List<SanPham> sanphamloc = new ArrayList<>();
+        btn_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sanphamloc.clear();
+                      String spnloaispValue = spnloaisp.getSelectedItem().toString();
+                      String spnchisoValue = spnchiso.getSelectedItem().toString();
+
+
+                      switch (spnloaispValue) {
+                        case "Tất cả":
+                            switch (spnchisoValue){
+                                case "Tùy chọn":
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        sanphamloc.add(sanPhams.get(i));
+                                    }
+                                    break;
+                                case "Bán được nhiều sản phẩm nhất":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        sanphamloc.add(sanPhams.get(i));
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongban() - o1.getSoluongban();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+
+                                case "Còn nhiều sản phẩm":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        sanphamloc.add(sanPhams.get(i));
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongnhap() - o1.getSoluongnhap();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+
+                            break;
+                        case "GIÀY":
+                            switch (spnchisoValue){
+                                case "Tùy chọn":
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
+                                    break;
+                                case "Bán được nhiều sản phẩm nhất":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongban() - o1.getSoluongban();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+
+                                case "Còn nhiều sản phẩm":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongnhap() - o1.getSoluongnhap();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                            break;
+                        case "ÁO":
+                            switch (spnchisoValue){
+                                case "Tùy chọn":
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
+                                    break;
+                                case "Bán được nhiều sản phẩm nhất":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongban() - o1.getSoluongban();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+
+                                case "Còn nhiều sản phẩm":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongnhap() - o1.getSoluongnhap();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                            break;
+                        case "QUẦN":
+                            switch (spnchisoValue){
+                                case "Tùy chọn":
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
+                                    break;
+                                case "Bán được nhiều sản phẩm nhất":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongban() - o1.getSoluongban();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+
+                                case "Còn nhiều sản phẩm":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongnhap() - o1.getSoluongnhap();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                            break;
+                        case "ÁO KHOÁC":
+                            switch (spnchisoValue){
+                                case "Tùy chọn":
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
+                                    break;
+                                case "Bán được nhiều sản phẩm nhất":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongban() - o1.getSoluongban();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+
+                                case "Còn nhiều sản phẩm":
+                                    for (int i= 0; i<sanPhams.size();i++){
+
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                        Comparator<SanPham> comparator = (o1, o2) -> o2.getSoluongnhap() - o1.getSoluongnhap();
+                                        Collections.sort(sanphamloc, comparator);
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                            break;
+
+                        default:
+                            for (int i= 0; i<sanPhams.size();i++){
+                                sanphamloc.add(sanPhams.get(i));
+                            }
+                            break;
+
+                    }
+
+
+
+
+
+
+                sanPhamAdapter = new SanPhamAdapter(context, sanphamloc, new SanPhamAdapter.OnClickItem() {
+                    @Override
+                    public void onclikUpdate(SanPham sanPham) {
+                        EditProducts(sanPham);
+                    }
+
+                    @Override
+                    public void onclickDelete(SanPham sanPham) {
+                        DeleteProducts(sanPham);
+                    }
+                });
+                recyclerView.setAdapter(sanPhamAdapter);
+                sanPhamAdapter.updateList(sanphamloc);
+                sanPhamAdapter.notifyDataSetChanged();
+            }
+        });
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +360,6 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
             }
         });
     }
-
     private void getDataFirebase() {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
 //        DatabaseReference DatabaseReferenceChiTiet;
@@ -112,44 +370,52 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                 sanPhams.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     SanPham mSanPham = dataSnapshot.getValue(SanPham.class);
-
-//                    DatabaseReference timkiemchitiet = DatabaseReferenceChiTiet.child(String.valueOf(mSanPham.getMasp()));
-//                    timkiemchitiet.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            int soluongsanpham = 0;
-//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                                ChiTietSanPhamfix chiTietSanPhamfix = dataSnapshot.getValue(ChiTietSanPhamfix.class);
-//                                soluongsanpham +=chiTietSanPhamfix.getSoluong();
+                    // Tạo hai biến tạm thời để lưu giá trị của spnchiso và thuonghieu
+//                    String spnchisoValue = spnloaisp.getSelectedItem().toString();
+//                    String thuonghieuValue = mSanPham.getThuonghieu();
+//
+//                    Toast.makeText(QuanLySanPhamActivity.this, "thong tin so sanh"+spnchisoValue + thuonghieuValue , Toast.LENGTH_SHORT).show();
+//
+//                    switch (spnchisoValue) {
+//                        case "Tất cả":
+//                                sanPhams.clear();
+//                                sanPhams.add(mSanPham);
+//
+//
+//                            break;
+//                        case "GIÀY":
+//                            sanPhams.clear();
+//                            if (mSanPham.getThuonghieu().equals(spnchisoValue)){
+//                                sanPhams.add(mSanPham);
 //                            }
-//                            Map<String, Object> updates2 = new HashMap<>();
-//                            updates2.put("soluongnhap", soluongsanpham);
-//                            mDatabaseReference.child(String.valueOf(mSanPham.getMasp())).updateChildren(updates2);
+//                            break;
+//                        case "ÁO":
+//                            sanPhams.clear();
+//                            if (mSanPham.getThuonghieu().equals(spnchisoValue)){
+//                                sanPhams.add(mSanPham);
+//                            }
+//                            break;
+//                        case "QUẦN":
+//                            sanPhams.clear();
+//                            if (mSanPham.getThuonghieu().equals(spnchisoValue)){
+//                                sanPhams.add(mSanPham);
+//                            }
+//                            break;
+//                        case "ÁO KHOÁC":
+//                            sanPhams.clear();
+//                            if (mSanPham.getThuonghieu().equals(spnchisoValue)){
+//                                sanPhams.add(mSanPham);
+//                            }
+//                            break;
 //
-//                        }
+//                        default:
+//                            sanPhams.add(mSanPham);
+//                            break;
 //
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-
+//                    }
                     sanPhams.add(mSanPham);
                 }
-                    sanPhamAdapter = new SanPhamAdapter(context, sanPhams, new SanPhamAdapter.OnClickItem() {
-                        @Override
-                        public void onclikUpdate(SanPham sanPham) {
-                            EditProducts(sanPham);
-                        }
 
-                        @Override
-                        public void onclickDelete(SanPham sanPham) {
-                            DeleteProducts(sanPham);
-                        }
-                    });
-                    recyclerView.setAdapter(sanPhamAdapter);
-                    sanPhamAdapter.updateList(sanPhams);
-                sanPhamAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -158,6 +424,58 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
             }
         });
     }
+
+//    private void getDataFirebase() {
+//        mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
+////        DatabaseReference DatabaseReferenceChiTiet;
+////        DatabaseReferenceChiTiet = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+//        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                sanPhams.clear();
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    SanPham mSanPham = dataSnapshot.getValue(SanPham.class);
+//                    if (spnchiso.getSelectedItem().equals(loaisp.get(0))){
+//                        if (mSanPham.getThuonghieu().equals(loaisp.get(0))){
+//                            sanPhams.add(mSanPham);
+//                        }
+//
+//                    } else if (spnchiso.getSelectedItem().equals(loaisp.get(1))){
+//                        if (mSanPham.getThuonghieu().equals(loaisp.get(1))){
+//                            sanPhams.add(mSanPham);
+//                        }
+//
+//                    } else if (spnchiso.getSelectedItem().equals(loaisp.get(2))){
+//                        if (mSanPham.getThuonghieu().equals(loaisp.get(2))){
+//                            sanPhams.add(mSanPham);
+//                        }
+//
+//                    }
+//
+//
+//                }
+//                    sanPhamAdapter = new SanPhamAdapter(context, sanPhams, new SanPhamAdapter.OnClickItem() {
+//                        @Override
+//                        public void onclikUpdate(SanPham sanPham) {
+//                            EditProducts(sanPham);
+//                        }
+//
+//                        @Override
+//                        public void onclickDelete(SanPham sanPham) {
+//                            DeleteProducts(sanPham);
+//                        }
+//                    });
+//                    recyclerView.setAdapter(sanPhamAdapter);
+//                    sanPhamAdapter.updateList(sanPhams);
+//                sanPhamAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
     private List<ChiTietSanPhamfix> chiTietSanPhams = new ArrayList<>();
     private void DeleteProducts(SanPham sanPham) {
 

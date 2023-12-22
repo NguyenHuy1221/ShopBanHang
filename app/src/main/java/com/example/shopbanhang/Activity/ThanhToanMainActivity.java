@@ -96,6 +96,13 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     }
 
     private void anhxa() {
+
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
+        int idtaikhoan = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
+
+        DatabaseReference mDatabaseReference;
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("TaiKhoan");
+        DatabaseReference timkiemtaikhoan = mDatabaseReference.child(String.valueOf(idtaikhoan));
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
         txtTongTien = findViewById(R.id.txtTongTien);
@@ -108,18 +115,38 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         btn_mua_hang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strDiaChi = edtDiaChi.getText().toString().trim();
-                Random random = new Random();
-                int id = random.nextInt(1000000);
-                if (TextUtils.isEmpty(strDiaChi)){
-                    Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
-                }else {
-                    String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-                    String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                    hoaDon = new HoaDon(id,idKhachHang,DateToday,TimeToday,trangthai,0,strDiaChi,tien);
+                timkiemtaikhoan.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        TaiKhoan taiKhoan = snapshot.getValue(TaiKhoan.class);
+                        if (taiKhoan.getSdttk().equals("none")){
+                            Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập Thông tin Số điện thoại ở trang cá nhân", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if (taiKhoan.getDiachitk().equals("none")){
+                            Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập Thông tin địa chỉ ở trang cá nhân", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            String strDiaChi = edtDiaChi.getText().toString().trim();
+                            Random random = new Random();
+                            int id = random.nextInt(1000000);
+                            if (TextUtils.isEmpty(strDiaChi)){
+                                Toast.makeText(ThanhToanMainActivity.this, "Bạn chưa nhập địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
+                            }else {
+                                String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                                String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                                hoaDon = new HoaDon(id,idKhachHang,DateToday,TimeToday,trangthai,0,strDiaChi,tien);
 //                    getDataFirebasesanpham();
-                    addHoaDon(hoaDon);
-                }
+                                addHoaDon(hoaDon);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
         });
     }

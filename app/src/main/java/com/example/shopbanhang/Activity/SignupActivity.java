@@ -30,6 +30,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 
@@ -98,7 +101,8 @@ public class SignupActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                TaiKhoan taiKhoan = new TaiKhoan(id,"https://firebasestorage.googleapis.com/v0/b/shopbanhang-38995.appspot.com/o/TaiKhoan%2Fno_image.png?alt=media&token=4a0b719e-6261-44b9-bf56-f509e0775ed2",hotenkh,emailkh,matkhaukh,"none","none","none","none");
+                                String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                                TaiKhoan taiKhoan = new TaiKhoan(id,"https://firebasestorage.googleapis.com/v0/b/shopbanhang-38995.appspot.com/o/TaiKhoan%2Fno_image.png?alt=media&token=4a0b719e-6261-44b9-bf56-f509e0775ed2",hotenkh,emailkh,matkhaukh,"none","none","DateToday","Hoạt Động");
                                 pushData(taiKhoan);
                                 Toast.makeText(SignupActivity.this, "Đăng kí thành công", Toast.LENGTH_SHORT).show();
                                 startActivity(intent);

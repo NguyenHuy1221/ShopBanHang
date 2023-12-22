@@ -65,8 +65,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
@@ -85,6 +87,8 @@ public class SuaSanPhamActivity extends AppCompatActivity {
     private ImageChiTietAdapter imageChiTietAdapter;
     private ImageView img_ct;
     private EditText edt_masp, edt_tensp, edt_so_luong_sp, edt_gia_nhap, edt_gia_ban, edt_ghi_chu;
+    private TextView soluongsanphamdaban;
+
     private Spinner spn_loaisp, spn_mausp, spn_sizesp, spn_trang_thai;
     private Button btnAdd , addchitiet;
     private RecyclerView rcy_ct_anh;
@@ -228,6 +232,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                         edt_gia_nhap.setText(String.valueOf(mSanPham.getGianhap()));
                         edt_gia_ban.setText(String.valueOf(mSanPham.getGiaban()));
                         edt_ghi_chu.setText(mSanPham.getGhichu());
+                        soluongsanphamdaban.setText(mSanPham.getSoluongban());
 //                List<String> color = new ArrayList<>();
 //                color.add(thuonghieu);
 //                ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, color);
@@ -315,6 +320,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
     }
 
     public void anhxa() {
+        soluongsanphamdaban = findViewById(R.id.txt_soluongdaban);
         img_chinh = findViewById(R.id.image_chinh);
         img_ct = findViewById(R.id.image_ct);
 //        edt_masp = findViewById(R.id.edt_ma_sp);
@@ -488,7 +494,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
 
             Intent intent = new Intent(SuaSanPhamActivity.this, QuanLySanPhamActivity.class);
             startActivity(intent);
-            finish();
+
         } else {
             imageRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -654,6 +660,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
+                DatabaseReference fixsoluongsanpham = FirebaseDatabase.getInstance().getReference("sanpham");
 
 
                 String solgspString  = editText.getText().toString().trim();
@@ -678,6 +685,9 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                     soluongsp = soluongsp + Integer.parseInt(solgspString);
                     edt_so_luong_sp.setText(String.valueOf(soluongsp));
 
+                    Map<String, Object> updates3 = new HashMap<>();
+                    updates3.put("soluongnhap",soluongsp);
+                    fixsoluongsanpham.child(String.valueOf(masanpham2)).updateChildren(updates3);
                     Random random = new Random();
                     int id = random.nextInt(100000);
 

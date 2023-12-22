@@ -161,6 +161,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Giá nhập"/>
+            <TextView
+                android:id="@+id/txt_soluongdaban"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Giá nhập"/>
             <EditText
                 android:id="@+id/edt_gia_sp"
                 android:layout_width="0dp"

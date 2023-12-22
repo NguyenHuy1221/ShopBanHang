@@ -288,6 +288,7 @@ public class Gio_Hang extends AppCompatActivity {
                                 // Áp dụng mã giảm giá đã chọn
                                 applySelectedKhuyenMai(danhSachKhuyenMai.get(selectedPosition));
 
+
                             }
                             dialog.dismiss();
                         }

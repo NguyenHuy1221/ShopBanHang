@@ -16,6 +16,54 @@
         android:layout_marginTop="16dp"
         />
 
+    <LinearLayout
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Loại sản phẩm"
+            android:textStyle="bold"/>
+        <Spinner
+            android:id="@+id/spn_loaisanpham"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="110dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Loại sản phẩm"
+            android:textStyle="bold"/>
+        <Spinner
+            android:id="@+id/spn_chiso"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="2"
+            />
+    </LinearLayout>
+    <Button
+        android:layout_marginTop="155dp"
+        android:id="@+id/btn_loc"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Lọc"
+
+        />
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -34,11 +82,15 @@
         android:textSize="25dp"
         android:textStyle="bold" />
 
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcy_qlsp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
+        android:layout_marginTop="160dp"
         android:padding="16dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
