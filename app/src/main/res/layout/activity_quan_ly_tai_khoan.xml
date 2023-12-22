@@ -44,20 +44,20 @@
         android:padding="10dp"
         tools:listitem="@layout/item_tai_khoan" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="right">-->
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addtk"
-            android:layout_width="134dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/red"
-            android:src="@drawable/ic_add" />
-    </LinearLayout>
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/addtk"-->
+<!--            android:layout_width="134dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="100dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:backgroundTint="@color/red"-->
+<!--            android:src="@drawable/ic_add" />-->
+<!--    </LinearLayout>-->
 
 
 </LinearLayout>

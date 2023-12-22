@@ -65,7 +65,7 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quan_ly_tai_khoan);
         initView();
-        addtk = findViewById(R.id.addtk);
+//        addtk = findViewById(R.id.addtk);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1);
         recycle_qltk.setLayoutManager(gridLayoutManager);
         taiKhoanAdapter = new TaiKhoanAdapter(QuanLyTaiKhoanActivity.this,list, new TaiKhoanAdapter.Click(){
@@ -376,7 +376,7 @@ public class QuanLyTaiKhoanActivity extends AppCompatActivity {
 //    }
 
     private void initView() {
-        addtk=findViewById(R.id.addtk);
+//        addtk=findViewById(R.id.addtk);
         recycle_qltk = findViewById(R.id.recycle_qltk);
         backBtntk = findViewById(R.id.backBtntk);
 //        backBtntk.setOnClickListener(v -> finish());
