@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class ChiTietSanPham {
 
-    private String idchitietsanpham;
+    private int idchitietsanpham;
     private int masp;
     private String kichco;
     private String mau;
@@ -15,7 +15,7 @@ public class ChiTietSanPham {
 
     }
 
-    public ChiTietSanPham(String idchitietsanpham, int masp, String kichco, String mau, int soluong) {
+    public ChiTietSanPham(int idchitietsanpham, int masp, String kichco, String mau, int soluong) {
         this.idchitietsanpham = idchitietsanpham;
         this.masp = masp;
         this.kichco = kichco;
@@ -23,11 +23,11 @@ public class ChiTietSanPham {
         this.soluong = soluong;
     }
 
-    public String getIdchitietsanpham() {
+    public int getIdchitietsanpham() {
         return idchitietsanpham;
     }
 
-    public void setIdchitietsanpham(String idchitietsanpham) {
+    public void setIdchitietsanpham(int idchitietsanpham) {
         this.idchitietsanpham = idchitietsanpham;
     }
 

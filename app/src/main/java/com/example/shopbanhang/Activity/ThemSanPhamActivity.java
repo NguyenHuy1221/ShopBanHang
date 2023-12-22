@@ -439,20 +439,23 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 //                    String id = UUID.randomUUID().toString();
 //                    ChiTietSanPham chiTietSanPham = new ChiTietSanPham(id,Integer.parseInt(masp),sizesp,mausp,Integer.parseInt(soluongsizecolor));
 //                    pushData(chiTietSanPham);
+                    int tongsoluong=0;
                     for (int id2 : map.keySet()){
 
                         AddsizeColor addsizeColor1 = map.get(id2);
                         String spinnerkichco = addsizeColor1.getSpnsize().getSelectedItem().toString();
                         String spinnermau = addsizeColor1.getSpncolor().getSelectedItem().toString();
                         int soluong = Integer.parseInt(addsizeColor1.getEdtsoluong().getText().toString());
+                        tongsoluong +=soluong;
                         String id3 = UUID.randomUUID().toString();
                         Random random = new Random();
-                        String id = String.valueOf(random.nextInt(1000000));
+                        int id = random.nextInt(100000);
                         ChiTietSanPham chiTietSanPham2 = new ChiTietSanPham(id,Integer.parseInt(masp),spinnerkichco,spinnermau,soluong);
                         pushData(chiTietSanPham2);
+
                     }
                     Toast.makeText(context, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
-                    uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, solgsp, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp,  trangthaisp, ghichu,selectedImages);
+                    uploadSanPhamToFirebase(mImageUri, Integer.parseInt(masp), tensp, tongsoluong, 0, Double.parseDouble(gianhap), Double.parseDouble(giaban), loaisp,  trangthaisp, ghichu,selectedImages);
 
                 }
 
@@ -599,8 +602,8 @@ public class ThemSanPhamActivity extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
 
-        String pathObj = chiTietSanPham.getIdchitietsanpham();
-        databaseReference.child(pathObj).setValue(chiTietSanPham);
+        int pathObj = chiTietSanPham.getIdchitietsanpham();
+        databaseReference.child(String.valueOf(pathObj)).setValue(chiTietSanPham);
 
     }
 }

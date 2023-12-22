@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -179,10 +180,10 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                     ChiTietSanPhamfix chiTietSanPham = dataSnapshot.getValue(ChiTietSanPhamfix.class);
                     if (chiTietSanPham != null){
                         if (chiTietSanPham.getMasp() == finalMasanpham){
-                            if (chiTietSanPham.getIdchitietsanpham() != null){
+
                                 chiTietSanPhams.add(chiTietSanPham);
                                 chiTietSanPhamAdapter.notifyDataSetChanged();
-                            }
+
 
                         }
                     }
@@ -596,7 +597,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                             chiTietSanPham.setKichco(sizesp);
                             chiTietSanPham.setMau(mausp);
                             chiTietSanPham.setSoluong(Integer.parseInt(solgspString));
-                            databaseReference.child(chiTietSanPham.getIdchitietsanpham()).updateChildren(chiTietSanPham.toMap());
+                            databaseReference.child(String.valueOf(chiTietSanPham.getIdchitietsanpham())).updateChildren(chiTietSanPham.toMap());
                     chiTietSanPhamAdapter.notifyDataSetChanged();
                             dialog.dismiss();
                         }
@@ -667,7 +668,8 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                     Toast.makeText(SuaSanPhamActivity.this, "Chưa nhận số lượng sản phẩm", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    String id = UUID.randomUUID().toString();
+                    Random random = new Random();
+                    int id = random.nextInt(100000);
 
                     ChiTietSanPhamfix chiTietSanPhamfix = new ChiTietSanPhamfix(id,masanpham2,sizesp,mausp,Integer.parseInt(solgspString));
                     pushData(chiTietSanPhamfix);
@@ -684,8 +686,8 @@ public class SuaSanPhamActivity extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
 
-        String pathObj = chiTietSanPhamfix.getIdchitietsanpham();
-        databaseReference.child(pathObj).setValue(chiTietSanPhamfix);
+        int pathObj = chiTietSanPhamfix.getIdchitietsanpham();
+        databaseReference.child(String.valueOf(pathObj)).setValue(chiTietSanPhamfix);
     }
     public void deletechitietsanpham(ChiTietSanPhamfix chiTietSanPham){
         new AlertDialog.Builder(this)

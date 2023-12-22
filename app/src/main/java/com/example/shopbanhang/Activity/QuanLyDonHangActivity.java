@@ -24,6 +24,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuanLyDonHangActivity extends AppCompatActivity {
@@ -57,7 +58,18 @@ public class QuanLyDonHangActivity extends AppCompatActivity {
                         HoaDon hoaDon = list.getValue(HoaDon.class);
 
                         mListhoadon.add(hoaDon);
+
                     }
+                    Collections.sort(mListhoadon, (hoaDon1, hoaDon2) -> {
+
+                        int dateCompare = -hoaDon1.getNgaytaoHD().compareTo(hoaDon2.getNgaytaoHD());
+
+                        if (dateCompare == 0) {
+                            return -hoaDon1.getGiotaoHD().compareTo(hoaDon2.getGiotaoHD());
+                        }
+
+                        return dateCompare;
+                    });
                     Log.i("b", "setAdapterHoaDon: " +mListhoadon.size());
                     //Set adapter
                     setAdapterHoaDon();

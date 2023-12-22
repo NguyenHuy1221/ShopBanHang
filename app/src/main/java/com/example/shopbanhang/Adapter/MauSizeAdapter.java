@@ -68,7 +68,7 @@ public class MauSizeAdapter extends RecyclerView.Adapter<MauSizeAdapter.ViewHold
                     listener.onItemClick(
                             chiTietSanPham.getKichco(),
                             chiTietSanPham.getMau(),
-                            Integer.parseInt(chiTietSanPham.getIdchitietsanpham()),
+                            chiTietSanPham.getIdchitietsanpham(),
                             chiTietSanPham.getSoluong());
 
                     // Cập nhật vị trí mục đã chọn

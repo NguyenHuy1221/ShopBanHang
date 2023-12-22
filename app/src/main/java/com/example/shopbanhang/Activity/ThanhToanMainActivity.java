@@ -40,8 +40,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
+//import com.google.firebase.messaging.FirebaseMessaging;
+//import com.google.firebase.messaging.RemoteMessage;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -117,7 +117,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                     String DateToday = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                     String TimeToday = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                     hoaDon = new HoaDon(id,idKhachHang,DateToday,TimeToday,trangthai,0,strDiaChi,tien);
-                    getDataFirebasesanpham();
+//                    getDataFirebasesanpham();
                     addHoaDon(hoaDon);
                 }
             }
@@ -175,58 +175,58 @@ public class ThanhToanMainActivity extends AppCompatActivity {
             }
         });
     }
-    private void getDataFirebasesanpham() {
-        DatabaseReference mDatabaseReference;
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (listsanpham != null) {
-                    listsanpham.clear();
-                }
-
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-
-//                    DoanhThu doanhThu = dataSnapshot.getValue(DoanhThu.class);
-                    sanPham = dataSnapshot.getValue(SanPham.class);
-                    if (sanPham != null){
-                        Toast.makeText(ThanhToanMainActivity.this, ""+listmasp.size(), Toast.LENGTH_SHORT).show();
-
-                        if (listmasp != null){
-                            for (int i = 0; i < listmasp.size();i++){
-
-                                if (sanPham.getMasp() == listmasp.get(i)){
-                                    listsanpham.add(sanPham);
-                                    int soluongdaban = 0;
-                                    int soluongbancuagiohang;
-                                    int soluongdabanbandau;
-                                    soluongdabanbandau = sanPham.getSoluongban();
-                                    soluongbancuagiohang = listmaspnumber.get(i);
-                                    soluongdaban = soluongdabanbandau + soluongbancuagiohang;
-
-
-                                    String pathObj = String.valueOf(sanPham.getMasp());
-                                    Map<String, Object> updates = new HashMap<>();
-                                    updates.put("soluongban", soluongdaban);
-                                    mDatabaseReference.child(pathObj).updateChildren(updates);
-                                    soluongdaban = 0;
-
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    private void getDataFirebasesanpham() {
+//        DatabaseReference mDatabaseReference;
+//        mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
+//        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+//            @SuppressLint("ResourceType")
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                if (listsanpham != null) {
+//                    listsanpham.clear();
+//                }
+//
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//
+//
+////                    DoanhThu doanhThu = dataSnapshot.getValue(DoanhThu.class);
+//                    sanPham = dataSnapshot.getValue(SanPham.class);
+//                    if (sanPham != null){
+//                        Toast.makeText(ThanhToanMainActivity.this, ""+listmasp.size(), Toast.LENGTH_SHORT).show();
+//
+//                        if (listmasp != null){
+//                            for (int i = 0; i < listmasp.size();i++){
+//
+//                                if (sanPham.getMasp() == listmasp.get(i)){
+//                                    listsanpham.add(sanPham);
+//                                    int soluongdaban = 0;
+//                                    int soluongbancuagiohang;
+//                                    int soluongdabanbandau;
+//                                    soluongdabanbandau = sanPham.getSoluongban();
+//                                    soluongbancuagiohang = listmaspnumber.get(i);
+//                                    soluongdaban = soluongdabanbandau + soluongbancuagiohang;
+//
+//
+//                                    String pathObj = String.valueOf(sanPham.getMasp());
+//                                    Map<String, Object> updates = new HashMap<>();
+//                                    updates.put("soluongban", soluongdaban);
+//                                    mDatabaseReference.child(pathObj).updateChildren(updates);
+//                                    soluongdaban = 0;
+//
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     private void sendDataCart() {
         Intent intent = getIntent();
@@ -246,7 +246,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                             addChiTietHoaDon(hoaDon.getMaHD());
                             clearGioHangData(idKhachHang);
                             Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
-                            createNotification();
+//                            createNotification();
                         } else {
                             Toast.makeText(ThanhToanMainActivity.this, "Lỗi khi thêm hóa đơn", Toast.LENGTH_SHORT).show();
                         }
@@ -258,6 +258,11 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private void addChiTietHoaDon(int idHoaDon) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference chiTietHoaDonRef = database.getReference("chitiethoadon");
+
+        DatabaseReference mDatabaseReference;
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+        DatabaseReference DatabaseReferencesanpham;
+        DatabaseReferencesanpham = FirebaseDatabase.getInstance().getReference("sanpham");
         for (ChiTietGioHang chiTietGioHang : chiTietGioHangArrayList) {
             ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon();
             chiTietHoaDon.setId_chi_tiet_hoa_don(idHoaDon);
@@ -266,8 +271,51 @@ public class ThanhToanMainActivity extends AppCompatActivity {
             chiTietHoaDon.setSo_luong(chiTietGioHang.getSo_luong());
             chiTietHoaDon.setDon_gia(chiTietGioHang.getDon_gia());
 
+            int pathObj = chiTietGioHang.getId_chi_tiet_san_pham();
+            Map<String, Object> updates = new HashMap<>();
+
+
+            DatabaseReference chitietsanpham = mDatabaseReference.child(String.valueOf(chiTietGioHang.getId_chi_tiet_san_pham()));
+            chitietsanpham.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        ChiTietSanPhamfix chiTietSanPhamfix = snapshot.getValue(ChiTietSanPhamfix.class);
+                        updates.put("soluong", chiTietSanPhamfix.getSoluong()-chiTietGioHang.getSo_luong());
+                        mDatabaseReference.child(String.valueOf(pathObj)).updateChildren(updates);
+                        DatabaseReference timkiemsanpham = DatabaseReferencesanpham.child(String.valueOf(chiTietSanPhamfix.getMasp()));
+                        timkiemsanpham.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()){
+                                    SanPham sanPham1 = snapshot.getValue(SanPham.class);
+
+
+                                    int pathObj2 = sanPham1.getMasp();
+                                    Map<String, Object> updates2 = new HashMap<>();
+                                    updates2.put("soluongban", sanPham1.getSoluongban() + chiTietGioHang.getSo_luong());
+                                    DatabaseReferencesanpham.child(String.valueOf(pathObj2)).updateChildren(updates2);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
             Random random = new Random();
-            int idChiTietHoaDon = random.nextInt(1000);
+            int idChiTietHoaDon = random.nextInt(100000);
             chiTietHoaDonRef.child(String.valueOf(idChiTietHoaDon)).setValue(chiTietHoaDon);
         }
     }
