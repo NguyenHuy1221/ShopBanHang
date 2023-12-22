@@ -75,8 +75,10 @@ public class SearchMainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 //                filter(editable.toString().toLowerCase().trim());
+
                 handler.removeCallbacks(searchRunnable);
                 handler.postDelayed(searchRunnable, 300);
+                getAllProducts();
             }
         });
     }
