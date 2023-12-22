@@ -288,13 +288,43 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
 
 
+//    private void updateChiTietGioHang(String chiTietGioHangKey, int newSoLuong) {
+//        DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
+//        chiTietGioHangRef.child(chiTietGioHangKey).child("so_luong").setValue(newSoLuong);
+//
+//        Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
+//        dialog.dismiss();
+//    }
+
     private void updateChiTietGioHang(String chiTietGioHangKey, int newSoLuong) {
         DatabaseReference chiTietGioHangRef = FirebaseDatabase.getInstance().getReference("chitietgiohang");
-        chiTietGioHangRef.child(chiTietGioHangKey).child("so_luong").setValue(newSoLuong);
 
-        Toast.makeText(context, "Số lượng sản phẩm đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
-        dialog.dismiss();
+        chiTietGioHangRef.child(chiTietGioHangKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ChiTietGioHang chiTietGioHang = dataSnapshot.getValue(ChiTietGioHang.class);
+
+                if (chiTietGioHang != null) {
+                    chiTietGioHangRef.child(chiTietGioHangKey).child("so_luong").setValue(newSoLuong);
+
+                    double donGia = chiTietGioHang.getDon_gia();
+                    double tongTien = donGia * newSoLuong;
+
+                    chiTietGioHangRef.child(chiTietGioHangKey).child("tong_tien").setValue(tongTien);
+
+                    Toast.makeText(context, "Số lượng sản phẩm và tổng tiền đã được cập nhật trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
     }
+
 
 
     private void hienThiSizeMau() {
