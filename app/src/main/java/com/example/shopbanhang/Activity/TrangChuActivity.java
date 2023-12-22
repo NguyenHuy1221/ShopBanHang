@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shopbanhang.Adapter.AoQuanAdapter;
 import com.example.shopbanhang.Adapter.CategoryMainAdapter;
 import com.example.shopbanhang.Adapter.SanPhamMainAdapter;
 import com.example.shopbanhang.Adapter.SliderAdapters;
@@ -42,9 +43,9 @@ public class TrangChuActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager2;
     private Handler slideHander = new Handler();
-    private RecyclerView recyclerViewCategory,recyclerViewProducts;
+    private RecyclerView recyclerViewCategory,recyclerViewProducts,recyclerViewHot,recyclerViewQuan;
     private CategoryMainAdapter categoryMainAdapter;
-    private RecyclerView.Adapter sanPhamMainAdapter;
+    private RecyclerView.Adapter sanPhamMainAdapter,AoQuanAdapter;
     private List<ThuongHieu> mThuongHieu;
     private Context context = this;
     private LinearLayout Lme,next_gio_hang,nextTym;
@@ -61,6 +62,8 @@ public class TrangChuActivity extends AppCompatActivity {
         banner();
         sendCategoryFirebase();
         sendProductsFirebase();
+        sendProductsFirebaseQuan();
+        sendProductsFirebaseAll();
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
         String user = mySharedPreferences.getValue("remember_username_ten");
@@ -107,9 +110,15 @@ public class TrangChuActivity extends AppCompatActivity {
         recyclerViewCategory = findViewById(R.id.rcy_category);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recyclerViewProducts = findViewById(R.id.rcy_products);
+        //rcy ÁO
+        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        // rcy Quan
+        recyclerViewQuan = findViewById(R.id.rcy_quan);
+        recyclerViewQuan.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        // rcy All
+        recyclerViewHot = findViewById(R.id.rcy_all);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context,2);
-        recyclerViewProducts.setLayoutManager(gridLayoutManager);
-//        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recyclerViewHot.setLayoutManager(gridLayoutManager);
     }
 
     private void banner() {
@@ -185,7 +194,68 @@ public class TrangChuActivity extends AppCompatActivity {
         });
     }
 
+
+
+    // Hiển thị Áo
     public void sendProductsFirebase() {
+        List<SanPham> mSanPham = new ArrayList<>();
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
+
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mSanPham.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    SanPham sanPham = dataSnapshot.getValue(SanPham.class);
+                    if (sanPham != null && "ÁO".equals(sanPham.getThuonghieu())) {
+                        mSanPham.add(sanPham);
+                    }
+                }
+                Log.d("HUYNE", String.valueOf(mSanPham.size()));
+                AoQuanAdapter = new AoQuanAdapter(context,mSanPham);
+                recyclerViewProducts.setAdapter(AoQuanAdapter);
+//                sanPhamMainAdapter = new SanPhamMainAdapter(context, mSanPham);
+//                recyclerViewProducts.setAdapter(sanPhamMainAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    // Hiển thị Quần
+    public void sendProductsFirebaseQuan() {
+        List<SanPham> mSanPham = new ArrayList<>();
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
+
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mSanPham.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    SanPham sanPham = dataSnapshot.getValue(SanPham.class);
+                    if (sanPham != null && "QUẦN".equals(sanPham.getThuonghieu())) {
+                        mSanPham.add(sanPham);
+                    }
+                }
+                AoQuanAdapter = new AoQuanAdapter(context,mSanPham);
+                recyclerViewQuan.setAdapter(AoQuanAdapter);
+//                sanPhamMainAdapter = new SanPhamMainAdapter(context, mSanPham);
+//                recyclerViewQuan.setAdapter(sanPhamMainAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // hiển thị all
+    public void sendProductsFirebaseAll() {
         List<SanPham> mSanPham = new ArrayList<>();
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
 
@@ -196,10 +266,9 @@ public class TrangChuActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     SanPham sanPham = dataSnapshot.getValue(SanPham.class);
                     mSanPham.add(sanPham);
-                    Log.d("HUYNE", String.valueOf(mSanPham.size()));
                 }
                 sanPhamMainAdapter = new SanPhamMainAdapter(context,mSanPham);
-                recyclerViewProducts.setAdapter(sanPhamMainAdapter);
+                recyclerViewHot.setAdapter(sanPhamMainAdapter);
             }
 
             @Override
@@ -208,5 +277,6 @@ public class TrangChuActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

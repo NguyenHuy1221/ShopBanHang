@@ -246,7 +246,7 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                             addChiTietHoaDon(hoaDon.getMaHD());
                             clearGioHangData(idKhachHang);
                             Toast.makeText(ThanhToanMainActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
-//                            createNotification();
+                            createNotification();
                         } else {
                             Toast.makeText(ThanhToanMainActivity.this, "Lỗi khi thêm hóa đơn", Toast.LENGTH_SHORT).show();
                         }
