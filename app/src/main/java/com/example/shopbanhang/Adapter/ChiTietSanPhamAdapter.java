@@ -61,11 +61,10 @@ public class ChiTietSanPhamAdapter extends RecyclerView.Adapter<ChiTietSanPhamAd
             }
         });
 
-        holder.imgxoa.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.imgxoa.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View v) {
                 mClick.onDeleteClick(chiTietSanPham);
-                return false;
             }
         });
     }

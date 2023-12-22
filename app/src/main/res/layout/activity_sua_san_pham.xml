@@ -115,6 +115,7 @@
                 android:background="@drawable/custom_khung"
                 />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,6 +135,20 @@
                 android:inputType="number"
                 android:background="@drawable/custom_khung"
                 />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Cảnh báo không nên sửa số lượng sản phẩm."
+                android:textColor="@color/red"/>
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -293,7 +308,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcy_suachitietsanpham"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="250dp"
             android:orientation="vertical"
             android:layout_gravity="center"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

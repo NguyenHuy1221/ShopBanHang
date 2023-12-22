@@ -52,6 +52,18 @@ public class LoginActivity extends AppCompatActivity {
         anhxa();
         Update();
 
+
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(LoginActivity.this);
+        boolean checklogin = mySharedPreferences.getBooleanValue("remember_checkbox");
+        if (checklogin == true){
+            Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
+            startActivity(intent);
+            finishAffinity();
+        }
+
+
+
+
         txtdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
 
                     signUp();
                 }
@@ -152,15 +164,12 @@ public class LoginActivity extends AppCompatActivity {
                             mySharedPreferences.putValue("remember_username", getuser.getEmailtk());
                             mySharedPreferences.putValue("remember_username_ten", getuser.getTentk());
                             mySharedPreferences.putValue("remember_password", getuser.getMatkhautk());
+                            mySharedPreferences.putBooleanValue("remember_checkbox", checkBox.isChecked());
                         } else {
                             mySharedPreferences.putValue("remember_id_tk", getuser.getIdtk());
                             mySharedPreferences.putValue("remember_username", getuser.getEmailtk());
                             mySharedPreferences.putValue("remember_username_ten", getuser.getTentk());
                             mySharedPreferences.putValue("remember_password", getuser.getMatkhautk());
-//                            mySharedPreferences.putValue("remember_id_tk", null);
-//                            mySharedPreferences.putValue("remember_username", null);
-//                            mySharedPreferences.putValue("remember_username_ten", null);
-//                            mySharedPreferences.putValue("remember_password", null);
                         }
 
                         // Chuyển trang
@@ -169,9 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         mySharedPreferences.putBooleanValue("login", true);
-                        Intent intent = new Intent(LoginActivity.this, TrangChuActivity.class);
-                        startActivity(intent);
-                        finishAffinity();
+
                     }
                 }
 

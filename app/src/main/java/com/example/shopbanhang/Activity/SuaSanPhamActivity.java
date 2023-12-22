@@ -132,6 +132,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             @Override
             public void onDeleteClick(ChiTietSanPhamfix chiTietSanPham) {
                 deletechitietsanpham(chiTietSanPham);
+                chiTietSanPhamAdapter.notifyDataSetChanged();
             }
         });
         rclv_suachitiet.setAdapter(chiTietSanPhamAdapter);
@@ -178,7 +179,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 //                    DoanhThu doanhThu = dataSnapshot.getValue(DoanhThu.class);
                     ChiTietSanPhamfix chiTietSanPham = dataSnapshot.getValue(ChiTietSanPhamfix.class);
-                    if (chiTietSanPham != null){
+
                         if (chiTietSanPham.getMasp() == finalMasanpham){
 
                                 chiTietSanPhams.add(chiTietSanPham);
@@ -186,7 +187,7 @@ public class SuaSanPhamActivity extends AppCompatActivity {
 
 
                         }
-                    }
+
 
                 }
 
@@ -653,7 +654,11 @@ public class SuaSanPhamActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Chitietsanpham");
+
+
                 String solgspString  = editText.getText().toString().trim();
+
+
 
                 String mausp = spincolor.getSelectedItem().toString();
                 String sizesp = spinnersize.getSelectedItem().toString();
@@ -668,6 +673,11 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                     Toast.makeText(SuaSanPhamActivity.this, "Chưa nhận số lượng sản phẩm", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
+                    //su ly so luong chinh xac
+                    int soluongsp = Integer.parseInt(edt_so_luong_sp.getText().toString().trim());
+                    soluongsp = soluongsp + Integer.parseInt(solgspString);
+                    edt_so_luong_sp.setText(String.valueOf(soluongsp));
+
                     Random random = new Random();
                     int id = random.nextInt(100000);
 
@@ -696,6 +706,12 @@ public class SuaSanPhamActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+
+                        //su ly so luong chinh xac
+                        int soluongsp = Integer.parseInt(edt_so_luong_sp.getText().toString().trim());
+                        soluongsp = soluongsp + chiTietSanPham.getSoluong();
+                        edt_so_luong_sp.setText(String.valueOf(soluongsp));
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference myRef = database.getReference("Chitietsanpham");
 

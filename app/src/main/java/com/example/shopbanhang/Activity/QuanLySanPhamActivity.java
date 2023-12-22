@@ -104,12 +104,36 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
 
     private void getDataFirebase() {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("sanpham");
+//        DatabaseReference DatabaseReferenceChiTiet;
+//        DatabaseReferenceChiTiet = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
         mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 sanPhams.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     SanPham mSanPham = dataSnapshot.getValue(SanPham.class);
+
+//                    DatabaseReference timkiemchitiet = DatabaseReferenceChiTiet.child(String.valueOf(mSanPham.getMasp()));
+//                    timkiemchitiet.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            int soluongsanpham = 0;
+//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                                ChiTietSanPhamfix chiTietSanPhamfix = dataSnapshot.getValue(ChiTietSanPhamfix.class);
+//                                soluongsanpham +=chiTietSanPhamfix.getSoluong();
+//                            }
+//                            Map<String, Object> updates2 = new HashMap<>();
+//                            updates2.put("soluongnhap", soluongsanpham);
+//                            mDatabaseReference.child(String.valueOf(mSanPham.getMasp())).updateChildren(updates2);
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+
                     sanPhams.add(mSanPham);
                 }
                     sanPhamAdapter = new SanPhamAdapter(context, sanPhams, new SanPhamAdapter.OnClickItem() {
@@ -204,6 +228,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         }
 
         startActivity(intent);
+        finish();
     }
 
 
