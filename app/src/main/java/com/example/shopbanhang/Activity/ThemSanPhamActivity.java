@@ -560,6 +560,7 @@ public class ThemSanPhamActivity extends AppCompatActivity {
 //                            Toast.makeText(ThemSanPhamActivity.this, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(ThemSanPhamActivity.this, QuanLySanPhamActivity.class);
                             startActivity(intent);
+                            finish();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
