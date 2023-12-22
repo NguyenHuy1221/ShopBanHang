@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,8 @@ import com.example.shopbanhang.Model.ChiTietSanPham;
 import com.example.shopbanhang.Model.GioHang;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,14 +73,15 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
         holder.txtCong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
-                chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
-
-                DecimalFormat decimalFormat = new DecimalFormat("#,###");
-                holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
-                holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
-
-                iclickListener.onItemChanged(chiTietGioHang);
+//                chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
+//                chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
+//
+//                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+//                holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+//                holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+//
+//                iclickListener.onItemChanged(chiTietGioHang);
+                checkSoLuongTrongKho(chiTietGioHang, holder);
             }
         });
 
@@ -107,6 +111,65 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.ViewHold
 
     }
 
+
+    private void checkSoLuongTrongKho(ChiTietGioHang chiTietGioHang, ViewHolder holder) {
+        DatabaseReference chiTietSanPhamRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+
+        chiTietSanPhamRef.child(String.valueOf(chiTietGioHang.getId_chi_tiet_san_pham())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ChiTietSanPham chiTietSanPham = dataSnapshot.getValue(ChiTietSanPham.class);
+
+                    // Lấy số lượng từ chi tiết sản phẩm
+                    int soLuongTrongKho = chiTietSanPham != null ? chiTietSanPham.getSoluong() : 0;
+
+                    // Kiểm tra số lượng trong kho và tăng số lượng trong giỏ hàng nếu đủ
+                    if (soLuongTrongKho > 0 && chiTietGioHang.getSo_luong() < soLuongTrongKho) {
+                        // Tăng số lượng trong giỏ hàng
+                        chiTietGioHang.setSo_luong(chiTietGioHang.getSo_luong() + 1);
+                        chiTietGioHang.setTong_tien(chiTietGioHang.getDon_gia() * chiTietGioHang.getSo_luong());
+
+                        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                        holder.txtGia.setText(decimalFormat.format(chiTietGioHang.getTong_tien()) + " đ");
+                        holder.txtSo.setText(String.valueOf(chiTietGioHang.getSo_luong()));
+
+                        // Cập nhật số lượng trong kho (nếu cần)
+                        updateSoLuongTrongKho(chiTietGioHang.getId_chi_tiet_san_pham(), soLuongTrongKho - 1);
+
+                        iclickListener.onItemChanged(chiTietGioHang);
+                    } else {
+                        // Hiển thị thông báo cho người dùng rằng số lượng không đủ trong kho
+                        Toast.makeText(context, "Số lượng không đủ trong kho", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu cần thiết
+            }
+        });
+    }
+
+    private void updateSoLuongTrongKho(int idChiTietSanPham, int soLuongMoi) {
+        DatabaseReference chiTietSanPhamRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");
+
+        Map<String, Object> updateData = new HashMap<>();
+        updateData.put("soLuong", soLuongMoi);
+
+        chiTietSanPhamRef.child(String.valueOf(idChiTietSanPham)).updateChildren(updateData)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("UpdateSoLuong", "Cập nhật số lượng trong kho thành công");
+                        } else {
+                            Log.e("UpdateSoLuong", "Lỗi khi cập nhật số lượng trong kho: " + task.getException());
+                        }
+                    }
+                });
+    }
 
     private void duLieuChiTietSanPham(int idChiTietSanPham, ViewHolder holder) {
         DatabaseReference chiTietSanPhamRef = FirebaseDatabase.getInstance().getReference("Chitietsanpham");

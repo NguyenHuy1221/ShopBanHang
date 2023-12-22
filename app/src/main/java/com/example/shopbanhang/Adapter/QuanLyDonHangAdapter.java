@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -103,6 +104,26 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
             @Override
             public void onClick(View v) {
                 showUpdateStatusDialog(hoaDon);
+            }
+        });
+
+        holder.view_hoadon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(view.getContext()).
+                        setTitle("Xóa Hóa Đơn").
+                        setMessage("Bạn Có Chắc Muốn Xóa Hóa Đơn Này?").
+                        setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                hoaDonDAO.deleteHoaDon(hoaDon);
+                                mHoadon.remove(position);
+                                Toast.makeText(context, "Xóa hóa đơn thành công ", Toast.LENGTH_SHORT).show();
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("Không", null)
+                        .show();
             }
         });
 

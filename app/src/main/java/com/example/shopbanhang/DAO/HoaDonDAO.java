@@ -19,11 +19,11 @@ public class HoaDonDAO {
 ////        myRef.child(HoaDon.getGiotaoHD()).updateChildren(HoaDon.toMap());
 //    }
 //
-//    public void deleteHoaDon(HoaDon HoaDon) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("hoadon");
-//        myRef.child(HoaDon.getGiotaoHD()).removeValue();
-//    }
+    public void deleteHoaDon(HoaDon HoaDon) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("hoadon");
+        myRef.child(String.valueOf(HoaDon.getMaHD())).removeValue();
+    }
 
     public void updateStatus(HoaDon hoaDon) {
         hoaDonRef = FirebaseDatabase.getInstance().getReference("hoadon");
