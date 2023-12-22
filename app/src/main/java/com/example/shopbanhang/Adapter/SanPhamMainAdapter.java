@@ -85,7 +85,9 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
+        if (user !=0){
+            user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
+        }
 
         if (isFavoriteProduct(sanPham.getMasp())) {
             holder.img_tym.setColorFilter(Color.RED);

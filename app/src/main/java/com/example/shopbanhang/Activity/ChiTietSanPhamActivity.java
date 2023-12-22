@@ -71,7 +71,9 @@ public class ChiTietSanPhamActivity extends AppCompatActivity {
 
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-        user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
+        if (user !=0){
+            user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
+        }
 
         anhXa();
         getIntentSanPham();
