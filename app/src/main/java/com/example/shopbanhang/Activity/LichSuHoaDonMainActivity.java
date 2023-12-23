@@ -78,7 +78,14 @@ public class LichSuHoaDonMainActivity extends AppCompatActivity {
         });
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
-
+//        btnBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(LichSuHoaDonMainActivity.this, TrangChuActivity.class);
+//                startActivity(intent);
+//
+//            }
+//        });
     }
 
     private void setAdapterHoaDon() {

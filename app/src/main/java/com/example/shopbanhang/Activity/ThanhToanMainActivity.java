@@ -19,7 +19,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -72,7 +71,6 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private Button btn_mua_hang;
     private HoaDon hoaDon;
     double tien;
-    private ImageView img_dia_chi;
     private ArrayList<GioHang> gioHangList = new ArrayList<>(Gio_Hang.mlistGioHang);
     private ArrayList<ChiTietGioHang> chiTietGioHangArrayList = new ArrayList<>(Gio_Hang.mListChiTiet);
     private ArrayList<GioHang> list = new ArrayList<>();
@@ -86,9 +84,6 @@ public class ThanhToanMainActivity extends AppCompatActivity {
     private Context context = this ;
     private int idKhachHang;
     private static final String CHANNEL_ID = "com.example.shopbanhang.notification.channel";
-
-    private double latitude = 10.7769;
-    private double longitude = 106.7009;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,15 +116,6 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         txtTongTien = findViewById(R.id.txtTongTien);
         txtGmail = findViewById(R.id.tvEmail);
         txtSdt = findViewById(R.id.tvSdt);
-        img_dia_chi = findViewById(R.id.img_dia_chi);
-
-        img_dia_chi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMap();
-            }
-        });
-
         edtDiaChi = findViewById(R.id.edtdiaChi);
         btn_mua_hang = findViewById(R.id.btn_mua_hang);
         int trangthai = 0;
@@ -434,15 +420,15 @@ public class ThanhToanMainActivity extends AppCompatActivity {
                     .setColor(Color.RED)
                     .setAutoCancel(true);
 
-//            Intent resultIntent = new Intent(context, LichSuHoaDonMainActivity.class);
-//            PendingIntent resultPendingIntent = PendingIntent.getActivity(
-//                    context,
-//                    0,
-//                    resultIntent,
-//                    PendingIntent.FLAG_UPDATE_CURRENT
-//            );
+            Intent resultIntent = new Intent(context, LichSuHoaDonMainActivity.class);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    resultIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
 
-//            builder.setContentIntent(resultPendingIntent);
+            builder.setContentIntent(resultPendingIntent);
 
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 
@@ -468,16 +454,4 @@ public class ThanhToanMainActivity extends AppCompatActivity {
         return (int) new Date().getTime();
     }
 
-
-    private void openMap() {
-        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + Uri.encode("geo:" + latitude + "," + longitude));
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-
-        if (mapIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(mapIntent);
-        } else {
-            Toast.makeText(this, "Ứng dụng Bản đồ không khả dụng.", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
