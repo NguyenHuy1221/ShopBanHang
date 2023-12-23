@@ -1,50 +1,57 @@
 package com.example.shopbanhang.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopbanhang.Activity.ChiTietSanPhamActivity;
-import com.example.shopbanhang.Model.ChiTietSanPham;
+import com.example.shopbanhang.DAO.SanPhamyeuThichDAO;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.YeuThichSanPham;
 import com.example.shopbanhang.R;
 import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
-public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.ViewHodel> {
+public class SanPhamyeuthichAdapter extends RecyclerView.Adapter<SanPhamyeuthichAdapter.ViewHodel> {
 
     private Context context;
     private List<SanPham> mSanPham;
 
     private List<SanPham> mFilteredSanPhamList;
-//    private int user;
+    private int user;
     private List<YeuThichSanPham> mYeuThichSanPhamList;
+    private SanPhamyeuThichDAO sanPhamyeuThichDAO = new SanPhamyeuThichDAO();
+//    private final SanPhamAdapter.OnClickItem onClickItem;
 
 
-    public SanPhamMainAdapter(Context context, List<SanPham> mSanPham) {
+
+//    public SanPhamyeuthichAdapter(Context context, List<SanPham> mSanPham, SanPhamAdapter.OnClickItem onClickItem) {
+//        this.context = context;
+//        this.mSanPham = mSanPham;
+//        this.mFilteredSanPhamList = new ArrayList<>(mSanPham);
+//        this.mYeuThichSanPhamList = new ArrayList<>();
+//        this.onClickItem = onClickItem;
+//    }
+
+        public SanPhamyeuthichAdapter(Context context, List<SanPham> mSanPham) {
         this.context = context;
         this.mSanPham = mSanPham;
         this.mFilteredSanPhamList = new ArrayList<>(mSanPham);
@@ -67,13 +74,13 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     }
     @NonNull
     @Override
-    public SanPhamMainAdapter.ViewHodel onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_san_pham_main,parent,false);
+    public SanPhamyeuthichAdapter.ViewHodel onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_sanpham_yeuthich,parent,false);
         return new ViewHodel(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SanPhamMainAdapter.ViewHodel holder, int position) {
+    public void onBindViewHolder(@NonNull SanPhamyeuthichAdapter.ViewHodel holder, int position) {
 
 
         SanPham sanPham = mSanPham.get(position);
@@ -83,11 +90,11 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         holder.txt_pirce.setText(formattedTien + " đ");
         Picasso.get().load(sanPham.getImageUrl()).into(holder.img_main);
 
-        int user =0;
+
         MySharedPreferences mySharedPreferences = new MySharedPreferences(context);
-
+        if (user !=0){
             user = Integer.parseInt(mySharedPreferences.getValue("remember_id_tk"));
-
+        }
 
         if (isFavoriteProduct(sanPham.getMasp())) {
             holder.img_tym.setColorFilter(Color.RED);
@@ -95,16 +102,29 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
             holder.img_tym.setColorFilter(Color.BLACK);
         }
 
-        int finalUser = user;
         holder.img_tym.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Random random = new Random();
-                int id = Integer.parseInt(String.valueOf(random.nextInt(1000000)));
-                YeuThichSanPham yeuThichSanPham = new YeuThichSanPham(id, finalUser, sanPham.getMasp());
-                ThemSanPhamYeuThich(yeuThichSanPham);
+                YeuThichSanPham yeuThichSanPham = new YeuThichSanPham();
 
-                holder.img_tym.setColorFilter(Color.RED);
+//                Xoasanphamyeuthich(mYeuThichSanPhamList);;=-[p;l0
+//                onClickItem.onclickDelete(sanPham);
+//                Xoasanphamyeuthich(sanPham);
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("Xóa sản phẩm yếu thích")
+                        .setMessage("Bạn Có Chắc Muốn Xóa Sản Phẩm Yêu Thích Này")
+                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sanPhamyeuThichDAO.deleteHoaDon(sanPham);
+                                mSanPham.remove(holder.getAdapterPosition());
+                                Toast.makeText(context, "Xóa sản phẩm yêu thích thành công", Toast.LENGTH_SHORT).show();
+                                notifyDataSetChanged();
+
+                            }
+                        })
+                        .setNegativeButton("Không", null)
+                        .show();
             }
         });
 
@@ -130,25 +150,10 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
     }
 
 
-    private void ThemSanPhamYeuThich(YeuThichSanPham yeuThichSanPham) {
+    private void Xoasanphamyeuthich(SanPham sanPham) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("SanPhamYeuThich");
-        databaseReference.child(String.valueOf(yeuThichSanPham.getId_yeu_thich())).setValue(yeuThichSanPham);
-//        DatabaseReference productRef = databaseReference.child(String.valueOf(yeuThichSanPham.getId_san_pham()));
-
-//        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (!snapshot.exists()) {
-//                    productRef.
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e("Firebase", "Error checking if product exists: " + error.getMessage());
-//            }
-//        });
+//        databaseReference.child(String.valueOf(sanPham.getMasp()).removeValue();
     }
 
     private boolean isFavoriteProduct(int productId) {
@@ -160,6 +165,14 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
         return false;
     }
 
+//    public abstract void onclickDelete(SanPham sanPham);
+//
+////    public abstract void onclickDelete(SanPham sanPham);
+//
+//    public interface OnClickItem {
+//
+//        void onclickDelete(SanPham sanPham);
+//    }
 
 
     public void filterList(List<SanPham> filteredList) {
@@ -181,6 +194,7 @@ public class SanPhamMainAdapter extends RecyclerView.Adapter<SanPhamMainAdapter.
 
         private TextView txt_name,txt_pirce;
         private ImageView img_main,img_tym;
+
         public ViewHodel(@NonNull View itemView) {
             super(itemView);
             txt_name = itemView.findViewById(R.id.txt_name);

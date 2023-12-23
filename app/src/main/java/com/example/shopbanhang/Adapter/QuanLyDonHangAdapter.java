@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +31,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdapter.ViewHolder> {
 
@@ -56,13 +60,21 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
 
         holder.tvNgaytao.setText("Ngày Tạo : " + hoaDon.getNgaytaoHD());
         holder.tvGiotao.setText(hoaDon.getGiotaoHD());
-        holder.tvDiaChi.setText("Địa chỉ : " + hoaDon.getDiaChi());
+        holder.tvDiaChi.setText(hoaDon.getDiaChi());
 
 
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedTien = decimalFormat.format(hoaDon.getTongtien());
         holder.tvTongtien.setText("Tổng tiền : " + formattedTien + " đ");
         DuLieuTaiKhoan(hoaDon.getIdKhachHang(),holder);
+
+        holder.imgDiaChi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditDialog("Sửa địa chỉ",holder.tvDiaChi,"diaChi",holder);
+            }
+        });
+
 //        holder.tvSohoadon.setText("Số Hóa Đơn: " + hoaDon.getMaHD() + "");
 //        holder.tvNguoimua.setText("Người Mua: " + hoaDon.getName_khachhang().toUpperCase());
 //
@@ -117,7 +129,7 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 hoaDonDAO.deleteHoaDon(hoaDon);
-                                mHoadon.remove(position);
+                                mHoadon.remove(holder.getAdapterPosition());
                                 Toast.makeText(context, "Xóa hóa đơn thành công ", Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                             }
@@ -193,6 +205,57 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
         return result;
     }
 
+    private void showEditDialog(String title, TextView textView, String fieldName, QuanLyDonHangAdapter.ViewHolder holder) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+
+        final EditText input = new EditText(context);
+        // Hiển thị thông tin hiện tại trong EditText
+        input.setText(textView.getText().toString());
+
+        builder.setView(input);
+
+        builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newValue = input.getText().toString();
+                textView.setText(newValue);
+
+                LuuThongTin(holder);
+
+
+
+            }
+        });
+
+        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
+    private void LuuThongTin(QuanLyDonHangAdapter.ViewHolder holder) {
+
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("hoadon");
+        String address = holder.tvDiaChi.getText().toString();
+
+        if (address.isEmpty()) {
+            Toast.makeText(context, "Địa chỉ trống", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int hoadonId = mHoadon.get(holder.getAdapterPosition()).getMaHD();
+        Map<String, Object> updates2 = new HashMap<>();
+        updates2.put("diaChi",address);
+        mDatabaseReference.child(String.valueOf(hoadonId)).updateChildren(updates2);
+
+    }
+
 
     @Override
     public int getItemCount() {
@@ -218,6 +281,8 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
         private Button btnThanhToan;
         private CardView view_hoadon;
         private RecyclerView rcy_don_hang;
+        private ImageView imgDiaChi;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -230,6 +295,7 @@ public class QuanLyDonHangAdapter extends RecyclerView.Adapter<QuanLyDonHangAdap
             tvNgaytao = itemView.findViewById(R.id.tvNgaymua);
             tvGiotao = itemView.findViewById(R.id.tvGiomua);
             tvDiaChi = itemView.findViewById(R.id.tvDiaChi);
+            imgDiaChi = itemView.findViewById(R.id.img_dia_chi);
             view_hoadon = itemView.findViewById(R.id.view_hoadon);
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));

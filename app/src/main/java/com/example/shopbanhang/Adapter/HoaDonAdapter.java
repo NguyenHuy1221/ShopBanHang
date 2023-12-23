@@ -6,13 +6,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -27,6 +31,9 @@ import com.example.shopbanhang.Model.HoaDon;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.TaiKhoan;
 import com.example.shopbanhang.R;
+import com.example.shopbanhang.SharedPreferences.MySharedPreferences;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +46,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonViewHoder> {
@@ -69,7 +78,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 
         holder.tvNgaytao.setText("Ngày Tạo : " + hoaDon.getNgaytaoHD());
         holder.tvGiotao.setText(hoaDon.getGiotaoHD());
-        holder.tvDiaChi.setText("Địa chỉ : " + hoaDon.getDiaChi());
+        holder.tvDiaChi.setText(hoaDon.getDiaChi());
 
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedTien = decimalFormat.format(hoaDon.getTongtien());
@@ -84,6 +93,13 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
 //            }
 //        });
         holder.tvTrangThai.setText(trangThaiDonHang(hoaDon.getTinhTrang()));
+//        holder.imgDiaChi.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showEditDialog("Sửa địa chỉ",holder.tvDiaChi,"diaChi",holder);
+//            }
+//        });
+        holder.imgDiaChi.setVisibility(View.GONE);
 
         DatabaseReference chiTietHoaDonRef = FirebaseDatabase.getInstance().getReference("chitiethoadon");
         chiTietHoaDonRef.orderByChild("hoa_don").equalTo(hoaDon.getMaHD()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -172,7 +188,56 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         return result;
     }
 
-
+//    private void showEditDialog(String title, TextView textView, String fieldName, HoaDonViewHoder holder) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        builder.setTitle(title);
+//
+//        final EditText input = new EditText(context);
+//        // Hiển thị thông tin hiện tại trong EditText
+//        input.setText(textView.getText().toString());
+//
+//        builder.setView(input);
+//
+//        builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                String newValue = input.getText().toString();
+//                textView.setText(newValue);
+//
+//                LuuThongTin(holder);
+//
+//
+//
+//            }
+//        });
+//
+//        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+//    }
+//
+//
+//    private void LuuThongTin(HoaDonViewHoder holder) {
+//
+//        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("hoadon");
+//        String address = holder.tvDiaChi.getText().toString();
+//
+//        if (address.isEmpty()) {
+//            Toast.makeText(context, "Địa chỉ trống", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        int hoadonId = mHoadon.get(holder.getAdapterPosition()).getMaHD();
+//        Map<String, Object> updates2 = new HashMap<>();
+//        updates2.put("diaChi",address);
+//        mDatabaseReference.child(String.valueOf(hoadonId)).updateChildren(updates2);
+//
+//    }
 
     @Override
     public int getItemCount() {
@@ -195,6 +260,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         private Button btnThanhToan;
         private CardView view_hoadon;
         private RecyclerView rcy_don_hang;
+        private ImageView imgDiaChi;
 
         public HoaDonViewHoder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -206,6 +272,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
             tvNgaytao = itemView.findViewById(R.id.tvNgaymua);
             tvGiotao = itemView.findViewById(R.id.tvGiomua);
             tvDiaChi = itemView.findViewById(R.id.tvDiaChi);
+            imgDiaChi = itemView.findViewById(R.id.img_dia_chi);
             view_hoadon = itemView.findViewById(R.id.view_hoadon);
             rcy_don_hang = itemView.findViewById(R.id.rcy_donhang);
             rcy_don_hang.setLayoutManager(new LinearLayoutManager(itemView.getContext()));

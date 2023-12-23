@@ -7,10 +7,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.shopbanhang.Adapter.SanPhamMainAdapter;
+import com.example.shopbanhang.Adapter.SanPhamyeuthichAdapter;
 import com.example.shopbanhang.Model.SanPham;
 import com.example.shopbanhang.Model.YeuThichSanPham;
 import com.example.shopbanhang.R;
@@ -31,7 +30,7 @@ public class SanPhamYeuThichMainActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private List<YeuThichSanPham> mListYeuThich;
-    private SanPhamMainAdapter sanPhamMainAdapter;
+    private SanPhamyeuthichAdapter sanPhamyeuthichAdapter;
 
     private int user;
     private Context context = this;
@@ -73,9 +72,10 @@ public class SanPhamYeuThichMainActivity extends AppCompatActivity {
                     mListYeuThich.add(yeuThichSanPham);
                 }
 
-                if (sanPhamMainAdapter == null) {
-                    sanPhamMainAdapter = new SanPhamMainAdapter(context, new ArrayList<>());
-                    rcyTym.setAdapter(sanPhamMainAdapter);
+                if (sanPhamyeuthichAdapter == null) {
+                    sanPhamyeuthichAdapter = new SanPhamyeuthichAdapter(context, new ArrayList<>());
+
+                    rcyTym.setAdapter(sanPhamyeuthichAdapter);
                 }
 
                 for (YeuThichSanPham yeuThichSanPham : mListYeuThich) {
@@ -98,7 +98,7 @@ public class SanPhamYeuThichMainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     SanPham sanPham = snapshot.getValue(SanPham.class);
-                    sanPhamMainAdapter.addSanPham(sanPham);
+                    sanPhamyeuthichAdapter.addSanPham(sanPham);
                 }
             }
 
@@ -107,4 +107,9 @@ public class SanPhamYeuThichMainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void DeleteProducts(SanPham sanPham){
+
+    }
+
 }

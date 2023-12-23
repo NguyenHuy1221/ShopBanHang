@@ -3,6 +3,7 @@ package com.example.shopbanhang.Model;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class HoaDon {
@@ -93,4 +94,19 @@ public class HoaDon {
     public void setTongtien(double tongtien) {
         this.tongtien = tongtien;
     }
+
+    public HashMap<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("maHD", maHD);
+        result.put("idKhachHang", idKhachHang);
+        result.put("ngaytaoHD", ngaytaoHD);
+        result.put("giotaoHD", giotaoHD);
+        result.put("tinhTrang", tinhTrang);
+        result.put("idKhuyenMai", idKhuyenMai);
+        result.put("diaChi", diaChi);
+        result.put("tongtien", tongtien);
+        return result;
+    }
+
+
 }

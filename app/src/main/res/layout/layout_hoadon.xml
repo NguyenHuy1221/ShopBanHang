@@ -94,14 +94,33 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvDiaChi"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Địa chỉ"
-                android:textSize="16dp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Địa chỉ : "
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvDiaChi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:text="Địa chỉ"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/img_dia_chi"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/arrow_detail" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/tvTongtien"
