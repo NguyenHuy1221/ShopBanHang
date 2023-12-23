@@ -160,6 +160,8 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                         Toast.makeText(quan_ly_khuyen_mai.this, "Ngày bắt đầu không được trùng với ngày kết thúc", Toast.LENGTH_SHORT).show();
                     } else if (ngayKetThucKM.compareTo(ngayBatDauKM) < 0) {
                         Toast.makeText(quan_ly_khuyen_mai.this, "Ngày kết thúc không được nhỏ hơn ngày bắt đầu ", Toast.LENGTH_SHORT).show();
+                    } else if (uri == null) {
+                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
                     }
                     else  {
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("KhuyenMai").child(uri.getLastPathSegment());
@@ -177,9 +179,7 @@ public class quan_ly_khuyen_mai extends AppCompatActivity {
                         });
                     }
                 } catch (ParseException e) {
-                     if (uri == null) {
-                        Toast.makeText(quan_ly_khuyen_mai.this, "Chưa chọn ảnh", Toast.LENGTH_SHORT).show();
-                    } else if (ngayBatDau.equals("")){
+                      if (ngayBatDau.equals("")){
                         Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày bắt đầu khuyến mãi", Toast.LENGTH_SHORT).show();
                     } else if (ngayKetThuc.equals("")){
                         Toast.makeText(quan_ly_khuyen_mai.this, "Chưa nhập ngày kết thúc khuyến mãi", Toast.LENGTH_SHORT).show();
