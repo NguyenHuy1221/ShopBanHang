@@ -85,6 +85,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
     private List<String> loaisp = new ArrayList<>();
     private List<String> chisosanpham = new ArrayList<>();
     private Button btn_loc;
+    private List<SanPham> sanphamloc = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         chisosanphamAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnchiso.setAdapter(chisosanphamAdapter);
 
-        getDataFirebase();
+
 
 
         sanPhamAdapter = new SanPhamAdapter(context, sanPhams, new SanPhamAdapter.OnClickItem() {
@@ -141,7 +142,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
         recyclerView.setAdapter(sanPhamAdapter);
         sanPhamAdapter.updateList(sanPhams);
         sanPhamAdapter.notifyDataSetChanged();
-        List<SanPham> sanphamloc = new ArrayList<>();
+
         btn_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,7 +177,11 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
                                     break;
                             }
 
@@ -212,7 +217,11 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
                                     break;
                             }
                             break;
@@ -247,7 +256,11 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
                                     break;
                             }
                             break;
@@ -282,7 +295,11 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
                                     break;
                             }
                             break;
@@ -317,7 +334,11 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-
+                                    for (int i= 0; i<sanPhams.size();i++){
+                                        if (spnloaispValue.equals(sanPhams.get(i).getThuonghieu())){
+                                            sanphamloc.add(sanPhams.get(i));
+                                        }
+                                    }
                                     break;
                             }
                             break;
@@ -326,6 +347,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                             for (int i= 0; i<sanPhams.size();i++){
                                 sanphamloc.add(sanPhams.get(i));
                             }
+                            sanPhamAdapter.notifyDataSetChanged();
                             break;
 
                     }
@@ -351,7 +373,7 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                 sanPhamAdapter.notifyDataSetChanged();
             }
         });
-
+        getDataFirebase();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -414,6 +436,20 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
 //
 //                    }
                     sanPhams.add(mSanPham);
+                    sanPhamAdapter = new SanPhamAdapter(context, sanPhams, new SanPhamAdapter.OnClickItem() {
+                        @Override
+                        public void onclikUpdate(SanPham sanPham) {
+                            EditProducts(sanPham);
+                        }
+
+                        @Override
+                        public void onclickDelete(SanPham sanPham) {
+                            DeleteProducts(sanPham);
+                        }
+                    });
+                    recyclerView.setAdapter(sanPhamAdapter);
+                    sanPhamAdapter.updateList(sanPhams);
+                    sanPhamAdapter.notifyDataSetChanged();
                 }
 
             }
@@ -505,10 +541,9 @@ public class QuanLySanPhamActivity extends AppCompatActivity {
                                         if (chiTietSanPham.getMasp() == sanPham.getMasp()){
 //                                            if (chiTietSanPham.getIdchitietsanpham() != null){
 //                                                chiTietSanPhams.add(chiTietSanPham);
-                                            Toast.makeText(QuanLySanPhamActivity.this, "Xóa thành công chi tiết sản phẩm "+chiTietSanPham.getMasp() , Toast.LENGTH_SHORT).show();
 
                                             myRef2.child(String.valueOf(chiTietSanPham.getIdchitietsanpham())).removeValue();
-
+                                                sanPhamAdapter.notifyDataSetChanged();
 //                                            }
 
                                         }
